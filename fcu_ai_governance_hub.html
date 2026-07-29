@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCU · AI Governance & Educational Resource Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fcu: {
+                            navy: '#0b1b3d',
+                            darkNavy: '#060f24',
+                            blue: '#133063',
+                            gold: '#c89528',
+                            brass: '#9a7018',
+                            goldLight: '#fbf5e8',
+                            cream: '#fcfbf7',
+                            slate: '#f0f4f8',
+                            emerald: '#0d5c46',
+                            emeraldLight: '#ecfdf5',
+                            burgundy: '#6b1d2f',
+                            burgundyLight: '#fff1f2'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Georgia', 'serif'],
+                        bodySerif: ['Newsreader', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Typography and Layout custom styles */
+        .academic-header {
+            background: linear-gradient(135deg, #060f24 0%, #0b1b3d 60%, #133063 100%);
+        }
+        .gold-border-glow {
+            box-shadow: 0 0 15px rgba(200, 149, 40, 0.15);
+        }
+        .toc-active {
+            border-left-color: #c89528 !important;
+            color: #c89528 !important;
+            font-weight: 600;
+            background-color: rgba(200, 149, 40, 0.05);
+        }
+
+        /* Scroll Animation utility classes */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* PRINT STYLESHEET OPTIMIZATIONS */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+            }
+            .no-print, header, nav, footer, #back-to-top, .sidebar-toc, #progress-bar, .action-buttons {
+                display: none !important;
+            }
+            .print-full-width {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .section-card {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                break-inside: avoid;
+            }
+            .form-input-print {
+                border-bottom: 1px solid #000 !important;
+                background: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-fcu-cream text-slate-800 font-sans antialiased selection:bg-fcu-gold selection:text-white flex flex-col min-h-screen">
+
+    <!-- Progress Indicator Bar -->
+    <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-fcu-gold via-amber-400 to-fcu-gold z-50 transition-all duration-150 w-0"></div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-fcu-darkNavy/95 backdrop-blur-md border-b border-fcu-gold/30 text-white shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- University Branding & Wordmark -->
+                <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-fcu-gold rounded-lg p-1">
+                    <div class="w-10 h-10 rounded-full bg-fcu-gold/20 border border-fcu-gold/60 flex items-center justify-center group-hover:bg-fcu-gold/30 transition-all">
+                        <!-- Shield Icon SVG -->
+                        <svg class="w-6 h-6 text-fcu-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block font-serif text-lg font-bold tracking-wide text-white group-hover:text-fcu-gold transition-colors">Filamer Christian University</span>
+                        <span class="block text-xs font-sans tracking-widest text-fcu-gold/90 uppercase font-semibold">AI Governance Hub</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Items -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <a href="#sec-policy" id="nav-policy" class="nav-item px-3 py-2 rounded-md text-sm font-medium text-slate-200 hover:text-fcu-gold hover:bg-white/5 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        FCU Policy for AI
+                    </a>
+                    <a href="#sec-guide" id="nav-guide" class="nav-item px-3 py-2 rounded-md text-sm font-medium text-slate-200 hover:text-fcu-gold hover:bg-white/5 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        Integration Guide
+                    </a>
+                    <a href="#sec-form" id="nav-form" class="nav-item px-3 py-2 rounded-md text-sm font-medium text-slate-200 hover:text-fcu-gold hover:bg-white/5 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Declaration Form
+                    </a>
+                    <button onclick="window.print()" class="ml-3 px-3.5 py-1.5 rounded-full border border-fcu-gold/60 text-fcu-gold hover:bg-fcu-gold hover:text-fcu-darkNavy text-xs font-semibold uppercase tracking-wider transition-all">
+                        Print / PDF
+                    </button>
+                </nav>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" type="button" class="p-2 rounded-md text-slate-300 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-fcu-gold" aria-label="Toggle navigation menu">
+                        <svg id="hamburger-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                        <svg id="close-icon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-drawer" class="hidden md:hidden bg-fcu-darkNavy/98 border-b border-fcu-gold/30 px-4 pt-2 pb-6 space-y-2">
+            <a href="#sec-policy" class="mobile-nav-link block px-4 py-3 rounded-lg text-base font-medium text-slate-100 hover:bg-fcu-blue hover:text-fcu-gold">
+                FCU Policy for AI
+            </a>
+            <a href="#sec-guide" class="mobile-nav-link block px-4 py-3 rounded-lg text-base font-medium text-slate-100 hover:bg-fcu-blue hover:text-fcu-gold">
+                Guide on AI Integration
+            </a>
+            <a href="#sec-form" class="mobile-nav-link block px-4 py-3 rounded-lg text-base font-medium text-slate-100 hover:bg-fcu-blue hover:text-fcu-gold">
+                AI Use Declaration Form
+            </a>
+            <div class="pt-2 border-t border-slate-700/60">
+                <button onclick="window.print();" class="w-full text-center px-4 py-2.5 rounded-lg bg-fcu-gold/20 text-fcu-gold font-semibold text-sm border border-fcu-gold/40">
+                    Print Institutional Documents
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Institutional Masthead -->
+    <section class="academic-header text-white pt-12 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-b-4 border-fcu-gold">
+        <!-- Background subtle decorative pattern -->
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#c89528_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fcu-gold/20 border border-fcu-gold/40 text-fcu-gold text-xs font-semibold tracking-wider uppercase mb-6">
+                <span class="w-2 h-2 rounded-full bg-fcu-gold animate-pulse"></span>
+                Official University Policy & Compliance Framework
+            </div>
+            
+            <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight">
+                Governance, Ethics & Responsible Integration of Artificial Intelligence
+            </h1>
+            
+            <p class="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto font-bodySerif italic leading-relaxed">
+                "A Christian University for Transformative Leadership — Upholding academic integrity, human dignity, and technological stewardship in teaching, learning, and research."
+            </p>
+
+            <!-- Metadata Badges -->
+            <div class="mt-8 flex flex-wrap justify-center items-center gap-4 text-xs sm:text-sm text-slate-300">
+                <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
+                    <svg class="w-4 h-4 text-fcu-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h6a1 1 0 100-2H7zm0 4a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+                    <span>ISO 21001 Aligned Framework</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
+                    <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    <span>Philippine Data Privacy Act (RA 10173) & NPC Compliant</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
+                    <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356.257l4 4.5a1 1 0 001.388 0l4-4.5a1 1 0 01.356-.257l2.644-1.131a1 1 0 000-1.84l-7-3z"/></svg>
+                    <span>CHED Standards & ASEAN Ethics Aligned</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 1: FCU POLICY ON AI USE -->
+        <!-- ========================================================================= -->
+        <section id="sec-policy" class="scroll-mt-24 mb-20 fade-in-section">
+            
+            <!-- Section Header Banner -->
+            <div class="bg-fcu-navy text-white rounded-2xl p-6 sm:p-8 shadow-xl border-l-8 border-fcu-gold flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 text-fcu-gold text-xs font-bold uppercase tracking-widest mb-1">
+                        <span>Institutional Document I</span>
+                        <span>•</span>
+                        <span>Official University Code</span>
+                    </div>
+                    <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+                        Policy on Responsible and Ethical Use of Artificial Intelligence (AI)
+                    </h2>
+                    <p class="text-slate-300 text-sm mt-1">Filamer Christian University · System-Wide Policy Standards</p>
+                </div>
+                <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl border border-white/15 text-xs text-slate-200">
+                    <svg class="w-5 h-5 text-fcu-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    <span>Status: Approved & Enforceable</span>
+                </div>
+            </div>
+
+            <!-- Two Column Layout: TOC Sidebar + Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <!-- Sticky Section Table of Contents Sidebar -->
+                <div class="lg:col-span-1 no-print">
+                    <div class="sticky top-28 bg-white rounded-xl p-4 shadow-sm border border-slate-200/80 sidebar-toc">
+                        <h3 class="font-serif font-bold text-sm text-fcu-navy uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-fcu-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            Policy Index
+                        </h3>
+                        <nav class="space-y-1 text-xs max-h-[calc(100vh-200px)] overflow-y-auto">
+                            <a href="#pol-1" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">1. Purpose & Alignment</a>
+                            <a href="#pol-2" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">2. Policy Principles</a>
+                            <a href="#pol-3" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">3. Definition of Terms</a>
+                            <a href="#pol-4" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">4. Scope & Applicability</a>
+                            <a href="#pol-5" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">5. Ethical Principles</a>
+                            <a href="#pol-6" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">6. Teaching & Learning</a>
+                            <a href="#pol-7" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">7. AI in Research</a>
+                            <a href="#pol-8" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">8. Data Privacy & Governance</a>
+                            <a href="#pol-9" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">9. Transparency & Disclosure</a>
+                            <a href="#pol-10" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">10. Misconduct & Appeals</a>
+                            <a href="#pol-11" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">11. Governance Roles</a>
+                            <a href="#pol-12" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">12. Capacity Building</a>
+                            <a href="#pol-13" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">13. Implementation & Review</a>
+                            <a href="#pol-14" class="block py-1.5 px-2.5 rounded border-l-2 border-transparent hover:bg-slate-50 text-slate-600 transition-all">14. Supporting Documents</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Policy Substantive Content Column -->
+                <div class="lg:col-span-3 space-y-8 print-full-width">
+
+                    <!-- Clause 1 -->
+                    <div id="pol-1" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">1</span>
+                            Purpose and Institutional Alignment
+                        </h3>
+                        <p class="text-slate-700 leading-relaxed font-bodySerif text-base sm:text-lg">
+                            Filamer Christian University (FCU), guided by its vision of becoming a <strong>Christian University for Transformative Leadership</strong>, recognizes the transformative impact of Artificial Intelligence (AI) on teaching, learning, research, and institutional operations. This policy establishes the principles and standards for the responsible, ethical, secure, and effective use of AI to uphold academic integrity, protect human dignity, promote critical thinking, and foster innovation. It supports the University's Vision, Mission, and Goals and aligns with <strong>ISO 21001</strong>, the <strong>Philippine Data Privacy Act of 2012 (Republic Act No. 10173)</strong>, and applicable policies and issuances of the Commission on Higher Education (CHED) and the National Privacy Commission (NPC).
+                        </p>
+                    </div>
+
+                    <!-- Clause 2 -->
+                    <div id="pol-2" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">2</span>
+                            Policy Principles
+                        </h3>
+                        <p class="text-slate-600 mb-4 text-sm">Adopted from the ASEAN Guide on AI Governance and Ethics, the policy operates under three foundational pillars:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-lg bg-fcu-slate border border-slate-200">
+                                <h4 class="font-bold text-fcu-navy text-sm mb-1">2.1 Institution-wide Approach</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">AI managed in a coordinated manner across students, faculty, staff, systems, and third-party vendors.</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-fcu-slate border border-slate-200">
+                                <h4 class="font-bold text-fcu-navy text-sm mb-1">2.2 Statutory Compliance</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">Strict adherence to RA 10173, NPC advisories, and CHED policies. National laws prevail in case of conflict.</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-fcu-slate border border-slate-200">
+                                <h4 class="font-bold text-fcu-navy text-sm mb-1">2.3 Responsible Innovation</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">Continuous policy review and institutional adaptation in line with evolving technological developments.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clause 3 -->
+                    <div id="pol-3" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">3</span>
+                            Definition of Terms
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-slate-50 border-l-4 border-fcu-navy">
+                                <span class="text-xs font-bold uppercase tracking-wider text-fcu-gold block mb-1">3.1 System Category</span>
+                                <h4 class="font-bold text-fcu-navy text-base mb-1">Artificial Intelligence (AI)</h4>
+                                <p class="text-xs text-slate-600">Computer-based systems that perform tasks requiring human intelligence, such as generating content, making predictions, analyzing information, or providing recommendations.</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border-l-4 border-fcu-navy">
+                                <span class="text-xs font-bold uppercase tracking-wider text-fcu-gold block mb-1">3.2 Generation Tools</span>
+                                <h4 class="font-bold text-fcu-navy text-base mb-1">Generative AI (GenAI)</h4>
+                                <p class="text-xs text-slate-600">A type of AI that creates new content, including text, images, audio, video, computer code, or similar outputs, based on user prompts.</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border-l-4 border-fcu-navy">
+                                <span class="text-xs font-bold uppercase tracking-wider text-fcu-gold block mb-1">3.3 Collaborative Work</span>
+                                <h4 class="font-bold text-fcu-navy text-base mb-1">AI-Assisted Work</h4>
+                                <p class="text-xs text-slate-600">Any academic, research, or administrative output created by a human author who utilized AI tools to support or augment the process, provided the human author remains responsible for originality and accuracy.</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border-l-4 border-fcu-navy">
+                                <span class="text-xs font-bold uppercase tracking-wider text-fcu-gold block mb-1">3.4 Academic Threshold</span>
+                                <h4 class="font-bold text-fcu-navy text-base mb-1">Major Assessment</h4>
+                                <p class="text-xs text-slate-600">An assessment contributing twenty percent (20%) or more of the final course grade or as determined by the instructor in the course syllabus.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clause 4 -->
+                    <div id="pol-4" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-3 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">4</span>
+                            Scope and Applicability
+                        </h3>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                            <strong>4.1 Academic & Administrative Levels:</strong> Applies universally across all departments, encompassing Basic Education, Undergraduate programs, and the Graduate School, establishing a unified standard of digital ethics across all disciplines at FCU.
+                        </p>
+                        <p class="text-slate-700 text-sm leading-relaxed">
+                            <strong>4.2 Operational Scope:</strong> Binding on all members of the University community—students, faculty, administrative staff, and researchers—who use, develop, procure, evaluate, or manage AI technologies for academic, research, administrative, or operational purposes.
+                        </p>
+                    </div>
+
+                    <!-- Clause 5 -->
+                    <div id="pol-5" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">5</span>
+                            Ethical Principles
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex gap-4 items-start">
+                                <div class="w-8 h-8 rounded-full bg-fcu-gold/20 text-fcu-brass flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">5.1</div>
+                                <div>
+                                    <h4 class="font-bold text-fcu-navy text-sm">Human Agency and Accountability</h4>
+                                    <p class="text-xs text-slate-600">Human users remain ultimately responsible for all AI-assisted outputs. AI shall support, but not replace, informed human judgment. Decisions significantly affecting students or employees shall never rely solely on automated outputs.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-8 h-8 rounded-full bg-fcu-gold/20 text-fcu-brass flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">5.2</div>
+                                <div>
+                                    <h4 class="font-bold text-fcu-navy text-sm">Transparency and Explainability</h4>
+                                    <p class="text-xs text-slate-600">Members of the University community shall disclose AI-assisted work whenever required under this policy or by course instructors.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-8 h-8 rounded-full bg-fcu-gold/20 text-fcu-brass flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">5.3</div>
+                                <div>
+                                    <h4 class="font-bold text-fcu-navy text-sm">Data Privacy and Sovereignty</h4>
+                                    <p class="text-xs text-slate-600">The unauthorized extraction or uploading of university intellectual property, proprietary instructional materials, or personal data into public or commercial AI models is strictly prohibited.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-8 h-8 rounded-full bg-fcu-gold/20 text-fcu-brass flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">5.4</div>
+                                <div>
+                                    <h4 class="font-bold text-fcu-navy text-sm">Fairness, Equity, and Inclusivity</h4>
+                                    <p class="text-xs text-slate-600">No student shall be academically penalized for lacking access to premium, subscription-based AI tools. Deployments must be audited to prevent systematic demographic bias.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-8 h-8 rounded-full bg-fcu-gold/20 text-fcu-brass flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">5.5</div>
+                                <div>
+                                    <h4 class="font-bold text-fcu-navy text-sm">Security</h4>
+                                    <p class="text-xs text-slate-600">Institution-approved AI systems must implement robust cybersecurity controls and undergo regular maintenance to mitigate operational risk.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clause 6 -->
+                    <div id="pol-6" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">6</span>
+                            AI Use in Teaching and Learning
+                        </h3>
+                        
+                        <!-- Important Warning Callout Box -->
+                        <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 mb-6 flex gap-3 items-start">
+                            <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <div>
+                                <h4 class="font-bold text-amber-900 text-sm">6.1.1 Strict Prohibition on Core Skill Replication</h4>
+                                <p class="text-xs text-amber-800 leading-relaxed mt-0.5">
+                                    AI shall <strong>NOT</strong> be used when it replaces the specific knowledge, skills, or competencies being assessed. For example, Generative AI shall not generate core original content for research papers, personal reflection essays, or artistic evaluations where individual student cognitive work is the primary basis of evaluation.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-xs sm:text-sm text-slate-700">
+                            <p><strong>6.1.2 Allowable Enhancements:</strong> When permitted by the instructor and properly disclosed, AI may support learning through brainstorming, outlining, summarizing background readings, improving readability, or language editing.</p>
+                            <p><strong>6.2 Faculty Responsibilities:</strong> Faculty must clearly communicate acceptable and unacceptable AI use in course syllabi, assessment instructions, and design authentic evaluations testing higher-order critical thinking.</p>
+                            <p><strong>6.3 Student Orientation:</strong> Faculty shall orient students on AI guidelines at the beginning of each course, and students are obligated to comply fully.</p>
+                        </div>
+                    </div>
+
+                    <!-- Clause 7 -->
+                    <div id="pol-7" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">7</span>
+                            AI Use in Research Integrity
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-lg bg-fcu-burgundyLight/50 border border-fcu-burgundy/20">
+                                <h4 class="font-bold text-fcu-burgundy text-sm mb-1">7.1.1 Authorship Limitations</h4>
+                                <p class="text-xs text-slate-700">AI systems can <strong>never</strong> be listed as authors or co-authors on research publications as non-human entities cannot assume legal or ethical liability.</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-fcu-burgundyLight/50 border border-fcu-burgundy/20">
+                                <h4 class="font-bold text-fcu-burgundy text-sm mb-1">7.1.2 Prohibition of Synthetic Data</h4>
+                                <p class="text-xs text-slate-700">Generating synthetic empirical data using GenAI to support research hypotheses constitutes severe data fabrication and research misconduct.</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                                <h4 class="font-bold text-fcu-navy text-sm mb-1">7.1.3 "Black Box" Liability</h4>
+                                <p class="text-xs text-slate-600">Researchers remain personally accountable for the accuracy, validity, originality, and citation integrity of all AI-assisted research outputs.</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                                <h4 class="font-bold text-fcu-navy text-sm mb-1">7.1.4 Research Ethics Oversight</h4>
+                                <p class="text-xs text-slate-600">Suspected algorithmic misrepresentation or departures from research standards will be reviewed by the Ethics Review Board under institutional misconduct protocols.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clause 8 & 9 -->
+                    <div id="pol-8" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">8</span>
+                            Data Privacy & Information Governance
+                        </h3>
+                        <div class="space-y-3 text-xs sm:text-sm text-slate-700">
+                            <p><strong>8.1.1 For Students:</strong> Explicitly forbidden from uploading instructor copyrighted materials (exams, rubrics, lecture slides) into public AI platforms without documented authorization.</p>
+                            <p><strong>8.1.2 For Instructors:</strong> Educators are prohibited from uploading student intellectual property or personal data into third-party AI tools for grading without explicit, documented student consent.</p>
+                            <p><strong>8.1.3 Data Minimization:</strong> Only anonymized, strictly necessary operational data may be processed through approved AI systems.</p>
+                            <p><strong>8.3 Enterprise Procurement:</strong> The ICTSO and Data Privacy Officer (DPO) must conduct mandatory privacy and security audits on vendor software to guarantee zero model-training usage of institutional data.</p>
+                        </div>
+                    </div>
+
+                    <div id="pol-9" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">9</span>
+                            Transparency & Mandatory Disclosure
+                        </h3>
+                        <div class="p-4 rounded-xl bg-fcu-goldLight border border-fcu-gold/40 mb-4">
+                            <h4 class="font-bold text-fcu-navy text-sm mb-1">9.1.1 & 9.1.2 Declaration for Major Assessments</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                For all major academic submissions (weighed at 20% or more of final grade), students <strong>MUST submit an AI Use Declaration Form</strong>. The declaration must explicitly name the AI model used and detail its exact functional application.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                                <strong>9.1.4 "AI Washing" Prohibition:</strong> Pursuant to NPC Advisory No. 2024-04, deceptive overstatement of AI capabilities or involvement is strictly banned.
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                                <strong>9.1.5 Disciplinary Action:</strong> Failure to disclose required AI assistance constitutes academic misconduct subject to Student Handbook sanctions.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clause 10 -->
+                    <div id="pol-10" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">10</span>
+                            AI Misconduct, Investigation, and Appeals
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-bold text-slate-800 text-sm mb-2">10.1 Defined AI Misconduct Violations:</h4>
+                            <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+                                <li>Submitting GenAI work without mandatory declaration.</li>
+                                <li>Fabricating or falsifying research data/citations via AI.</li>
+                                <li>Committing AI-generated plagiarism without attribution.</li>
+                                <li>Submitting AI-generated content in whole or substantial part as original work.</li>
+                                <li>Bypassing core competency evaluations using automated tools.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Technical Warning on AI Detectors -->
+                        <div class="p-4 rounded-xl bg-slate-100 border border-slate-300 text-xs text-slate-700 space-y-2">
+                            <p class="font-bold text-fcu-navy uppercase tracking-wider">10.3 Safeguards Against False Positives in Investigations</p>
+                            <p>
+                                <strong>Important:</strong> AI detection tools are known to produce false positives and <strong>shall NOT constitute sole proof</strong> of misconduct. All allegations must be corroborated by supporting evidence such as document version histories, oral defenses, writing style shifts, or draft progression checks under due process.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Clause 11, 12, 13, 14 -->
+                    <div id="pol-11" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-fcu-navy mb-4 flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-fcu-navy text-fcu-gold flex items-center justify-center text-sm font-bold font-sans">11</span>
+                            Governance Framework & Institutional Roles
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                            <div class="p-3 bg-fcu-slate rounded-lg border border-slate-200">
+                                <span class="font-bold text-fcu-navy block mb-1">Academic Affairs</span>
+                                Oversight in teaching, curriculum compliance, and academic integrity support.
+                            </div>
+                            <div class="p-3 bg-fcu-slate rounded-lg border border-slate-200">
+                                <span class="font-bold text-fcu-navy block mb-1">Quality Assurance</span>
+                                Audits, ISO 21001 monitoring, process evaluation, and continuous improvement.
+                            </div>
+                            <div class="p-3 bg-fcu-slate rounded-lg border border-slate-200">
+                                <span class="font-bold text-fcu-navy block mb-1">ICTSO & DPO</span>
+                                Security infrastructure, software procurement audits, and Data Privacy compliance.
+                            </div>
+                            <div class="p-3 bg-fcu-slate rounded-lg border border-slate-200">
+                                <span class="font-bold text-fcu-navy block mb-1">Student Affairs & HR</span>
+                                Student awareness, misconduct hearings, and professional faculty/staff training.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pol-12" class="bg-white rounded-xl p-6 sm:p-8 shadow-sm border border-slate-200/80 section-card scroll-mt-28">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1">
+                                <h3 class="font-serif text-lg font-bold text-fcu-navy mb-2">12. Capacity Building</h3>
+                                <p class="text-xs text-slate-600">Institutional commitment to fostering AI literacy, ethical awareness, and ongoing professional development across all academic units.</p>
+                            </div>
+                            <div class="md:col-span-1">
+                                <h3 class="font-serif text-lg font-bold text-fcu-navy mb-2">13. Policy Review</h3>
+                                <p class="text-xs text-slate-600">Periodic review by the Digital Advancement Committee to maintain alignment with technological and statutory changes.</p>
+                            </div>
+                            <div class="md:col-span-1">
+                                <h3 class="font-serif text-lg font-bold text-fcu-navy mb-2">14. Supporting Framework</h3>
+                                <p class="text-xs text-slate-600">Includes the AI Declaration Form, Citation Guidelines, and the Integration Guide in Teaching & Learning.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 2: GUIDE ON AI INTEGRATION IN TEACHING & LEARNING -->
+        <!-- ========================================================================= -->
+        <section id="sec-guide" class="scroll-mt-24 mb-20 fade-in-section">
+            
+            <!-- Section Header Banner -->
+            <div class="bg-fcu-emerald text-white rounded-2xl p-6 sm:p-8 shadow-xl border-l-8 border-emerald-400 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest mb-1">
+                        <span>Institutional Document II</span>
+                        <span>•</span>
+                        <span>Faculty & Student Pedagogical Guide</span>
+                    </div>
+                    <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+                        Guide on AI Integration in Teaching and Learning
+                    </h2>
+                    <p class="text-emerald-100 text-sm mt-1">Filamer Christian University · Practical Classroom Framework</p>
+                </div>
+                <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl border border-white/20 text-xs text-emerald-50">
+                    <svg class="w-5 h-5 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    <span>Pedagogical Support Hub</span>
+                </div>
+            </div>
+
+            <!-- Content Area for Guide -->
+            <div class="space-y-8">
+
+                <!-- Guiding Principles & Decision Framework Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 section-card">
+                        <h3 class="font-serif font-bold text-lg text-fcu-navy mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-fcu-emerald"></span>
+                            Core Guiding Principles
+                        </h3>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <span class="text-fcu-emerald font-bold">•</span>
+                                <span>AI supports, but does not replace, active teaching and learning.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-fcu-emerald font-bold">•</span>
+                                <span>Targeted learning outcomes remain the primary basis for all assessment.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-fcu-emerald font-bold">•</span>
+                                <span>Students must continually demonstrate individual critical understanding.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-fcu-emerald font-bold">•</span>
+                                <span>AI usage must be transparent, cited, and disclosed appropriately.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 section-card">
+                        <h3 class="font-serif font-bold text-lg text-fcu-navy mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-fcu-emerald"></span>
+                            Determining Appropriate AI Use
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-2">Faculty decision questions before assigning coursework:</p>
+                        <div class="space-y-2 text-xs text-slate-700 font-medium">
+                            <div class="p-2.5 rounded bg-fcu-emeraldLight border border-fcu-emerald/20">
+                                1. What specific knowledge or skill is being assessed?
+                            </div>
+                            <div class="p-2.5 rounded bg-fcu-emeraldLight border border-fcu-emerald/20">
+                                2. Will AI assist learning, or will it complete the learning task for them?
+                            </div>
+                            <div class="p-2.5 rounded bg-fcu-emeraldLight border border-fcu-emerald/20">
+                                3. Can students still independently demonstrate authentic mastery?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Use Categories Table -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 section-card">
+                    <h3 class="font-serif font-bold text-xl text-fcu-navy mb-4">
+                        Standardized AI Use Categories
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-fcu-navy text-white">
+                                    <th class="p-3.5 rounded-tl-lg font-semibold w-1/4">Category</th>
+                                    <th class="p-3.5 font-semibold w-2/4">Description</th>
+                                    <th class="p-3.5 rounded-tr-lg font-semibold w-1/4">Permitted Examples</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3.5">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                            ✔ Allowed
+                                        </span>
+                                    </td>
+                                    <td class="p-3.5 text-slate-700">AI may be used without restriction for the specified administrative or preliminary support task.</td>
+                                    <td class="p-3.5 text-slate-600">Brainstorming, grammar checking, readability editing, outlining ideas.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3.5">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                                            ⚠️ Allowed with Disclosure
+                                        </span>
+                                    </td>
+                                    <td class="p-3.5 text-slate-700">AI may be utilized, but students are required to submit formal acknowledgement detailing its application.</td>
+                                    <td class="p-3.5 text-slate-600">Literature summaries, code generation, diagram drafting, section pre-drafting.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3.5">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+                                            ✖ Not Allowed
+                                        </span>
+                                    </td>
+                                    <td class="p-3.5 text-slate-700">AI use is strictly prohibited because it directly undermines essential intended learning outcomes.</td>
+                                    <td class="p-3.5 text-slate-600">Exams, reflective journals, personal narratives, practical skill demonstrations.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sample Syllabus Statements (Interactive Copy Component) -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 section-card">
+                    <h3 class="font-serif font-bold text-xl text-fcu-navy mb-2">
+                        Sample Syllabus Statements for Faculty
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-6">Instructors may copy and adapt these standardized clauses directly into course syllabi:</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Statement 1 -->
+                        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block mb-2">1. AI Allowed Statement</span>
+                                <p id="stmt-1" class="text-xs text-slate-700 font-mono bg-white p-3 rounded border border-slate-200 leading-relaxed mb-3">
+                                    "Students may use AI tools for brainstorming, language improvement, and organizing ideas. Students remain responsible for the accuracy, originality, and integrity of all submitted work."
+                                </p>
+                            </div>
+                            <button onclick="copyToClipboard('stmt-1', 'btn-copy-1')" id="btn-copy-1" class="w-full py-1.5 px-3 bg-fcu-navy text-white text-xs font-semibold rounded hover:bg-fcu-blue transition-colors flex items-center justify-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 012-2v-8a2 2 0 01-2-2h-8a2 2 0 01-2 2v8a2 2 0 012 2z"/></svg>
+                                Copy Statement
+                            </button>
+                        </div>
+
+                        <!-- Statement 2 -->
+                        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block mb-2">2. Disclosure Statement</span>
+                                <p id="stmt-2" class="text-xs text-slate-700 font-mono bg-white p-3 rounded border border-slate-200 leading-relaxed mb-3">
+                                    "Students may use AI as a learning aid for this assessment. Any significant AI assistance must be acknowledged in accordance with the University's Guidelines on AI Acknowledgment and Citation."
+                                </p>
+                            </div>
+                            <button onclick="copyToClipboard('stmt-2', 'btn-copy-2')" id="btn-copy-2" class="w-full py-1.5 px-3 bg-fcu-navy text-white text-xs font-semibold rounded hover:bg-fcu-blue transition-colors flex items-center justify-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 012-2v-8a2 2 0 01-2-2h-8a2 2 0 01-2 2v8a2 2 0 012 2z"/></svg>
+                                Copy Statement
+                            </button>
+                        </div>
+
+                        <!-- Statement 3 -->
+                        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-rose-700 uppercase tracking-wider block mb-2">3. Prohibited Statement</span>
+                                <p id="stmt-3" class="text-xs text-slate-700 font-mono bg-white p-3 rounded border border-slate-200 leading-relaxed mb-3">
+                                    "The use of AI is not permitted for this assessment because it would interfere with the intended learning outcomes. Submitted work must represent the student's own knowledge and understanding."
+                                </p>
+                            </div>
+                            <button onclick="copyToClipboard('stmt-3', 'btn-copy-3')" id="btn-copy-3" class="w-full py-1.5 px-3 bg-fcu-navy text-white text-xs font-semibold rounded hover:bg-fcu-blue transition-colors flex items-center justify-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 012-2v-8a2 2 0 01-2-2h-8a2 2 0 01-2 2v8a2 2 0 012 2z"/></svg>
+                                Copy Statement
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Do's and Don'ts / Good Practices vs Avoid Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-emerald-50/60 rounded-xl p-6 border border-emerald-200 section-card">
+                        <h3 class="font-serif font-bold text-emerald-900 text-lg mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            Good Practices to Adopt
+                        </h3>
+                        <ul class="space-y-2 text-xs sm:text-sm text-emerald-900">
+                            <li>✔ Verify all AI-generated assertions and facts using peer-reviewed sources.</li>
+                            <li>✔ Critically evaluate logic, tone, and potential hallucination before using content.</li>
+                            <li>✔ Protect privacy by removing all personal and confidential university data.</li>
+                            <li>✔ Treat AI strictly as an aid to enhance, rather than replace, personal cognition.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-rose-50/60 rounded-xl p-6 border border-rose-200 section-card">
+                        <h3 class="font-serif font-bold text-rose-900 text-lg mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                            Practices to Avoid
+                        </h3>
+                        <ul class="space-y-2 text-xs sm:text-sm text-rose-900">
+                            <li>✖ Submitting unedited AI-generated text as original intellectual work.</li>
+                            <li>✖ Utilizing AI to generate fake empirical data, citations, or references.</li>
+                            <li>✖ Using AI during prohibited assessments such as closed-book exams.</li>
+                            <li>✖ Uploading copyrighted exam questions or courseware into third-party AI platforms.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Appendix A Quick Reference Matrix -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 section-card">
+                    <h3 class="font-serif font-bold text-lg text-fcu-navy mb-1">
+                        Appendix A: Quick Reference Assessment Decision Matrix
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">Fast guide for selecting appropriate AI allowances based on task type:</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                        <div class="p-3 rounded bg-emerald-50 border border-emerald-200 flex justify-between items-center">
+                            <span class="font-medium text-emerald-950">Brainstorming ideas</span>
+                            <span class="font-bold text-emerald-700">✔ Allowed</span>
+                        </div>
+                        <div class="p-3 rounded bg-emerald-50 border border-emerald-200 flex justify-between items-center">
+                            <span class="font-medium text-emerald-950">Grammar & style edit</span>
+                            <span class="font-bold text-emerald-700">✔ Allowed</span>
+                        </div>
+                        <div class="p-3 rounded bg-emerald-50 border border-emerald-200 flex justify-between items-center">
+                            <span class="font-medium text-emerald-950">Outlining content</span>
+                            <span class="font-bold text-emerald-700">✔ Allowed</span>
+                        </div>
+                        <div class="p-3 rounded bg-amber-50 border border-amber-200 flex justify-between items-center">
+                            <span class="font-medium text-amber-950">Code generation</span>
+                            <span class="font-bold text-amber-700">⚠️ Disclose</span>
+                        </div>
+                        <div class="p-3 rounded bg-amber-50 border border-amber-200 flex justify-between items-center">
+                            <span class="font-medium text-amber-950">Summarizing literature</span>
+                            <span class="font-bold text-amber-700">⚠️ Disclose</span>
+                        </div>
+                        <div class="p-3 rounded bg-amber-50 border border-amber-200 flex justify-between items-center">
+                            <span class="font-medium text-amber-950">Diagram creation</span>
+                            <span class="font-bold text-amber-700">⚠️ Disclose</span>
+                        </div>
+                        <div class="p-3 rounded bg-rose-50 border border-rose-200 flex justify-between items-center">
+                            <span class="font-medium text-rose-950">Reflective journals</span>
+                            <span class="font-bold text-rose-700">✖ Prohibited</span>
+                        </div>
+                        <div class="p-3 rounded bg-rose-50 border border-rose-200 flex justify-between items-center">
+                            <span class="font-medium text-rose-950">Quizzes & Exams</span>
+                            <span class="font-bold text-rose-700">✖ Prohibited</span>
+                        </div>
+                        <div class="p-3 rounded bg-rose-50 border border-rose-200 flex justify-between items-center">
+                            <span class="font-medium text-rose-950">Practical skill demos</span>
+                            <span class="font-bold text-rose-700">✖ Prohibited</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 3: INTERACTIVE AI USE DECLARATION FORM -->
+        <!-- ========================================================================= -->
+        <section id="sec-form" class="scroll-mt-24 mb-16 fade-in-section">
+            
+            <!-- Section Header Banner -->
+            <div class="bg-fcu-burgundy text-white rounded-2xl p-6 sm:p-8 shadow-xl border-l-8 border-fcu-gold flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 text-fcu-gold text-xs font-bold uppercase tracking-widest mb-1">
+                        <span>Institutional Document III</span>
+                        <span>•</span>
+                        <span>Mandatory Submission Attachment</span>
+                    </div>
+                    <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+                        Artificial Intelligence (AI) Use Declaration Form
+                    </h2>
+                    <p class="text-rose-100 text-sm mt-1">Filamer Christian University · Required for Major Assessments (≥20% Grade Weight)</p>
+                </div>
+                <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl border border-white/20 text-xs text-rose-100">
+                    <svg class="w-5 h-5 text-fcu-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Official Form Submission</span>
+                </div>
+            </div>
+
+            <!-- Form Wrapper Card -->
+            <div class="bg-white rounded-2xl p-6 sm:p-10 shadow-xl border border-slate-300 section-card">
+                
+                <!-- Instructions Callout Box -->
+                <div class="p-4 rounded-xl bg-slate-100 border-l-4 border-fcu-navy mb-8 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                    <strong>Instructions:</strong> In accordance with the FCU Policy on Artificial Intelligence (AI) Use, this form must be completed and attached to all major academic assessments if an AI tool was utilized in the preparation, drafting, or editing of the submission. Failure to disclose AI use or using AI to replicate core cognitive skills constitutes academic misconduct.
+                </div>
+
+                <!-- HTML Form Element -->
+                <form id="ai-declaration-form" onsubmit="handleFormSubmit(event)" class="space-y-8">
+                    
+                    <!-- PART I: STUDENT & ASSESSMENT INFORMATION -->
+                    <div>
+                        <h3 class="font-serif font-bold text-lg text-fcu-navy mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-fcu-navy text-fcu-gold flex items-center justify-center text-xs font-sans">I</span>
+                            Student and Assessment Information
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="student-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Student Full Name *</label>
+                                <input type="text" id="student-name" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold focus:border-fcu-navy text-sm form-input-print" placeholder="e.g. Maria Santos">
+                            </div>
+                            <div>
+                                <label for="student-id" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Student ID Number *</label>
+                                <input type="text" id="student-id" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold focus:border-fcu-navy text-sm form-input-print" placeholder="e.g. 2024-89012">
+                            </div>
+                            <div>
+                                <label for="course-code" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Course Code & Title *</label>
+                                <input type="text" id="course-code" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold focus:border-fcu-navy text-sm form-input-print" placeholder="e.g. CS 301 - Ethics in Computing">
+                            </div>
+                            <div>
+                                <label for="instructor-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Instructor Name *</label>
+                                <input type="text" id="instructor-name" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold focus:border-fcu-navy text-sm form-input-print" placeholder="e.g. Dr. Alejandro Cruz">
+                            </div>
+                            <div>
+                                <label for="assessment-title" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Title of Assessment *</label>
+                                <input type="text" id="assessment-title" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold focus:border-fcu-navy text-sm form-input-print" placeholder="e.g. Term Research Proposal">
+                            </div>
+                            <div>
+                                <label for="submission-date" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Date of Submission *</label>
+                                <input type="date" id="submission-date" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold focus:border-fcu-navy text-sm form-input-print">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PART II: AI TOOLS UTILIZED -->
+                    <div>
+                        <h3 class="font-serif font-bold text-lg text-fcu-navy mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-fcu-navy text-fcu-gold flex items-center justify-center text-xs font-sans">II</span>
+                            AI Tools Utilized
+                        </h3>
+                        
+                        <!-- No AI Checkbox Toggle -->
+                        <div class="mb-4 bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                            <label class="inline-flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" id="no-ai-checkbox" onchange="toggleAiToolsSection(this.checked)" class="w-4 h-4 text-fcu-navy focus:ring-fcu-gold rounded">
+                                <span class="text-sm font-semibold text-slate-800">
+                                    No AI tools were used in the completion of this assessment.
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Dynamic Tools Table -->
+                        <div id="ai-tools-container" class="space-y-3">
+                            <p class="text-xs text-slate-500">Please list all Artificial Intelligence tools (e.g., ChatGPT, Gemini, Claude, Grammarly) used in the development of this assessment:</p>
+                            
+                            <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-fcu-slate text-fcu-navy">
+                                        <th class="p-3 border border-slate-200 w-12 text-center">#</th>
+                                        <th class="p-3 border border-slate-200">AI Tool Name</th>
+                                        <th class="p-3 border border-slate-200">Version / Model (if known)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tools-table-body">
+                                    <tr>
+                                        <td class="p-2 border border-slate-200 text-center font-bold">1</td>
+                                        <td class="p-2 border border-slate-200">
+                                            <input type="text" class="tool-name-input w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="e.g. ChatGPT (OpenAI)">
+                                        </td>
+                                        <td class="p-2 border border-slate-200">
+                                            <input type="text" class="tool-version-input w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="e.g. GPT-4o">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border border-slate-200 text-center font-bold">2</td>
+                                        <td class="p-2 border border-slate-200">
+                                            <input type="text" class="tool-name-input w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="e.g. Grammarly">
+                                        </td>
+                                        <td class="p-2 border border-slate-200">
+                                            <input type="text" class="tool-version-input w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="e.g. Desktop v1.2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border border-slate-200 text-center font-bold">3</td>
+                                        <td class="p-2 border border-slate-200">
+                                            <input type="text" class="tool-name-input w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="e.g. Claude">
+                                        </td>
+                                        <td class="p-2 border border-slate-200">
+                                            <input type="text" class="tool-version-input w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="e.g. Sonnet 3.5">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PART III: NATURE OF AI ASSISTANCE -->
+                    <div id="ai-nature-container">
+                        <h3 class="font-serif font-bold text-lg text-fcu-navy mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-fcu-navy text-fcu-gold flex items-center justify-center text-xs font-sans">III</span>
+                            Nature of AI Assistance
+                        </h3>
+                        
+                        <p class="text-xs text-slate-600 mb-3">Check all that apply. <em>Note: AI may only be used for structural and stylistic enhancements, not core content generation.</em></p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                            <label class="flex items-start gap-2.5 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                <input type="checkbox" class="nature-checkbox mt-0.5 w-4 h-4 text-fcu-navy rounded">
+                                <div class="text-xs">
+                                    <span class="font-bold text-slate-800 block">Brainstorming</span>
+                                    <span class="text-slate-500">Generating initial ideas or topics.</span>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-2.5 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                <input type="checkbox" class="nature-checkbox mt-0.5 w-4 h-4 text-fcu-navy rounded">
+                                <div class="text-xs">
+                                    <span class="font-bold text-slate-800 block">Outlining</span>
+                                    <span class="text-slate-500">Structuring the flow of document or presentation.</span>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-2.5 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                <input type="checkbox" class="nature-checkbox mt-0.5 w-4 h-4 text-fcu-navy rounded">
+                                <div class="text-xs">
+                                    <span class="font-bold text-slate-800 block">Information Retrieval</span>
+                                    <span class="text-slate-500">Summarizing background readings (subsequently verified).</span>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-2.5 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                <input type="checkbox" class="nature-checkbox mt-0.5 w-4 h-4 text-fcu-navy rounded">
+                                <div class="text-xs">
+                                    <span class="font-bold text-slate-800 block">Language Polishing</span>
+                                    <span class="text-slate-500">Enhancing readability, grammar, syntax, or formatting.</span>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-2.5 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                                <input type="checkbox" class="nature-checkbox mt-0.5 w-4 h-4 text-fcu-navy rounded">
+                                <div class="text-xs">
+                                    <span class="font-bold text-slate-800 block">Data Visualization</span>
+                                    <span class="text-slate-500">Assisting in formatting charts or graphs based on original data.</span>
+                                </div>
+                            </label>
+                            <div class="p-3 rounded-lg border border-slate-200 bg-slate-50">
+                                <label for="other-specify" class="text-xs font-bold text-slate-800 block mb-1">Other (Specify):</label>
+                                <input type="text" id="other-specify" class="w-full px-2.5 py-1.5 rounded border border-slate-300 text-xs" placeholder="Describe alternative usage...">
+                            </div>
+                        </div>
+
+                        <!-- Prompts Description Textarea -->
+                        <div>
+                            <label for="prompts-description" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                                Description of Prompts or Inputs Provided to the AI Tool(s) *
+                            </label>
+                            <textarea id="prompts-description" rows="3" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold text-xs leading-relaxed" placeholder="e.g., 'I asked the AI to review my draft for grammatical errors and suggest a more formal tone.' or 'I used AI to help construct a bulleted outline of chapter 4.'"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- PART IV: STUDENT ATTESTATION -->
+                    <div>
+                        <h3 class="font-serif font-bold text-lg text-fcu-navy mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-fcu-navy text-fcu-gold flex items-center justify-center text-xs font-sans">IV</span>
+                            Student Attestation
+                        </h3>
+
+                        <div class="p-4 rounded-xl bg-fcu-goldLight/70 border border-fcu-gold/50 mb-4 text-xs text-slate-800 leading-relaxed font-bodySerif italic">
+                            "By submitting this form, I certify that the information provided is accurate and complete. I affirm that the core intellectual content, critical analysis, and final output of this assessment are entirely my own original work. I understand that unauthorized AI use, deceptive 'AI Washing,' or failure to disclose AI assistance is a violation of the FCU Policy on AI Use and subject to disciplinary action under the Student Handbook."
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                            <div>
+                                <label for="digital-signature" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Digital Student Signature (Type Name) *</label>
+                                <input type="text" id="digital-signature" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-fcu-gold text-sm font-serif italic font-bold" placeholder="Signature Full Name">
+                            </div>
+                            <div>
+                                <label for="attestation-date" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Attestation Date *</label>
+                                <input type="date" id="attestation-date" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PART V: FOR INSTRUCTOR USE ONLY -->
+                    <div class="pt-6 border-t-2 border-dashed border-slate-300 bg-slate-50/80 p-6 rounded-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-500">FOR INSTRUCTOR USE ONLY</h4>
+                            <span class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono">Faculty Evaluation Block</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+                                <input type="radio" name="instructor-review" class="w-4 h-4 text-fcu-navy">
+                                <span>Disclosure Reviewed</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+                                <input type="radio" name="instructor-review" class="w-4 h-4 text-emerald-600">
+                                <span>Acceptable AI Use</span>
+                            </label>
+                            <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+                                <input type="radio" name="instructor-review" class="w-4 h-4 text-rose-600">
+                                <span>Requires Further Investigation</span>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-200">
+                            <div>
+                                <span class="block text-xs text-slate-400">Instructor Signature Line:</span>
+                                <div class="h-8 border-b border-slate-400 border-dashed"></div>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-400">Review Date:</span>
+                                <div class="h-8 border-b border-slate-400 border-dashed"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4 no-print">
+                        <button type="submit" class="flex-1 py-3.5 px-6 rounded-xl bg-fcu-navy text-fcu-gold font-bold text-sm shadow-lg hover:bg-fcu-darkNavy transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Submit & Validate Declaration
+                        </button>
+                        <button type="button" onclick="window.print()" class="py-3.5 px-6 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-sm transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                            Print Form
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Institutional Footer -->
+    <footer class="bg-fcu-darkNavy text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t-4 border-fcu-gold no-print">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-xs">
+            <div>
+                <h4 class="font-serif text-white font-bold text-sm mb-2">Filamer Christian University</h4>
+                <p class="leading-relaxed">Roxas City, Capiz, Philippines</p>
+                <p class="mt-2 text-slate-400">Center for Academic Integrity & Digital Advancement</p>
+            </div>
+            <div>
+                <h4 class="font-serif text-white font-bold text-sm mb-2">Governance Framework</h4>
+                <p>Aligned with ISO 21001 Educational Organization Management</p>
+                <p class="mt-1">Philippine Data Privacy Act (RA 10173)</p>
+                <p class="mt-1">CHED & National Privacy Commission Guidelines</p>
+            </div>
+            <div>
+                <h4 class="font-serif text-white font-bold text-sm mb-2">Inquiries & Policy Feedback</h4>
+                <p>Digital Advancement Committee / Quality Assurance Office</p>
+                <p class="mt-1 font-mono text-fcu-gold">Email: ai-governance@filamer.edu.ph</p>
+                <p class="mt-1">Effective Date: Academic Year 2024-2025 (v1.0)</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-6 border-t border-slate-800 text-center text-xs text-slate-400">
+            &copy; 2026 Filamer Christian University. All rights reserved. Upholding transformative leadership, academic excellence, and Christian ethics.
+        </div>
+    </footer>
+
+    <!-- Floating Back to Top Button -->
+    <button id="back-to-top" onclick="scrollToTop()" aria-label="Back to top" class="fixed bottom-6 right-6 p-3 rounded-full bg-fcu-navy text-fcu-gold shadow-2xl border border-fcu-gold/40 hover:bg-fcu-gold hover:text-fcu-navy transition-all opacity-0 pointer-events-none z-50 no-print">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+    </button>
+
+    <!-- Submission Modal Simulation -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-fcu-gold transform scale-95 transition-transform duration-300" id="modal-box">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="font-serif font-bold text-2xl text-center text-fcu-navy mb-2">Declaration Recorded</h3>
+            <p class="text-xs text-slate-600 text-center mb-6 leading-relaxed">
+                Your AI Use Declaration Form has been validated and formatted. A timestamped record has been generated for course attachment.
+            </p>
+            
+            <div id="modal-summary" class="bg-slate-50 p-4 rounded-xl text-xs space-y-2 mb-6 border border-slate-200">
+                <!-- Summary content dynamically populated by JS -->
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="flex-1 py-2.5 rounded-xl bg-fcu-navy text-white text-xs font-bold hover:bg-fcu-darkNavy">
+                    Close Window
+                </button>
+                <button onclick="closeModal(); window.print();" class="py-2.5 px-4 rounded-xl bg-fcu-gold/20 text-fcu-brass border border-fcu-gold/50 text-xs font-bold hover:bg-fcu-gold hover:text-white">
+                    Print Form PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Set current date on submission inputs
+            const today = new Date().toISOString().split('T')[0];
+            const dateInputs = ['submission-date', 'attestation-date'];
+            dateInputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = today;
+            });
+
+            // Initialize Intersection Observer for Scroll Animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-section').forEach(sec => observer.observe(sec));
+
+            // Scrollspy and Navigation Highlight Setup
+            window.addEventListener('scroll', onScrollHandler);
+
+            // Mobile menu drawer toggle logic
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const drawer = document.getElementById('mobile-drawer');
+            const hamburger = document.getElementById('hamburger-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            mobileBtn.addEventListener('click', () => {
+                const isHidden = drawer.classList.contains('hidden');
+                if (isHidden) {
+                    drawer.classList.remove('hidden');
+                    hamburger.classList.add('hidden');
+                    closeIcon.classList.remove('hidden');
+                } else {
+                    drawer.classList.add('hidden');
+                    hamburger.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                }
+            });
+
+            // Close mobile menu on link click
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    drawer.classList.add('hidden');
+                    hamburger.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                });
+            });
+        });
+
+        function onScrollHandler() {
+            // Scroll Progress Bar calculation
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+
+            // Back to Top button visibility
+            const backBtn = document.getElementById('back-to-top');
+            if (winScroll > 400) {
+                backBtn.classList.remove('opacity-0', 'pointer-events-none');
+                backBtn.classList.add('opacity-100');
+            } else {
+                backBtn.classList.add('opacity-0', 'pointer-events-none');
+                backBtn.classList.remove('opacity-100');
+            }
+
+            // Scrollspy Active link update
+            const sections = ['sec-policy', 'sec-guide', 'sec-form'];
+            const navMap = {
+                'sec-policy': 'nav-policy',
+                'sec-guide': 'nav-guide',
+                'sec-form': 'nav-form'
+            };
+
+            let current = '';
+            sections.forEach(id => {
+                const sec = document.getElementById(id);
+                if (sec) {
+                    const top = sec.offsetTop - 120;
+                    if (winScroll >= top) {
+                        current = id;
+                    }
+                }
+            });
+
+            Object.values(navMap).forEach(navId => {
+                const navEl = document.getElementById(navId);
+                if (navEl) navEl.classList.remove('text-fcu-gold', 'bg-white/10');
+            });
+
+            if (current && navMap[current]) {
+                const activeNav = document.getElementById(navMap[current]);
+                if (activeNav) activeNav.classList.add('text-fcu-gold', 'bg-white/10');
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function copyToClipboard(elementId, buttonId) {
+            const text = document.getElementById(elementId).innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById(buttonId);
+                const origText = btn.innerHTML;
+                btn.innerHTML = `✔ Copied!`;
+                btn.classList.replace('bg-fcu-navy', 'bg-emerald-700');
+                setTimeout(() => {
+                    btn.innerHTML = origText;
+                    btn.classList.replace('bg-emerald-700', 'bg-fcu-navy');
+                }, 2000);
+            } catch (err) {
+                console.error('Copy failed', err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function toggleAiToolsSection(isNoAi) {
+            const toolsContainer = document.getElementById('ai-tools-container');
+            const natureContainer = document.getElementById('ai-nature-container');
+            
+            if (isNoAi) {
+                toolsContainer.style.opacity = '0.4';
+                toolsContainer.style.pointerEvents = 'none';
+                natureContainer.style.opacity = '0.4';
+                natureContainer.style.pointerEvents = 'none';
+            } else {
+                toolsContainer.style.opacity = '1';
+                toolsContainer.style.pointerEvents = 'auto';
+                natureContainer.style.opacity = '1';
+                natureContainer.style.pointerEvents = 'auto';
+            }
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('student-name').value;
+            const idNum = document.getElementById('student-id').value;
+            const course = document.getElementById('course-code').value;
+            const title = document.getElementById('assessment-title').value;
+            const noAi = document.getElementById('no-ai-checkbox').checked;
+
+            const summaryHtml = `
+                <div class="flex justify-between border-b pb-1">
+                    <span class="text-slate-500">Student:</span>
+                    <span class="font-bold text-slate-800">${name} (${idNum})</span>
+                </div>
+                <div class="flex justify-between border-b pb-1">
+                    <span class="text-slate-500">Course & Assessment:</span>
+                    <span class="font-bold text-slate-800">${course} - ${title}</span>
+                </div>
+                <div class="flex justify-between border-b pb-1">
+                    <span class="text-slate-500">AI Usage Declaration:</span>
+                    <span class="font-bold ${noAi ? 'text-emerald-700' : 'text-fcu-brass'}">
+                        ${noAi ? 'No AI Used' : 'AI Assistance Disclosed'}
+                    </span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Verification Hash:</span>
+                    <span class="font-mono text-[10px] text-slate-400">FCU-AI-${Math.floor(100000 + Math.random() * 900000)}</span>
+                </div>
+            `;
+
+            document.getElementById('modal-summary').innerHTML = summaryHtml;
+
+            const backdrop = document.getElementById('modal-backdrop');
+            const box = document.getElementById('modal-box');
+
+            backdrop.classList.remove('opacity-0', 'pointer-events-none');
+            box.classList.remove('scale-95');
+            box.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const box = document.getElementById('modal-box');
+
+            backdrop.classList.add('opacity-0', 'pointer-events-none');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+        }
+    </script>
+</body>
+</html>
