@@ -1,208 +1,1012 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FCU CCS Faculty @ AIFest 2026</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --glass-bg: rgba(20, 20, 25, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --accent-color: #3b82f6;
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.7);
+            --transition-speed: 0.3s;
+        }
 
-<title>Research Questionnaire</title>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+        }
 
-<style>
+        #slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            overflow: hidden;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        .slide-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 700ms ease-in-out;
+            will-change: opacity;
+            pointer-events: none;
+        }
 
-body{
-    font-family:'Poppins',sans-serif;
-    background:#0f172a;
-    color:#f8fafc;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  overflow:auto;
-}
+        .slide-layer.active {
+            opacity: 1;
+            z-index: 1;
+        }
 
-body::before{
-    content:'';
-    position:fixed;
-    inset:0;
-    background:
-        radial-gradient(circle at top left,#2563eb33,transparent 40%),
-        radial-gradient(circle at bottom right,#06b6d433,transparent 35%);
-    z-index:-1;
-}
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            z-index: 100;
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
 
-.card{
+        #header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center;
+            color: var(--text-main);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 0 20px;
+        }
 
-    width:min(900px,92%);
-    background:#111827;
-    border:1px solid #334155;
-    border-radius:24px;
-    padding:55px;
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.45);
+        #header.hidden-header {
+            opacity: 0;
+            transform: translateY(-100%);
+            pointer-events: none;
+        }
 
-}
+        .ui-control {
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            opacity: 0.2;
+            z-index: 90;
+        }
 
-.badge{
+        .ui-control.active,
+        .ui-control:hover {
+            opacity: 0.85;
+        }
 
-    display:inline-block;
-    background:#2563eb22;
-    color:#60a5fa;
-    padding:8px 18px;
-    border-radius:999px;
-    font-size:14px;
-    margin-bottom:20px;
-    font-weight:600;
+        .ui-control.dimmed {
+            opacity: 0.2;
+        }
 
-}
+        .ui-control.hidden-ui {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
 
-h1{
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--glass-shadow);
+            transition: background 0.2s ease, transform 0.2s ease, opacity 0.4s ease;
+        }
 
-    font-size:32px;
-    line-height:1.25;
-    margin-bottom:20px;
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-50%) scale(1.08);
+        }
 
-}
+        .nav-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
 
-.highlight{
+        #prev-btn { left: 24px; }
+        #next-btn { right: 24px; }
 
-    color:#38bdf8;
+        .nav-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
-}
+        .top-actions {
+            position: fixed;
+            top: 12px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 101;
+        }
 
-p{
+        .glass-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--glass-shadow);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
 
-    font-size:18px;
-    line-height:1.8;
-    color:#cbd5e1;
-    margin-bottom:18px;
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
 
-}
+        .glass-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
-.info{
+        #counter-badge {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 18px;
+            border-radius: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    margin-top:35px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:18px;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #22c55e;
+            display: inline-block;
+        }
 
-}
+        .status-dot.paused {
+            background-color: #f59e0b;
+        }
 
-.box{
+        #toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 150;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
 
-    background:#1e293b;
-    padding:20px;
-    border-radius:15px;
-    border:1px solid #334155;
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
 
-}
+        #overlay-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(5, 5, 8, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            transition: opacity 0.6s ease;
+            text-align: center;
+            padding: 20px;
+        }
 
-.box h3{
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
 
-    color:#38bdf8;
-    margin-bottom:10px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-}
+        .loading-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
 
-.box p{
+        .loading-sub {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            max-width: 420px;
+            line-height: 1.5;
+        }
 
-    margin:0;
-    font-size:15px;
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            stroke: #ef4444;
+            opacity: 0.8;
+        }
 
-}
+        #help-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
 
-.button{
+        #help-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-    display:inline-block;
-    margin-top:40px;
-    background:linear-gradient(135deg,#2563eb,#0ea5e9);
-    color:white;
-    text-decoration:none;
-    padding:22px 60px;
-    border-radius:18px;
-    font-size:24px;
-    font-weight:bold;
-    transition:.3s;
-    box-shadow:0 15px 40px rgba(37,99,235,.35);
+        .modal-content {
+            background: rgba(25, 25, 30, 0.95);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--glass-shadow);
+        }
 
-}
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 12px;
+        }
 
-.button:hover{
+        .modal-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
-    transform:translateY(-4px) scale(1.03);
-    box-shadow:0 25px 50px rgba(37,99,235,.5);
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
 
-}
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px 18px;
+            align-items: center;
+            font-size: 0.9rem;
+        }
 
-.footer{
+        kbd {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #60a5fa;
+            text-align: center;
+            min-width: 28px;
+            display: inline-block;
+        }
 
-    margin-top:40px;
-    font-size:13px;
-    color:#94a3b8;
-    text-align:center;
-
-}
-
-.style1 {color: #00CCFF}
-</style>
-
+        /* Responsive tweaks */
+        @media (max-width: 640px) {
+            #header h1 { font-size: 1.05rem; }
+            .nav-btn { width: 44px; height: 44px; }
+            #prev-btn { left: 12px; }
+            #next-btn { right: 12px; }
+            .top-actions { right: 10px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="card">
+    <header id="header">
+        <h1>FCU CCS Faculty @ AIFest 2026</h1>
+    </header>
 
-<div class="badge">
-Research Study</div>
+    <div class="top-actions">
+        <button id="help-btn" class="glass-btn ui-control" title="Keyboard Shortcuts (?)">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <button id="fullscreen-btn" class="glass-btn ui-control" title="Toggle Fullscreen (F)">
+            <svg id="fs-expand" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            <svg id="fs-compress" viewBox="0 0 24 24" style="display:none;"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+        </button>
+    </div>
 
-<h1>
-<span class="style1">Artificial Intelligence Competency</span> and
-<span class="highlight">Faculty Capacity for Digital Change Adaptation</span>
-Among College Faculty Members of
-Filamer Christian University, Inc.</h1>
+    <main id="slideshow-container">
+        <img id="slide-a" class="slide-layer" alt="Slideshow Image Layer A">
+        <img id="slide-b" class="slide-layer" alt="Slideshow Image Layer B">
+    </main>
 
-<div class="info">
+    <button id="prev-btn" class="nav-btn ui-control" title="Previous Image (Left Arrow)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button id="next-btn" class="nav-btn ui-control" title="Next Image (Right Arrow)">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
 
-<div class="box">
-<h3>Estimated Time</h3>
-<p>Approximately 8-10 minutes</p>
-</div>
+    <div id="counter-badge" class="ui-control">
+        <span id="status-dot" class="status-dot" title="Slideshow Active"></span>
+        <span id="counter-text">0 / 0</span>
+    </div>
 
-<div class="box">
-<h3>Confidentiality</h3>
-<p>All responses will remain confidential and will be used solely for academic research.</p>
-</div>
+    <div id="toast">Toast Message</div>
 
-<div class="box">
-<h3>Participation</h3>
-<p>Your participation is voluntary. You may discontinue the survey at any time.</p>
-</div>
+    <div id="overlay-screen">
+        <div id="loading-spinner" class="spinner"></div>
+        <svg id="empty-icon" class="empty-icon" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div id="loading-title" class="loading-title">Loading slideshow...</div>
+        <div id="loading-sub" class="loading-sub">Scanning images folder for sequential photos...</div>
+    </div>
 
-</div>
+    <div id="help-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Keyboard Shortcuts</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="shortcut-grid">
+                <div><kbd>&larr;</kbd> / <kbd>&rarr;</kbd></div><div>Previous / Next Image</div>
+                <div><kbd>Space</kbd></div><div>Pause / Resume Slideshow</div>
+                <div><kbd>Home</kbd> / <kbd>End</kbd></div><div>First / Last Image</div>
+                <div><kbd>F</kbd></div><div>Toggle Fullscreen</div>
+                <div><kbd>R</kbd> / <kbd>S</kbd></div><div>Toggle Random / Shuffle Playback</div>
+                <div><kbd>H</kbd></div><div>Toggle Header Visibility</div>
+                <div><kbd>I</kbd></div><div>Toggle Image Counter</div>
+                <div><kbd>L</kbd></div><div>Toggle Looping Mode</div>
+                <div><kbd>+</kbd> / <kbd>-</kbd> or <kbd>&uarr;</kbd> / <kbd>&darr;</kbd></div><div>Increase / Decrease Speed</div>
+                <div><kbd>Esc</kbd></div><div>Exit Fullscreen</div>
+            </div>
+        </div>
+    </div>
 
-<center>
+    <script>
+        (function() {
+            'use strict';
 
-<a class="button"
-href="https://forms.gle/j8KrLyCZowwYccRK6"
-target="_self">
+            // Application State Parameters
+            const CONFIG = {
+                maxConsecutiveFailures: 10,
+                defaultInterval: 5000,
+                minInterval: 1000,
+                maxInterval: 30000,
+                intervalStep: 1000,
+                autoHideDelay: 2000
+            };
 
-Start the Questionnaire
+            let images = [];              // Discovered valid image URLs
+            let currentIndex = 0;         // Current active slide index
+            let activeLayer = 'a';        // Current active DOM layer ('a' or 'b')
+            let timer = null;             // Auto slideshow timer
+            let autoHideTimer = null;     // Controls auto-dim timer
+            let toastTimer = null;        // Toast notification timer
+            let touchStartX = 0;          // Touch gesture start X
+            let touchStartY = 0;          // Touch gesture start Y
+            let touchEndTime = 0;         // Tap detection helper
+            let isScanningComplete = false;
 
-</a>
+            // Persistent User Preferences
+            let prefs = {
+                interval: CONFIG.defaultInterval,
+                isRandom: false,
+                isLooping: true,
+                showHeader: true,
+                showCounter: true
+            };
 
-</center>
+            // DOM Elements Cache
+            const el = {
+                slideA: document.getElementById('slide-a'),
+                slideB: document.getElementById('slide-b'),
+                header: document.getElementById('header'),
+                prevBtn: document.getElementById('prev-btn'),
+                nextBtn: document.getElementById('next-btn'),
+                counterBadge: document.getElementById('counter-badge'),
+                counterText: document.getElementById('counter-text'),
+                statusDot: document.getElementById('status-dot'),
+                fullscreenBtn: document.getElementById('fullscreen-btn'),
+                fsExpand: document.getElementById('fs-expand'),
+                fsCompress: document.getElementById('fs-compress'),
+                helpBtn: document.getElementById('help-btn'),
+                helpModal: document.getElementById('help-modal'),
+                closeModal: document.getElementById('close-modal'),
+                toast: document.getElementById('toast'),
+                overlayScreen: document.getElementById('overlay-screen'),
+                loadingSpinner: document.getElementById('loading-spinner'),
+                emptyIcon: document.getElementById('empty-icon'),
+                loadingTitle: document.getElementById('loading-title'),
+                loadingSub: document.getElementById('loading-sub'),
+                uiControls: document.querySelectorAll('.ui-control')
+            };
 
-<div class="footer">
+            function loadPreferences() {
+                try {
+                    const saved = localStorage.getItem('fcu_slideshow_prefs');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        prefs = { ...prefs, ...parsed };
+                    }
+                } catch (e) {
+                    console.warn('LocalStorage unavailable:', e);
+                }
+                applyPreferences();
+            }
 
-Researcher: <strong>Clifton D. Egida</strong><br>
-Graduate School  &bull; Filamer Christian University, Inc.</div>
+            function savePreferences() {
+                try {
+                    localStorage.setItem('fcu_slideshow_prefs', JSON.stringify(prefs));
+                } catch (e) {
+                    console.warn('Failed to save to localStorage:', e);
+                }
+            }
 
-</div>
+            function applyPreferences() {
+                // Apply Header Visibility
+                if (!prefs.showHeader) {
+                    el.header.classList.add('hidden-header');
+                } else {
+                    el.header.classList.remove('hidden-header');
+                }
 
+                // Apply Counter Visibility
+                if (!prefs.showCounter) {
+                    el.counterBadge.classList.add('hidden-ui');
+                } else {
+                    el.counterBadge.classList.remove('hidden-ui');
+                }
+            }
+
+            async function discoverImages() {
+                let consecutiveFailures = 0;
+                let num = 1;
+
+                while (consecutiveFailures < CONFIG.maxConsecutiveFailures) {
+                    // Format number: '01.jpg', '02.jpg' ... '10.jpg', '100.jpg'
+                    const paddedNum = String(num).padStart(2, '0');
+                    const imgPath = `images/${paddedNum}.jpg`;
+
+                    const exists = await checkImageExists(imgPath);
+
+                    if (exists) {
+                        images.push(imgPath);
+                        consecutiveFailures = 0; // Reset missing counter on success
+                        el.loadingSub.textContent = `Found ${images.length} image${images.length > 1 ? 's' : ''}... searching for more`;
+                    } else {
+                        consecutiveFailures++;
+                    }
+
+                    num++;
+                }
+
+                isScanningComplete = true;
+                onDiscoveryFinished();
+            }
+
+            // Helper to probe image existence asynchronously
+            function checkImageExists(url) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = url;
+                });
+            }
+
+            function onDiscoveryFinished() {
+                if (images.length === 0) {
+                    // Show Empty Folder Screen
+                    el.loadingSpinner.style.display = 'none';
+                    el.emptyIcon.style.display = 'block';
+                    el.loadingTitle.textContent = 'No slideshow images found.';
+                    el.loadingSub.innerHTML = 'Please place numbered JPG images inside the <strong>images/</strong> folder.<br><br>Example: <code>01.jpg</code>, <code>02.jpg</code>, <code>03.jpg</code>';
+                    return;
+                }
+
+                // Hide Loading Screen with Smooth Transition
+                el.overlayScreen.style.opacity = '0';
+                setTimeout(() => {
+                    el.overlayScreen.style.display = 'none';
+                }, 600);
+
+                // Initialize Slideshow View
+                currentIndex = 0;
+                displaySlide(currentIndex, true);
+                startAutoplay();
+                resetAutoHideTimer();
+            }
+
+            function displaySlide(index, immediate = false) {
+                if (images.length === 0) return;
+
+                const targetUrl = images[index];
+                const currentLayer = activeLayer === 'a' ? el.slideA : el.slideB;
+                const nextLayer = activeLayer === 'a' ? el.slideB : el.slideA;
+
+                if (immediate) {
+                    currentLayer.src = targetUrl;
+                    currentLayer.classList.add('active');
+                } else {
+                    nextLayer.src = targetUrl;
+                    
+                    // Cross-fade when next layer completes loading
+                    nextLayer.onload = () => {
+                        nextLayer.classList.add('active');
+                        currentLayer.classList.remove('active');
+                        activeLayer = activeLayer === 'a' ? 'b' : 'a';
+                    };
+                }
+
+                updateCounter();
+                preloadAdjacentImages(index);
+            }
+
+            // Preload next and previous images for ultra-smooth rendering
+            function preloadAdjacentImages(idx) {
+                const nextIdx = (idx + 1) % images.length;
+                const prevIdx = (idx - 1 + images.length) % images.length;
+
+                const imgNext = new Image();
+                imgNext.src = images[nextIdx];
+
+                const imgPrev = new Image();
+                imgPrev.src = images[prevIdx];
+            }
+
+            function updateCounter() {
+                if (images.length === 0) return;
+                el.counterText.textContent = `${currentIndex + 1} / ${images.length}`;
+            }
+
+            function startAutoplay() {
+                stopAutoplay();
+                timer = setInterval(() => {
+                    nextSlide();
+                }, prefs.interval);
+                el.statusDot.classList.remove('paused');
+                el.statusDot.title = 'Slideshow Playing';
+            }
+
+            function stopAutoplay() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+                el.statusDot.classList.add('paused');
+                el.statusDot.title = 'Slideshow Paused';
+            }
+
+            function toggleAutoplay() {
+                if (timer) {
+                    stopAutoplay();
+                    showToast('Slideshow Paused');
+                } else {
+                    startAutoplay();
+                    showToast('Slideshow Resumed');
+                }
+            }
+
+            function nextSlide() {
+                if (images.length === 0) return;
+
+                if (prefs.isRandom && images.length > 1) {
+                    let newIdx;
+                    do {
+                        newIdx = Math.floor(Math.random() * images.length);
+                    } while (newIdx === currentIndex);
+                    currentIndex = newIdx;
+                } else {
+                    if (currentIndex < images.length - 1) {
+                        currentIndex++;
+                    } else if (prefs.isLooping) {
+                        currentIndex = 0;
+                    } else {
+                        stopAutoplay();
+                        return;
+                    }
+                }
+                displaySlide(currentIndex);
+            }
+
+            function prevSlide() {
+                if (images.length === 0) return;
+
+                if (prefs.isRandom && images.length > 1) {
+                    currentIndex = Math.floor(Math.random() * images.length);
+                } else {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                    } else if (prefs.isLooping) {
+                        currentIndex = images.length - 1;
+                    }
+                }
+                displaySlide(currentIndex);
+            }
+
+            function firstSlide() {
+                currentIndex = 0;
+                displaySlide(currentIndex);
+                showToast('First Slide');
+            }
+
+            function lastSlide() {
+                currentIndex = images.length - 1;
+                displaySlide(currentIndex);
+                showToast('Last Slide');
+            }
+
+            function changeSpeed(deltaMs) {
+                let newInterval = prefs.interval + deltaMs;
+                if (newInterval < CONFIG.minInterval) newInterval = CONFIG.minInterval;
+                if (newInterval > CONFIG.maxInterval) newInterval = CONFIG.maxInterval;
+
+                prefs.interval = newInterval;
+                savePreferences();
+
+                if (timer) {
+                    startAutoplay(); // Restart timer with new interval
+                }
+
+                showToast(`Speed: ${(prefs.interval / 1000).toFixed(1)}s`);
+            }
+
+            function showToast(message) {
+                el.toast.textContent = message;
+                el.toast.classList.add('show');
+
+                if (toastTimer) clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    el.toast.classList.remove('show');
+                }, 1800);
+            }
+
+            function wakeUI() {
+                el.uiControls.forEach(ctrl => {
+                    ctrl.classList.remove('dimmed');
+                    ctrl.classList.add('active');
+                });
+                resetAutoHideTimer();
+            }
+
+            function resetAutoHideTimer() {
+                if (autoHideTimer) clearTimeout(autoHideTimer);
+                autoHideTimer = setTimeout(() => {
+                    el.uiControls.forEach(ctrl => {
+                        ctrl.classList.remove('active');
+                        ctrl.classList.add('dimmed');
+                    });
+                }, CONFIG.autoHideDelay);
+            }
+
+            function toggleFullscreen() {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) {
+                        document.documentElement.webkitRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+            }
+
+            function updateFullscreenIcons() {
+                const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+                el.fsExpand.style.display = isFS ? 'none' : 'block';
+                el.fsCompress.style.display = isFS ? 'block' : 'none';
+            }
+
+            function handleKeyDown(e) {
+                // Ignore key events if modal is open (except Escape or ?)
+                if (el.helpModal.classList.contains('active')) {
+                    if (e.key === 'Escape' || e.key === '?') {
+                        el.helpModal.classList.remove('active');
+                    }
+                    return;
+                }
+
+                wakeUI();
+
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        prevSlide();
+                        if (timer) startAutoplay(); // Reset slide timer
+                        break;
+
+                    case 'ArrowRight':
+                        nextSlide();
+                        if (timer) startAutoplay(); // Reset slide timer
+                        break;
+
+                    case ' ':
+                        e.preventDefault();
+                        toggleAutoplay();
+                        break;
+
+                    case 'Home':
+                        firstSlide();
+                        break;
+
+                    case 'End':
+                        lastSlide();
+                        break;
+
+                    case 'f':
+                    case 'F':
+                        toggleFullscreen();
+                        break;
+
+                    case 'r':
+                    case 'R':
+                    case 's':
+                    case 'S':
+                        prefs.isRandom = !prefs.isRandom;
+                        savePreferences();
+                        showToast(`Playback: ${prefs.isRandom ? 'Random / Shuffle' : 'Sequential'}`);
+                        break;
+
+                    case 'h':
+                    case 'H':
+                        prefs.showHeader = !prefs.showHeader;
+                        savePreferences();
+                        applyPreferences();
+                        showToast(`Header: ${prefs.showHeader ? 'Visible' : 'Hidden'}`);
+                        break;
+
+                    case 'i':
+                    case 'I':
+                        prefs.showCounter = !prefs.showCounter;
+                        savePreferences();
+                        applyPreferences();
+                        showToast(`Counter: ${prefs.showCounter ? 'Visible' : 'Hidden'}`);
+                        break;
+
+                    case 'l':
+                    case 'L':
+                        prefs.isLooping = !prefs.isLooping;
+                        savePreferences();
+                        showToast(`Looping: ${prefs.isLooping ? 'Enabled' : 'Disabled'}`);
+                        break;
+
+                    case '+':
+                    case '=':
+                    case 'ArrowUp':
+                        changeSpeed(-CONFIG.intervalStep); // Faster (smaller interval)
+                        break;
+
+                    case '-':
+                    case '_':
+                    case 'ArrowDown':
+                        changeSpeed(CONFIG.intervalStep); // Slower (larger interval)
+                        break;
+
+                    case '?':
+                        el.helpModal.classList.toggle('active');
+                        break;
+
+                    case 'Escape':
+                        // Exit fullscreen natively handled by browser
+                        break;
+                }
+            }
+
+            let wheelDebounce = false;
+            function handleWheel(e) {
+                wakeUI();
+                if (wheelDebounce) return;
+
+                wheelDebounce = true;
+                setTimeout(() => { wheelDebounce = false; }, 250);
+
+                if (e.deltaY > 0) {
+                    nextSlide();
+                } else if (e.deltaY < 0) {
+                    prevSlide();
+                }
+            }
+
+            function handleTouchStart(e) {
+                wakeUI();
+                if (e.touches.length === 1) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }
+
+            function handleTouchEnd(e) {
+                if (!touchStartX || !touchStartY) return;
+
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+
+                const diffX = touchStartX - touchEndX;
+                const diffY = touchStartY - touchEndY;
+
+                // Check horizontal swipe
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+                    if (diffX > 0) {
+                        nextSlide(); // Swipe Left
+                    } else {
+                        prevSlide(); // Swipe Right
+                    }
+                } else if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+                    // Tap detection for double-tap fullscreen
+                    const now = Date.now();
+                    if (now - touchEndTime < 300) {
+                        toggleFullscreen();
+                    }
+                    touchEndTime = now;
+                }
+
+                touchStartX = 0;
+                touchStartY = 0;
+            }
+
+            function initEventListeners() {
+                // Mouse & Keyboard Movement
+                window.addEventListener('mousemove', wakeUI);
+                window.addEventListener('keydown', handleKeyDown);
+                window.addEventListener('wheel', handleWheel, { passive: true });
+
+                // Navigation Buttons
+                el.prevBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    prevSlide();
+                    if (timer) startAutoplay();
+                });
+
+                el.nextBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    nextSlide();
+                    if (timer) startAutoplay();
+                });
+
+                // Top Actions
+                el.fullscreenBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFullscreen();
+                });
+
+                el.helpBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    el.helpModal.classList.add('active');
+                });
+
+                el.closeModal.addEventListener('click', () => {
+                    el.helpModal.classList.remove('active');
+                });
+
+                el.helpModal.addEventListener('click', (e) => {
+                    if (e.target === el.helpModal) {
+                        el.helpModal.classList.remove('active');
+                    }
+                });
+
+                // Fullscreen Change Observer
+                document.addEventListener('fullscreenchange', updateFullscreenIcons);
+                document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+
+                // Container Interactions (Single & Double Click)
+                const container = document.getElementById('slideshow-container');
+                container.addEventListener('click', wakeUI);
+                container.addEventListener('dblclick', toggleFullscreen);
+
+                // Touch Events
+                window.addEventListener('touchstart', handleTouchStart, { passive: true });
+                window.addEventListener('touchend', handleTouchEnd, { passive: true });
+            }
+
+            window.addEventListener('load', () => {
+                loadPreferences();
+                initEventListeners();
+                discoverImages();
+            });
+
+        })();
+    </script>
 </body>
 </html>
