@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding Mission: Research to Game Prototype</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #0b0f19;
+    color: #e8e8e8;
+}
+
+header {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    padding: 25px;
+    text-align: center;
+    border-bottom: 2px solid #00e5ff;
+}
+
+header h1 {
+    color: #00e5ff;
+    text-shadow: 0 0 15px #00e5ff;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    background: #111827;
+    padding: 10px;
+    text-align: center;
+    z-index: 10;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+nav a:hover {
+    background: #00e5ff;
+    color: #000;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.card {
+    background: #151c2c;
+    margin: 25px 0;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #334155;
+    box-shadow: 0 0 20px rgba(0,229,255,0.08);
+}
+
+.card h2 {
+    color: #00e5ff;
+}
+
+.mission {
+    background: #1e293b;
+    padding: 20px;
+    border-left: 5px solid #22c55e;
+    border-radius: 10px;
+}
+
+.problem {
+    background: #111827;
+    padding: 15px;
+    margin: 12px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid #374151;
+}
+
+.problem:hover {
+    border-color: #00e5ff;
+    transform: translateX(5px);
+}
+
+.step {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.number {
+    background: #00e5ff;
+    color: #000;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 10px;
+    font-weight: bold;
+}
+
+.prompt {
+    background: #020617;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px dashed #00e5ff;
+    font-family: Consolas, monospace;
+}
+
+.example {
+    background: #052e16;
+    border-left: 5px solid #22c55e;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.question {
+    background: #3f1d1d;
+    border-left: 5px solid #ef4444;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.footer {
+    text-align: center;
+    padding: 30px;
+    color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎮 VIBE CODING MISSION</h1>
+<p>Research Problem → Game Idea → AI Prompt → Prototype</p>
+</header>
+
+
+<nav>
+<a href="#mission">Mission</a>
+<a href="#problems">Problems</a>
+<a href="#activity">Activity</a>
+<a href="#prompt">AI Prompt</a>
+<a href="#reflection">Reflection</a>
+</nav>
+
+
+<div class="container">
+
+
+<section id="mission" class="card">
+<h2>🎯 Mission Brief</h2>
+
+<div class="mission">
+<p>
+You are a BSIT development team. Your mission is to design a game concept
+that solves a real problem. </p>
+<p>Use Google Canvas to create a single HTML file for this activity. Generate the complete HTML, CSS, and JavaScript code in one file only. The file should be ready to run by saving it as an .html file and opening it in a browser.</p>
+<p>Before asking AI to create a game, you must
+  identify the problem, target users, and purpose of the game. </p>
+<p>
+Remember:
+<strong>Research determines what should be built. AI helps build it faster.</strong>
+</p>
+</div>
+
+</section>
+
+
+<section id="problems" class="card">
+
+<h2>⚔  Your Research Challenge</h2>
+
+
+<div class="problem">
+<strong>Mathematics Practice</strong><br>
+Elementary learners need more practice in basic mathematics.
+</div>
+
+
+
+</section>
+
+
+
+<section id="activity" class="card">
+
+<h2>🕹 Game Development Quest</h2>
+
+
+<div class="step">
+<div class="number">1</div>
+<div>
+<strong>Identify the Problem</strong>
+<p>
+What problem will your game solve?
+</p>
+</div>
+</div>
+
+
+<div class="step">
+<div class="number">2</div>
+<div>
+<strong>Identify the Users</strong>
+<p>
+Who will play your game?
+</p>
+</div>
+</div>
+
+
+<div class="step">
+<div class="number">3</div>
+<div>
+<strong>Select Game Type</strong>
+<p>
+Choose one:
+</p>
+
+<ul>
+<li>Adventure Game</li>
+<li>Quiz Game</li>
+<li>RPG Game</li>
+<li>Simulation Game</li>
+<li>Puzzle Game</li>
+</ul>
+
+</div>
+</div>
+
+
+<div class="step">
+<div class="number">4</div>
+<div>
+<strong>Describe Player Actions</strong>
+
+<p>
+What will the player do in the game?
+</p>
+
+</div>
+</div>
+
+
+</section>
+
+
+
+<section id="prompt" class="card">
+
+<h2>🤖 AI Prompt Generator</h2>
+
+<p>Create a prompt using this format:</p>
+
+<div class="prompt">
+
+Create a browser-based game about __________.
+
+<br><br>
+
+The game is designed for __________.
+
+<br><br>
+
+The player should __________.
+
+<br><br>
+
+Include features such as __________.
+
+</div>
+
+
+<h3>Example Mission Complete</h3>
+
+<div class="example">
+
+<strong>Research Problem:</strong><br>
+Grade 7 students have difficulty remembering and understanding the parts and functions of the human body because lessons are often presented through text-based materials and lectures.<br>
+<br>
+
+<strong>Game Solution:</strong><br>
+BioQuest: The Human Body Adventure<br>
+<br>
+
+<strong>AI Prompt:</strong>
+
+<p>Create a browser-based educational adventure game for Grade 7 students that helps them learn the parts and functions of the human body. The player explores different areas of the human body as a mini scientist, completes missions, answers biology questions, and collects rewards by correctly identifying organs and their functions. Include interactive challenges, multiple levels, quizzes, scoring, hints, achievement badges, and a progress tracking system. The game should use a colorful, student-friendly design and provide immediate feedback to help learners improve their understanding of human biology.</p>
+
+</div>
+
+</section>
+
+
+
+
+<section id="reflection" class="card">
+
+<h2>🧠 Researcher Reflection</h2>
+
+<div class="question">
+<strong>Question 1:</strong><br>
+If you only tell AI "Create a game", will the result be useful?
+</div>
+
+
+<div class="question">
+<strong>Question 2:</strong><br>
+What information should you provide to AI to create a better software solution?
+</div>
+
+
+<div class="question">
+<strong>Question 3:</strong><br>
+Why is research important before using AI for development?
+</div>
+
+
+<h2>🏆 Final Rule</h2>
+
+<div class="mission">
+
+<p>
+<strong>
+Good Research → Clear Requirements → Better AI Prompt → Better Software Solution
+</strong>
+</p>
+
+
+
+</div>
+
+
+<div class="mission">
+
+<p>
+ Complete below form by providing your group’s research problem, proposed game solution, AI development prompt, and reflections based on the Vibe Coding activity. Ensure that your answers clearly explain how your game idea addresses the identified problem.</p>
+<p>Link: <strong><a href="https://forms.gle/7yAVGFzFCyavCLhq5">https://forms.gle/E7vs4cLM61iMfiXN8</a></strong></p>
+</div>
+
+</section>
+
+
+</div>
+
+
+<div class="footer">
+BSIT Research | AI-Assisted Software Development Activity
+</div>
+
+
+</body>
+</html>

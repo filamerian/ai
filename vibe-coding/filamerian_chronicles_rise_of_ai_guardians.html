@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Filamerian Chronicles: Rise of AI Guardians</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #090d16;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .pixel-font {
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
+        }
+
+        canvas {
+            display: block;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+            border-radius: 12px;
+            background-color: #38bdf8;
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .interactive-ui {
+            pointer-events: auto;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+        }
+
+        .touch-btn {
+            background: rgba(30, 41, 59, 0.85);
+            border: 2px solid #3b82f6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            user-select: none;
+            touch-action: manipulation;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transition: transform 0.08s, background 0.08s;
+        }
+
+        .touch-btn:active {
+            transform: scale(0.90);
+            background: rgba(59, 130, 246, 0.9);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
+            50% { box-shadow: 0 0 32px rgba(59, 130, 246, 0.95); }
+        }
+
+        .glow-effect {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="ui-overlay">
+            <!-- Top HUD Bar -->
+            <div class="flex justify-between items-center w-full px-4 py-2 glass-card pixel-font text-[10px] sm:text-xs text-yellow-300">
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-1">
+                        <span class="text-red-400">HERO:</span>
+                        <div id="lives-container" class="flex space-x-1 text-red-500 text-sm sm:text-base">❤️❤️❤️</div>
+                    </div>
+                    <div class="hidden sm:flex items-center space-x-2">
+                        <span class="text-blue-400">HP:</span>
+                        <div class="w-20 bg-gray-700 h-3 rounded-full overflow-hidden border border-gray-600">
+                            <div id="hp-bar" class="bg-green-500 h-full w-full transition-all duration-200"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-1">
+                        <span class="text-cyan-300">LVL:</span>
+                        <span id="level-num" class="text-white">1/4</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <span class="text-yellow-400">⭐</span>
+                        <span id="star-count" class="text-white">0</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <span class="text-indigo-300">PTS:</span>
+                        <span id="score-count" class="text-white">00000</span>
+                    </div>
+                    <div id="powerup-badge" class="hidden px-2 py-1 bg-blue-600 text-white rounded text-[9px] animate-pulse">
+                        READY
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button id="sound-btn" class="interactive-ui bg-slate-800 hover:bg-slate-700 text-white p-2 rounded-lg border border-slate-600 transition">
+                        🔊
+                    </button>
+                    <button id="pause-btn" class="interactive-ui bg-slate-800 hover:bg-slate-700 text-white p-2 rounded-lg border border-slate-600 transition">
+                        ⏸️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Boss HUD -->
+            <div id="boss-hud" class="hidden w-full max-w-xl mx-auto mt-2 p-3 glass-card text-center pixel-font">
+                <div class="text-red-400 text-xs mb-1 animate-pulse">⚠️ WARNING: AI GUARDIAN OVERLORD CORE ⚠️</div>
+                <div class="w-full bg-slate-900 h-5 rounded-full overflow-hidden border-2 border-red-500">
+                    <div id="boss-hp-bar" class="bg-gradient-to-r from-red-600 via-orange-500 to-amber-400 h-full w-full transition-all duration-200"></div>
+                </div>
+            </div>
+
+            <!-- Mobile Touch Controls -->
+            <div id="touch-controls" class="interactive-ui flex justify-between items-end w-full pb-3 px-2 select-none md:hidden">
+                <div class="flex space-x-3">
+                    <button id="btn-left" class="touch-btn w-14 h-14 text-xl">◀</button>
+                    <button id="btn-right" class="touch-btn w-14 h-14 text-xl">▶</button>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="btn-fire" class="touch-btn w-14 h-14 bg-red-600/90 border-red-400 text-xs font-bold">CODE</button>
+                    <button id="btn-jump" class="touch-btn w-14 h-14 bg-blue-600/90 border-blue-400 text-sm font-bold">JUMP</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-modal" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col justify-center items-center text-center p-6 z-50">
+            <div class="max-w-2xl glass-card p-8 glow-effect rounded-2xl flex flex-col items-center">
+                <div class="text-blue-400 text-xs tracking-widest pixel-font mb-2">EDUCATIONAL PLATFORM ADVENTURE</div>
+                <h1 class="pixel-font text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 mb-3 leading-relaxed">
+                    FILAMERIAN CHRONICLES
+                </h1>
+                <h2 class="pixel-font text-xs md:text-sm text-yellow-400 mb-5">Rise of AI Guardians</h2>
+
+                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs sm:text-sm text-slate-300 mb-6 text-left space-y-2 max-w-lg leading-relaxed">
+                    <p><strong class="text-blue-400">STORY:</strong> A rogue AI virus matrix has taken control of Filamer campus! Drones, corrupted books, and virus blobs roam every building.</p>
+                    <p><strong class="text-yellow-400">MISSION:</strong> Play as the Hero, traverse each school wing, collect Knowledge Stars, hit Learning Boxes, get Coding Power, and reach each school building to access the next area!</p>
+                    <p><strong class="text-green-400">CONTROLS:</strong> <span class="bg-slate-800 px-2 py-1 rounded">A / D</span> or <span class="bg-slate-800 px-2 py-1 rounded">⬅️ ➡️</span> Move | <span class="bg-slate-800 px-2 py-1 rounded">SPACE / W</span> Jump | <span class="bg-slate-800 px-2 py-1 rounded">K / X</span> Shoot Code</p>
+                </div>
+
+                <button id="start-game-btn" class="pixel-font bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition font-bold text-xs sm:text-sm tracking-wider">
+                    START MISSION 🚀
+                </button>
+            </div>
+        </div>
+
+        <!-- Level Transition / End Modal -->
+        <div id="msg-modal" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col justify-center items-center text-center p-6 z-40">
+            <div class="max-w-md glass-card p-8 rounded-2xl flex flex-col items-center">
+                <div id="msg-title" class="pixel-font text-lg text-yellow-400 mb-3">LEVEL SECURED!</div>
+                <div id="msg-body" class="text-slate-200 text-xs sm:text-sm mb-6 leading-relaxed">You entered the Academic Building and saved the Campus Grounds!</div>
+                <button id="msg-continue-btn" class="pixel-font bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg shadow transition text-xs">
+                    CONTINUE ▶
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const V_WIDTH = 960;
+        const V_HEIGHT = 540;
+
+        let scale = 1;
+        let activeLevel = 1;
+        let isPaused = false;
+        let gameStarted = false;
+        let soundEnabled = true;
+
+        function resizeCanvas() {
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            let w = windowWidth;
+            let h = windowHeight;
+
+            if (w / h > V_WIDTH / V_HEIGHT) {
+                w = h * (V_WIDTH / V_HEIGHT);
+            } else {
+                h = w * (V_HEIGHT / V_WIDTH);
+            }
+
+            canvas.width = V_WIDTH;
+            canvas.height = V_HEIGHT;
+            canvas.style.width = `${w}px`;
+            canvas.style.height = `${h}px`;
+            scale = w / V_WIDTH;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.bgmTimer = null;
+                this.noteIdx = 0;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playTone(freq, type, duration, startGain = 0.2, endGain = 0.01) {
+                if (!soundEnabled) return;
+                this.init();
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(startGain, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(endGain, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch(e) {}
+            }
+
+            jump() {
+                if (!soundEnabled) return;
+                this.init();
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(160, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(500, this.ctx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.12);
+                } catch(e) {}
+            }
+
+            collect() {
+                this.playTone(523.25, 'triangle', 0.08, 0.2); // C5
+                setTimeout(() => this.playTone(659.25, 'triangle', 0.08, 0.2), 50); // E5
+                setTimeout(() => this.playTone(783.99, 'triangle', 0.12, 0.2), 100); // G5
+            }
+
+            powerUp() {
+                this.playTone(392, 'sine', 0.08);
+                setTimeout(() => this.playTone(523.25, 'sine', 0.08), 70);
+                setTimeout(() => this.playTone(659.25, 'sine', 0.08), 140);
+                setTimeout(() => this.playTone(880, 'sine', 0.2), 210);
+            }
+
+            stomp() {
+                this.playTone(140, 'sawtooth', 0.15, 0.3);
+            }
+
+            bossHit() {
+                this.playTone(220, 'square', 0.1, 0.3);
+                setTimeout(() => this.playTone(110, 'sawtooth', 0.15, 0.4), 60);
+            }
+
+            shoot() {
+                this.playTone(700, 'square', 0.06, 0.12);
+            }
+
+            hurt() {
+                this.playTone(100, 'sawtooth', 0.2, 0.4);
+            }
+
+            victory() {
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                notes.forEach((n, i) => {
+                    setTimeout(() => this.playTone(n, 'triangle', 0.25, 0.3), i * 110);
+                });
+            }
+
+            startBGM() {
+                if (this.bgmTimer) return;
+                const melody = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 293.66, 349.23, 440.00, 587.33, 440.00, 349.23];
+                this.bgmTimer = setInterval(() => {
+                    if (soundEnabled && gameStarted && !isPaused) {
+                        const note = melody[this.noteIdx % melody.length];
+                        this.playTone(note, 'sine', 0.12, 0.04, 0.001);
+                        this.noteIdx++;
+                    }
+                }, 220);
+            }
+        }
+
+        const sounds = new SoundEngine();
+
+        class SpriteAtlas {
+            constructor() {
+                // Hero canvas (matching image_18d277.jpg)
+                this.heroCanvas = document.createElement('canvas');
+                this.heroCanvas.width = 384; // 6 frames x 64px
+                this.heroCanvas.height = 64;
+                this.renderHeroSprites();
+
+                // Level 1 End: Campus Academic Wing Building
+                this.academicBuildingCanvas = document.createElement('canvas');
+                this.academicBuildingCanvas.width = 280;
+                this.academicBuildingCanvas.height = 260;
+                this.renderAcademicBuilding();
+
+                // Level 2 End: Technology & Robotics Center
+                this.techBuildingCanvas = document.createElement('canvas');
+                this.techBuildingCanvas.width = 280;
+                this.techBuildingCanvas.height = 260;
+                this.renderTechBuilding();
+
+                // Level 3 End: Grand Library & Learning Hub
+                this.libraryBuildingCanvas = document.createElement('canvas');
+                this.libraryBuildingCanvas.width = 280;
+                this.libraryBuildingCanvas.height = 260;
+                this.renderLibraryBuilding();
+
+                // Level 4 End: Main School HQ (ccecnt.jpg exact pixel replica)
+                this.schoolHQCanvas = document.createElement('canvas');
+                this.schoolHQCanvas.width = 320;
+                this.schoolHQCanvas.height = 280;
+                this.renderSchoolHQ();
+            }
+
+            renderHeroSprites() {
+                const hctx = this.heroCanvas.getContext('2d');
+                hctx.imageSmoothingEnabled = false;
+
+                // 6 Animation Frames
+                for (let f = 0; f < 6; f++) {
+                    const ox = f * 64;
+                    const legOffset = (f === 1) ? 3 : (f === 2) ? -3 : 0;
+                    const armOffset = (f === 1) ? -4 : (f === 2) ? 4 : (f === 5) ? -12 : 0;
+                    const isJump = (f === 3);
+                    const isHurt = (f === 4);
+                    const isVictory = (f === 5);
+
+                    // SNEAKERS (Black / Red Accent / White Sole)
+                    hctx.fillStyle = '#1e293b';
+                    hctx.fillRect(ox + 20 - legOffset, 54, 10, 6);
+                    hctx.fillRect(ox + 34 + legOffset, 54, 10, 6);
+                    hctx.fillStyle = '#ef4444';
+                    hctx.fillRect(ox + 20 - legOffset, 54, 10, 2);
+                    hctx.fillRect(ox + 34 + legOffset, 54, 10, 2);
+                    hctx.fillStyle = '#ffffff';
+                    hctx.fillRect(ox + 19 - legOffset, 58, 11, 2);
+                    hctx.fillRect(ox + 34 + legOffset, 58, 11, 2);
+
+                    // TROUSERS (Dark Slate/Black)
+                    hctx.fillStyle = '#0f172a';
+                    hctx.fillRect(ox + 22 - legOffset, 38, 8, 16);
+                    hctx.fillRect(ox + 34 + legOffset, 38, 8, 16);
+
+                    // SHIRT (White with Blue Polo collar & Swoosh Pattern from uploaded image_18d277.jpg)
+                    hctx.fillStyle = '#f8fafc';
+                    hctx.fillRect(ox + 21, 22, 22, 16);
+
+                    hctx.fillStyle = '#1d4ed8'; // Blue collar
+                    hctx.fillRect(ox + 24, 20, 16, 3);
+                    hctx.fillRect(ox + 16, 22, 6, 8); // Left sleeve
+                    hctx.fillRect(ox + 42, 22, 6, 8); // Right sleeve
+
+                    // Diagonal blue stripes
+                    hctx.fillStyle = '#3b82f6';
+                    hctx.beginPath();
+                    hctx.moveTo(ox + 21, 38);
+                    hctx.lineTo(ox + 32, 22);
+                    hctx.lineTo(ox + 37, 22);
+                    hctx.lineTo(ox + 26, 38);
+                    hctx.fill();
+
+                    hctx.fillStyle = '#60a5fa';
+                    hctx.beginPath();
+                    hctx.moveTo(ox + 26, 38);
+                    hctx.lineTo(ox + 37, 22);
+                    hctx.lineTo(ox + 41, 22);
+                    hctx.lineTo(ox + 30, 38);
+                    hctx.fill();
+
+                    // School Badge on left chest
+                    hctx.fillStyle = '#f59e0b';
+                    hctx.fillRect(ox + 36, 25, 3, 3);
+
+                    // ARMS & HANDS + BLACK WRISTWATCH
+                    hctx.fillStyle = '#e5a880';
+                    if (isVictory) {
+                        hctx.fillRect(ox + 14, 10, 6, 14);
+                        hctx.fillRect(ox + 44, 10, 6, 14);
+                    } else {
+                        hctx.fillRect(ox + 16, 28 + armOffset, 5, 10);
+                        hctx.fillRect(ox + 43, 28 - armOffset, 5, 10);
+                        hctx.fillStyle = '#020617'; // Watch on left wrist
+                        hctx.fillRect(ox + 16, 32 + armOffset, 5, 3);
+                    }
+
+                    // HEAD & FACIAL FEATURES (Exact match to uploaded image_18d277.jpg)
+                    hctx.fillStyle = '#e5a880';
+                    hctx.fillRect(ox + 21, 6, 22, 16);
+
+                    // Short Dark Hair
+                    hctx.fillStyle = '#111827';
+                    hctx.fillRect(ox + 20, 2, 24, 6);
+                    hctx.fillRect(ox + 19, 4, 3, 8);
+                    hctx.fillRect(ox + 42, 4, 3, 8);
+
+                    // Eyebrows & Eyes
+                    hctx.fillStyle = '#000000';
+                    hctx.fillRect(ox + 24, 9, 5, 2);
+                    hctx.fillRect(ox + 35, 9, 5, 2);
+                    if (isHurt) {
+                        hctx.fillRect(ox + 25, 12, 3, 1);
+                        hctx.fillRect(ox + 36, 12, 3, 1);
+                    } else {
+                        hctx.fillRect(ox + 25, 12, 3, 3);
+                        hctx.fillRect(ox + 36, 12, 3, 3);
+                    }
+
+                    // Smile with visible white teeth
+                    hctx.fillStyle = '#ffffff';
+                    hctx.fillRect(ox + 26, 17, 12, 3);
+                    hctx.fillStyle = '#991b1b';
+                    hctx.fillRect(ox + 27, 19, 10, 1);
+                }
+            }
+
+            renderAcademicBuilding() {
+                const bctx = this.academicBuildingCanvas.getContext('2d');
+                // Brick Academic Wing
+                bctx.fillStyle = '#94a3b8';
+                bctx.fillRect(20, 50, 240, 210);
+                bctx.fillStyle = '#1e293b';
+                bctx.fillRect(30, 20, 220, 30); // Roof border
+
+                // Triangular Front Gable
+                bctx.fillStyle = '#1d4ed8';
+                bctx.beginPath();
+                bctx.moveTo(20, 50);
+                bctx.lineTo(140, 10);
+                bctx.lineTo(260, 50);
+                bctx.fill();
+
+                // Windows
+                bctx.fillStyle = '#38bdf8';
+                for (let x = 40; x <= 200; x += 50) {
+                    bctx.fillRect(x, 70, 30, 35);
+                    bctx.fillRect(x, 120, 30, 35);
+                }
+
+                // Glowing Entrance Door
+                bctx.fillStyle = '#f59e0b';
+                bctx.fillRect(110, 180, 60, 80);
+                bctx.fillStyle = '#fef08a';
+                bctx.fillRect(115, 185, 50, 75);
+
+                // Flag & Banner
+                bctx.fillStyle = '#1e3a8a';
+                bctx.fillRect(138, 0, 4, 30);
+                bctx.fillStyle = '#ef4444';
+                bctx.fillRect(142, 0, 24, 14);
+            }
+
+            renderTechBuilding() {
+                const bctx = this.techBuildingCanvas.getContext('2d');
+                // Cyber Tech Center
+                bctx.fillStyle = '#1e293b';
+                bctx.fillRect(20, 40, 240, 220);
+
+                // Neon trim & server antenna
+                bctx.fillStyle = '#06b6d4';
+                bctx.fillRect(15, 30, 250, 10);
+                bctx.fillRect(135, 0, 10, 30);
+
+                // Tech windows grid
+                bctx.fillStyle = '#0284c7';
+                for (let y = 60; y <= 140; y += 40) {
+                    for (let x = 40; x <= 200; x += 45) {
+                        bctx.fillRect(x, y, 35, 25);
+                    }
+                }
+
+                // Portal Entrance
+                bctx.fillStyle = '#3b82f6';
+                bctx.fillRect(100, 170, 80, 90);
+                bctx.fillStyle = '#60a5fa';
+                bctx.beginPath();
+                bctx.arc(140, 215, 30, 0, Math.PI * 2);
+                bctx.fill();
+            }
+
+            renderLibraryBuilding() {
+                const bctx = this.libraryBuildingCanvas.getContext('2d');
+                // Classical Library Wing
+                bctx.fillStyle = '#f1f5f9';
+                bctx.fillRect(20, 60, 240, 200);
+
+                // Golden Clock Dome Top
+                bctx.fillStyle = '#eab308';
+                bctx.beginPath();
+                bctx.arc(140, 60, 40, Math.PI, 0);
+                bctx.fill();
+
+                // Classical Pillars
+                bctx.fillStyle = '#cbd5e1';
+                bctx.fillRect(40, 80, 20, 180);
+                bctx.fillRect(90, 80, 20, 180);
+                bctx.fillRect(170, 80, 20, 180);
+                bctx.fillRect(220, 80, 20, 180);
+
+                // Main Library Entrance
+                bctx.fillStyle = '#854d0e';
+                bctx.fillRect(120, 170, 40, 90);
+            }
+
+            renderSchoolHQ() {
+                // Recreating uploaded ccecnt.jpg: Blue support towers, white central gable, dark glass facade, front arch ramp.
+                const bctx = this.schoolHQCanvas.getContext('2d');
+
+                bctx.fillStyle = '#f8fafc';
+                bctx.fillRect(40, 40, 240, 240);
+
+                // Blue corner support towers
+                bctx.fillStyle = '#1d4ed8';
+                bctx.fillRect(30, 20, 35, 260);
+                bctx.fillRect(205, 20, 75, 260);
+
+                // Horizontal dividers
+                bctx.fillRect(40, 90, 200, 10);
+                bctx.fillRect(40, 150, 200, 10);
+                bctx.fillRect(40, 210, 200, 10);
+
+                // Triangular Roof Pediment
+                bctx.fillStyle = '#f8fafc';
+                bctx.beginPath();
+                bctx.moveTo(70, 40);
+                bctx.lineTo(150, 10);
+                bctx.lineTo(230, 40);
+                bctx.closePath();
+                bctx.fill();
+                bctx.lineWidth = 4;
+                bctx.strokeStyle = '#1d4ed8';
+                bctx.stroke();
+
+                // School Crest Seal
+                bctx.fillStyle = '#f59e0b';
+                bctx.beginPath();
+                bctx.arc(150, 28, 10, 0, Math.PI * 2);
+                bctx.fill();
+                bctx.fillStyle = '#1e3a8a';
+                bctx.beginPath();
+                bctx.arc(150, 28, 6, 0, Math.PI * 2);
+                bctx.fill();
+
+                // Glass window facade
+                bctx.fillStyle = '#1e293b';
+                bctx.fillRect(75, 50, 120, 35);
+                bctx.fillRect(75, 105, 120, 40);
+                bctx.fillRect(75, 165, 120, 40);
+
+                bctx.strokeStyle = '#64748b';
+                bctx.lineWidth = 2;
+                for (let x = 95; x < 190; x += 25) {
+                    bctx.beginPath();
+                    bctx.moveTo(x, 50);
+                    bctx.lineTo(x, 205);
+                    bctx.stroke();
+                }
+
+                // Portal Arch Doorway
+                bctx.fillStyle = '#0f172a';
+                bctx.fillRect(105, 220, 60, 60);
+
+                // Flag & Trees
+                bctx.fillStyle = '#f59e0b';
+                bctx.beginPath();
+                bctx.moveTo(25, 30);
+                bctx.lineTo(5, 40);
+                bctx.lineTo(25, 50);
+                bctx.fill();
+
+                bctx.fillStyle = '#15803d';
+                bctx.beginPath();
+                bctx.arc(15, 200, 25, 0, Math.PI * 2);
+                bctx.arc(295, 200, 30, 0, Math.PI * 2);
+                bctx.fill();
+            }
+        }
+
+        const sprites = new SpriteAtlas();
+
+        class Player {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 40;
+                this.height = 56;
+                this.vx = 0;
+                this.vy = 0;
+                this.speed = 5.2;
+                this.jumpForce = -13.5;
+                this.grounded = false;
+                this.facing = 'right';
+                this.animFrame = 0;
+                this.animTimer = 0;
+
+                this.lives = 3;
+                this.hp = 100;
+                this.invulnerableTimer = 0;
+                this.powerup = null; // 'coding', 'shield'
+                this.powerupTimer = 0;
+            }
+
+            update(input, platforms) {
+                if (input.left) {
+                    this.vx = -this.speed;
+                    this.facing = 'left';
+                } else if (input.right) {
+                    this.vx = this.speed;
+                    this.facing = 'right';
+                } else {
+                    this.vx *= 0.72;
+                }
+
+                if (input.jump && this.grounded) {
+                    this.vy = this.jumpForce;
+                    this.grounded = false;
+                    sounds.jump();
+                }
+
+                this.vy += 0.68;
+                if (this.vy > 14) this.vy = 14;
+
+                this.x += this.vx;
+                this.handleCollisionX(platforms);
+
+                this.y += this.vy;
+                this.grounded = false;
+                this.handleCollisionY(platforms);
+
+                // Check bottom boundary drop
+                if (this.y > V_HEIGHT + 100) {
+                    this.takeDamage(100);
+                }
+
+                if (this.invulnerableTimer > 0) this.invulnerableTimer--;
+                if (this.powerupTimer > 0 && activeLevel < 4) {
+                    this.powerupTimer--;
+                    if (this.powerupTimer === 0) {
+                        this.powerup = null;
+                        document.getElementById('powerup-badge').classList.add('hidden');
+                    }
+                }
+
+                this.animTimer++;
+                if (this.animTimer % 8 === 0) {
+                    this.animFrame = (this.animFrame + 1) % 2;
+                }
+            }
+
+            handleCollisionX(platforms) {
+                for (let p of platforms) {
+                    if (this.collidesWith(p)) {
+                        if (this.vx > 0) this.x = p.x - this.width;
+                        else if (this.vx < 0) this.x = p.x + p.width;
+                    }
+                }
+            }
+
+            handleCollisionY(platforms) {
+                for (let p of platforms) {
+                    if (this.collidesWith(p)) {
+                        if (this.vy > 0) {
+                            this.y = p.y - this.height;
+                            this.vy = 0;
+                            this.grounded = true;
+                        } else if (this.vy < 0) {
+                            this.y = p.y + p.height;
+                            this.vy = 0;
+                            if (p.isLearningBox && !p.used) {
+                                p.triggerHit();
+                            }
+                        }
+                    }
+                }
+            }
+
+            collidesWith(rect) {
+                return this.x < rect.x + rect.width &&
+                       this.x + this.width > rect.x &&
+                       this.y < rect.y + rect.height &&
+                       this.y + this.height > rect.y;
+            }
+
+            takeDamage(amount) {
+                if (this.invulnerableTimer > 0) return;
+                if (this.powerup === 'shield') {
+                    this.powerup = null;
+                    document.getElementById('powerup-badge').classList.add('hidden');
+                    this.invulnerableTimer = 40;
+                    sounds.hurt();
+                    return;
+                }
+
+                this.hp -= amount;
+                this.invulnerableTimer = 50;
+                sounds.hurt();
+
+                if (this.hp <= 0) {
+                    this.lives--;
+                    this.hp = 100;
+                    if (this.lives < 0) {
+                        gameOver();
+                    } else {
+                        this.x = 80;
+                        this.y = 300;
+                    }
+                }
+                updateHUD();
+            }
+
+            draw(ctx, cameraX) {
+                if (this.invulnerableTimer % 4 >= 2) return;
+
+                let frameIndex = 0;
+                if (!this.grounded) {
+                    frameIndex = (this.vy < 0) ? 3 : 1;
+                } else if (Math.abs(this.vx) > 0.5) {
+                    frameIndex = 1 + this.animFrame;
+                } else {
+                    frameIndex = 0;
+                }
+
+                ctx.save();
+                ctx.translate(this.x - cameraX + this.width / 2, this.y + this.height / 2);
+                if (this.facing === 'left') {
+                    ctx.scale(-1, 1);
+                }
+
+                ctx.drawImage(
+                    sprites.heroCanvas,
+                    frameIndex * 64, 0, 64, 64,
+                    -32, -32, 64, 64
+                );
+
+                if (this.powerup === 'shield') {
+                    ctx.strokeStyle = '#38bdf8';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 32, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        class Enemy {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type; // 'robot', 'virus', 'drone', 'book'
+                this.width = 36;
+                this.height = 36;
+                this.vx = (type === 'drone') ? 2.2 : 1.6;
+                this.vy = 0;
+                this.startY = y;
+                this.startX = x;
+                this.range = 150;
+                this.hp = (type === 'robot') ? 2 : 1;
+                this.alive = true;
+                this.floatTimer = Math.random() * 10;
+            }
+
+            update() {
+                if (!this.alive) return;
+
+                if (this.type === 'drone') {
+                    this.floatTimer += 0.05;
+                    this.y = this.startY + Math.sin(this.floatTimer) * 25;
+                    this.x += this.vx;
+                    if (Math.abs(this.x - this.startX) > this.range) {
+                        this.vx *= -1;
+                    }
+                } else {
+                    this.x += this.vx;
+                    if (Math.abs(this.x - this.startX) > this.range) {
+                        this.vx *= -1;
+                    }
+                }
+            }
+
+            draw(ctx, cameraX) {
+                if (!this.alive) return;
+
+                ctx.save();
+                ctx.translate(this.x - cameraX, this.y);
+
+                if (this.type === 'robot') {
+                    ctx.fillStyle = '#64748b';
+                    ctx.fillRect(4, 8, 28, 24);
+                    ctx.fillStyle = '#ef4444';
+                    ctx.fillRect(20, 14, 8, 6);
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(8, 32, 8, 4);
+                    ctx.fillRect(20, 32, 8, 4);
+                } else if (this.type === 'virus') {
+                    ctx.fillStyle = '#a855f7';
+                    ctx.beginPath();
+                    ctx.arc(18, 18, 16, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#000000';
+                    ctx.fillRect(10, 12, 4, 4);
+                    ctx.fillRect(22, 12, 4, 4);
+                } else if (this.type === 'drone') {
+                    ctx.fillStyle = '#0284c7';
+                    ctx.fillRect(6, 12, 24, 12);
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillRect(2, 6, 32, 4);
+                } else {
+                    ctx.fillStyle = '#b91c1c';
+                    ctx.fillRect(4, 6, 28, 24);
+                    ctx.fillStyle = '#fef08a';
+                    ctx.fillRect(8, 10, 20, 16);
+                }
+
+                ctx.restore();
+            }
+        }
+
+        class Boss {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 90;
+                this.height = 90;
+                this.maxHp = 15;
+                this.hp = 15;
+                this.vx = 2.5;
+                this.attackTimer = 0;
+                this.alive = true;
+                this.invulnerableTimer = 0;
+            }
+
+            update(player, projectiles) {
+                if (!this.alive) return;
+
+                if (this.invulnerableTimer > 0) this.invulnerableTimer--;
+
+                // Hover inside boss arena (1200px to 1800px)
+                this.x += this.vx;
+                if (this.x < 1300 || this.x > 1750) this.vx *= -1;
+
+                this.attackTimer++;
+                // Shoot cyber energy projectiles
+                if (this.attackTimer % 80 === 0) {
+                    const angle = Math.atan2(player.y - this.y, player.x - this.x);
+                    projectiles.push(new BossProjectile(this.x + 45, this.y + 45, Math.cos(angle) * 5.5, Math.sin(angle) * 5.5));
+                    sounds.shoot();
+                }
+            }
+
+            takeDamage(amount) {
+                if (this.invulnerableTimer > 0) return;
+                this.hp -= amount;
+                this.invulnerableTimer = 15;
+                sounds.bossHit();
+                document.getElementById('boss-hp-bar').style.width = `${Math.max(0, (this.hp / this.maxHp) * 100)}%`;
+
+                if (this.hp <= 0) {
+                    this.alive = false;
+                    score += 2500;
+                    triggerVictory();
+                }
+            }
+
+            draw(ctx, cameraX) {
+                if (!this.alive) return;
+
+                ctx.save();
+                ctx.translate(this.x - cameraX, this.y);
+
+                if (this.invulnerableTimer % 2 === 1) {
+                    ctx.globalAlpha = 0.5;
+                }
+
+                // AI Core Sphere
+                ctx.fillStyle = '#1e1b4b';
+                ctx.beginPath();
+                ctx.arc(45, 45, 42, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                // Glowing Eye
+                ctx.fillStyle = '#dc2626';
+                ctx.beginPath();
+                ctx.arc(45, 45, 18 + Math.sin(Date.now() / 150) * 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        class Projectile {
+            constructor(x, y, vx) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.width = 16;
+                this.height = 12;
+                this.active = true;
+            }
+
+            update() {
+                this.x += this.vx;
+            }
+
+            draw(ctx, cameraX) {
+                if (!this.active) return;
+                ctx.fillStyle = '#60a5fa';
+                ctx.font = '12px Press Start 2P';
+                ctx.fillText('</>', this.x - cameraX, this.y);
+            }
+        }
+
+        class BossProjectile {
+            constructor(x, y, vx, vy) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.width = 16;
+                this.height = 16;
+                this.active = true;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw(ctx, cameraX) {
+                if (!this.active) return;
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath();
+                ctx.arc(this.x - cameraX, this.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Platform {
+            constructor(x, y, w, h, type = 'normal', isLearningBox = false, item = null) {
+                this.x = x;
+                this.y = y;
+                this.width = w;
+                this.height = h;
+                this.type = type;
+                this.isLearningBox = isLearningBox;
+                this.item = item;
+                this.used = false;
+                this.bounceY = 0;
+            }
+
+            triggerHit() {
+                if (this.used) return;
+                this.used = true;
+                this.bounceY = -8;
+
+                if (this.item === 'star') {
+                    stars.push(new KnowledgeStar(this.x + this.width / 2 - 10, this.y - 30));
+                    sounds.collect();
+                } else if (this.item === 'coding' || this.item === 'shield') {
+                    powerups.push(new PowerUpItem(this.x + this.width / 2 - 12, this.y - 32, this.item));
+                    sounds.powerUp();
+                }
+            }
+
+            update() {
+                if (this.bounceY < 0) {
+                    this.bounceY += 1;
+                }
+            }
+
+            draw(ctx, cameraX) {
+                ctx.save();
+                const drawY = this.y + this.bounceY;
+
+                if (this.isLearningBox) {
+                    ctx.fillStyle = this.used ? '#64748b' : '#f59e0b';
+                    ctx.fillRect(this.x - cameraX, drawY, this.width, this.height);
+                    ctx.strokeStyle = '#fef08a';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(this.x - cameraX, drawY, this.width, this.height);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '14px Press Start 2P';
+                    ctx.fillText(this.used ? '✓' : '?', this.x - cameraX + 10, drawY + 22);
+                } else {
+                    if (activeLevel === 1) {
+                        ctx.fillStyle = '#15803d';
+                        ctx.fillRect(this.x - cameraX, drawY, this.width, 8);
+                        ctx.fillStyle = '#78350f';
+                        ctx.fillRect(this.x - cameraX, drawY + 8, this.width, this.height - 8);
+                    } else if (activeLevel === 2) {
+                        ctx.fillStyle = '#334155';
+                        ctx.fillRect(this.x - cameraX, drawY, this.width, this.height);
+                        ctx.strokeStyle = '#38bdf8';
+                        ctx.strokeRect(this.x - cameraX, drawY, this.width, this.height);
+                    } else {
+                        ctx.fillStyle = '#854d0e';
+                        ctx.fillRect(this.x - cameraX, drawY, this.width, this.height);
+                    }
+                }
+
+                ctx.restore();
+            }
+        }
+
+        class KnowledgeStar {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 22;
+                this.height = 22;
+                this.collected = false;
+            }
+
+            draw(ctx, cameraX) {
+                if (this.collected) return;
+                ctx.fillStyle = '#facc15';
+                ctx.font = '16px Press Start 2P';
+                ctx.fillText('⭐', this.x - cameraX, this.y + 16);
+            }
+        }
+
+        class PowerUpItem {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.width = 24;
+                this.height = 24;
+                this.collected = false;
+            }
+
+            draw(ctx, cameraX) {
+                if (this.collected) return;
+                ctx.font = '18px Press Start 2P';
+                ctx.fillText(this.type === 'coding' ? '💻' : '🛡️', this.x - cameraX, this.y + 18);
+            }
+        }
+
+        let player = new Player(80, 300);
+        let platforms = [];
+        let enemies = [];
+        let stars = [];
+        let powerups = [];
+        let playerProjectiles = [];
+        let bossProjectiles = [];
+        let boss = null;
+        let score = 0;
+        let starCount = 0;
+        let cameraX = 0;
+
+        const input = { left: false, right: false, jump: false };
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyA' || e.code === 'ArrowLeft') input.left = true;
+            if (e.code === 'KeyD' || e.code === 'ArrowRight') input.right = true;
+            if (e.code === 'KeyW' || e.code === 'ArrowUp' || e.code === 'Space') input.jump = true;
+            if (e.code === 'KeyK' || e.code === 'KeyX') shootCode();
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'KeyA' || e.code === 'ArrowLeft') input.left = false;
+            if (e.code === 'KeyD' || e.code === 'ArrowRight') input.right = false;
+            if (e.code === 'KeyW' || e.code === 'ArrowUp' || e.code === 'Space') input.jump = false;
+        });
+
+        document.getElementById('btn-left').addEventListener('touchstart', (e) => { e.preventDefault(); input.left = true; });
+        document.getElementById('btn-left').addEventListener('touchend', (e) => { e.preventDefault(); input.left = false; });
+        document.getElementById('btn-right').addEventListener('touchstart', (e) => { e.preventDefault(); input.right = true; });
+        document.getElementById('btn-right').addEventListener('touchend', (e) => { e.preventDefault(); input.right = false; });
+        document.getElementById('btn-jump').addEventListener('touchstart', (e) => { e.preventDefault(); input.jump = true; });
+        document.getElementById('btn-jump').addEventListener('touchend', (e) => { e.preventDefault(); input.jump = false; });
+        document.getElementById('btn-fire').addEventListener('touchstart', (e) => { e.preventDefault(); shootCode(); });
+
+        function shootCode() {
+            if (player.powerup === 'coding' || activeLevel === 4) {
+                const dir = player.facing === 'right' ? 11 : -11;
+                playerProjectiles.push(new Projectile(player.x + 20, player.y + 20, dir));
+                sounds.shoot();
+            }
+        }
+
+        function loadLevel(lvl) {
+            activeLevel = lvl;
+            platforms = [];
+            enemies = [];
+            stars = [];
+            powerups = [];
+            playerProjectiles = [];
+            bossProjectiles = [];
+            boss = null;
+            cameraX = 0;
+            player.x = 80;
+            player.y = 300;
+
+            document.getElementById('level-num').innerText = `${lvl}/4`;
+            document.getElementById('boss-hud').classList.add('hidden');
+
+            if (lvl === 1) { // LEVEL 1: Campus Grounds (Ends at Academic Wing at x = 1800)
+                platforms.push(new Platform(0, 480, 2200, 60)); // Baseline
+                platforms.push(new Platform(280, 370, 140, 20));
+                platforms.push(new Platform(320, 250, 40, 40, 'normal', true, 'star'));
+                platforms.push(new Platform(520, 330, 160, 20));
+                platforms.push(new Platform(580, 210, 40, 40, 'normal', true, 'coding'));
+                platforms.push(new Platform(820, 350, 180, 20));
+                platforms.push(new Platform(1100, 310, 150, 20));
+                platforms.push(new Platform(1150, 190, 40, 40, 'normal', true, 'shield'));
+                platforms.push(new Platform(1380, 360, 160, 20));
+
+                enemies.push(new Enemy(450, 444, 'robot'));
+                enemies.push(new Enemy(860, 314, 'drone'));
+                enemies.push(new Enemy(1200, 444, 'virus'));
+
+                stars.push(new KnowledgeStar(300, 340));
+                stars.push(new KnowledgeStar(540, 300));
+                stars.push(new KnowledgeStar(1400, 320));
+            } 
+            else if (lvl === 2) { // LEVEL 2: Technology Building (Ends at Tech Center at x = 1800)
+                platforms.push(new Platform(0, 480, 2200, 60));
+                platforms.push(new Platform(240, 380, 140, 20));
+                platforms.push(new Platform(440, 320, 140, 20));
+                platforms.push(new Platform(480, 200, 40, 40, 'normal', true, 'coding'));
+                platforms.push(new Platform(700, 280, 200, 20));
+                platforms.push(new Platform(1000, 350, 180, 20));
+                platforms.push(new Platform(1050, 230, 40, 40, 'normal', true, 'star'));
+                platforms.push(new Platform(1350, 340, 160, 20));
+
+                enemies.push(new Enemy(300, 344, 'virus'));
+                enemies.push(new Enemy(750, 244, 'drone'));
+                enemies.push(new Enemy(1050, 314, 'robot'));
+
+                stars.push(new KnowledgeStar(260, 350));
+                stars.push(new KnowledgeStar(720, 250));
+            } 
+            else if (lvl === 3) { // LEVEL 3: Library Archives (Ends at Library Hub at x = 1800)
+                platforms.push(new Platform(0, 480, 2200, 60));
+                platforms.push(new Platform(280, 350, 160, 20));
+                platforms.push(new Platform(500, 290, 140, 20));
+                platforms.push(new Platform(550, 170, 40, 40, 'normal', true, 'shield'));
+                platforms.push(new Platform(760, 340, 180, 20));
+                platforms.push(new Platform(1050, 300, 160, 20));
+                platforms.push(new Platform(1100, 180, 40, 40, 'normal', true, 'coding'));
+                platforms.push(new Platform(1380, 360, 160, 20));
+
+                enemies.push(new Enemy(320, 314, 'book'));
+                enemies.push(new Enemy(520, 254, 'drone'));
+                enemies.push(new Enemy(800, 304, 'book'));
+
+                stars.push(new KnowledgeStar(300, 320));
+                stars.push(new KnowledgeStar(780, 310));
+            } 
+            else if (lvl === 4) { // LEVEL 4: Final Level - School HQ & Boss Arena
+                document.getElementById('boss-hud').classList.remove('hidden');
+                player.powerup = 'coding'; // Permanent coding power enabled for Boss Fight!
+                document.getElementById('powerup-badge').classList.remove('hidden');
+                document.getElementById('powerup-badge').innerText = 'POWER: CODING 💻';
+                document.getElementById('btn-fire').classList.remove('hidden');
+
+                boss = new Boss(1500, 320);
+
+                // Enclosed Arena Platforms
+                platforms.push(new Platform(0, 480, 2200, 60));
+                platforms.push(new Platform(0, 0, 20, 480)); // Left boundary wall
+                platforms.push(new Platform(2180, 0, 20, 480)); // Right boundary wall
+
+                platforms.push(new Platform(300, 360, 140, 20));
+                platforms.push(new Platform(600, 300, 160, 20));
+                platforms.push(new Platform(900, 360, 140, 20));
+                platforms.push(new Platform(1200, 320, 140, 20));
+                platforms.push(new Platform(1500, 260, 140, 20));
+                platforms.push(new Platform(1250, 180, 40, 40, 'normal', true, 'shield'));
+            }
+        }
+
+        function update() {
+            if (isPaused || !gameStarted) return;
+
+            player.update(input, platforms);
+            cameraX = Math.max(0, Math.min(player.x - V_WIDTH / 3, 1200));
+
+            platforms.forEach(p => p.update());
+
+            // Collect Knowledge Stars
+            stars.forEach(s => {
+                if (!s.collected && player.collidesWith(s)) {
+                    s.collected = true;
+                    starCount++;
+                    score += 150;
+                    sounds.collect();
+                    updateHUD();
+                }
+            });
+
+            // Collect Power-ups
+            powerups.forEach(p => {
+                if (!p.collected && player.collidesWith(p)) {
+                    p.collected = true;
+                    player.powerup = p.type;
+                    player.powerupTimer = 600;
+                    score += 300;
+                    const badge = document.getElementById('powerup-badge');
+                    badge.classList.remove('hidden');
+                    badge.innerText = p.type === 'coding' ? 'POWER: CODING 💻' : 'POWER: SHIELD 🛡️';
+                    if (p.type === 'coding') document.getElementById('btn-fire').classList.remove('hidden');
+                    sounds.powerUp();
+                    updateHUD();
+                }
+            });
+
+            // Player Code Projectiles vs Enemies & Boss
+            playerProjectiles.forEach(proj => {
+                if (!proj.active) return;
+                proj.update();
+
+                enemies.forEach(e => {
+                    if (e.alive && proj.active && proj.x < e.x + e.width && proj.x + proj.width > e.x && proj.y < e.y + e.height && proj.y + proj.height > e.y) {
+                        e.hp--;
+                        proj.active = false;
+                        if (e.hp <= 0) {
+                            e.alive = false;
+                            score += 200;
+                            sounds.stomp();
+                            updateHUD();
+                        }
+                    }
+                });
+
+                if (boss && boss.alive && proj.active && proj.x < boss.x + boss.width && proj.x + proj.width > boss.x && proj.y < boss.y + boss.height && proj.y + proj.height > boss.y) {
+                    proj.active = false;
+                    boss.takeDamage(1);
+                }
+            });
+
+            // Boss Projectiles vs Player
+            bossProjectiles.forEach(bp => {
+                if (!bp.active) return;
+                bp.update();
+                if (player.collidesWith(bp)) {
+                    bp.active = false;
+                    player.takeDamage(18);
+                }
+            });
+
+            // Enemies collision with Player
+            enemies.forEach(e => {
+                if (!e.alive) return;
+                e.update();
+
+                if (player.collidesWith(e)) {
+                    if (player.vy > 0 && player.y + player.height - player.vy <= e.y + 14) {
+                        e.alive = false;
+                        player.vy = -9.5;
+                        score += 200;
+                        sounds.stomp();
+                        updateHUD();
+                    } else {
+                        player.takeDamage(15);
+                    }
+                }
+            });
+
+            // Boss update & Jump-Stomp collision logic
+            if (boss && boss.alive) {
+                boss.update(player, bossProjectiles);
+
+                if (player.collidesWith(boss)) {
+                    // Stomping on top of boss head damages boss!
+                    if (player.vy > 0 && player.y + player.height - player.vy <= boss.y + 20) {
+                        boss.takeDamage(1);
+                        player.vy = -12; // High jump bounce off boss
+                    } else {
+                        player.takeDamage(20);
+                    }
+                }
+            }
+
+            // LEVEL ENDING CHECK: Reaching the building entrance at x > 1750 (Levels 1-3)
+            if (activeLevel < 4 && player.x > 1750) {
+                activeLevel++;
+                showLevelTransition();
+            }
+        }
+
+        function render() {
+            // Level Theme Sky Colors
+            if (activeLevel === 1) ctx.fillStyle = '#38bdf8';
+            else if (activeLevel === 2) ctx.fillStyle = '#0f172a';
+            else if (activeLevel === 3) ctx.fillStyle = '#292524';
+            else ctx.fillStyle = '#1e1b4b';
+
+            ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+            // Parallax Background Clouds / Decor
+            if (activeLevel === 1) {
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(200 - cameraX * 0.2, 80, 32, 0, Math.PI * 2);
+                ctx.arc(650 - cameraX * 0.2, 100, 40, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // DRAW LEVEL END BUILDINGS: Every level ends with its distinct building!
+            if (activeLevel === 1) {
+                ctx.drawImage(sprites.academicBuildingCanvas, 1750 - cameraX, 220, 280, 260);
+            } else if (activeLevel === 2) {
+                ctx.drawImage(sprites.techBuildingCanvas, 1750 - cameraX, 220, 280, 260);
+            } else if (activeLevel === 3) {
+                ctx.drawImage(sprites.libraryBuildingCanvas, 1750 - cameraX, 220, 280, 260);
+            } else if (activeLevel === 4) {
+                // Main Uploaded School HQ Building at end of Level 4
+                ctx.drawImage(sprites.schoolHQCanvas, 1800 - cameraX, 200, 320, 280);
+            }
+
+            // Render Platforms
+            platforms.forEach(p => p.draw(ctx, cameraX));
+
+            // Render Items
+            stars.forEach(s => s.draw(ctx, cameraX));
+            powerups.forEach(p => p.draw(ctx, cameraX));
+            playerProjectiles.forEach(p => p.draw(ctx, cameraX));
+            bossProjectiles.forEach(bp => bp.draw(ctx, cameraX));
+
+            // Render Enemies & Boss
+            enemies.forEach(e => e.draw(ctx, cameraX));
+            if (boss) boss.draw(ctx, cameraX);
+
+            // Render Player Hero
+            player.draw(ctx, cameraX);
+        }
+
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updateHUD() {
+            document.getElementById('star-count').innerText = starCount;
+            document.getElementById('score-count').innerText = String(score).padStart(5, '0');
+            document.getElementById('hp-bar').style.width = `${player.hp}%`;
+
+            let hearts = '';
+            for (let i = 0; i < player.lives; i++) hearts += '❤️';
+            document.getElementById('lives-container').innerText = hearts || '💀';
+        }
+
+        function showLevelTransition() {
+            isPaused = true;
+            const names = [
+                'Academic & Science Wing',
+                'Technology & Robotics Center',
+                'Grand Library Archives',
+                'School Headquarters'
+            ];
+            document.getElementById('msg-title').innerText = `LEVEL ${activeLevel - 1} SECURED!`;
+            document.getElementById('msg-body').innerText = `Hero entered the building! Advancing to Level ${activeLevel}: ${names[activeLevel - 1]}`;
+            document.getElementById('msg-continue-btn').innerText = 'CONTINUE ▶';
+            document.getElementById('msg-modal').classList.remove('hidden');
+        }
+
+        function triggerVictory() {
+            sounds.victory();
+            isPaused = true;
+            document.getElementById('msg-title').innerText = `CAMPUS RESTORED! 🎓`;
+            document.getElementById('msg-body').innerText = `Congratulations! You defeated the AI Guardian Overlord at the School HQ! Final Score: ${score}`;
+            document.getElementById('msg-continue-btn').innerText = 'PLAY AGAIN 🔄';
+            document.getElementById('msg-modal').classList.remove('hidden');
+        }
+
+        function gameOver() {
+            isPaused = true;
+            document.getElementById('msg-title').innerText = `MISSION FAILED`;
+            document.getElementById('msg-body').innerText = `The AI network overrode system defenses. Try again!`;
+            document.getElementById('msg-continue-btn').innerText = 'RETRY LEVEL 🔄';
+            document.getElementById('msg-modal').classList.remove('hidden');
+        }
+
+        document.getElementById('start-game-btn').addEventListener('click', () => {
+            document.getElementById('start-modal').classList.add('hidden');
+            gameStarted = true;
+            sounds.startBGM();
+            loadLevel(1);
+        });
+
+        document.getElementById('msg-continue-btn').addEventListener('click', () => {
+            document.getElementById('msg-modal').classList.add('hidden');
+            if (player.lives < 0 || (boss && !boss.alive)) {
+                player.lives = 3;
+                score = 0;
+                starCount = 0;
+                loadLevel(1);
+            } else {
+                loadLevel(activeLevel);
+            }
+            isPaused = false;
+            updateHUD();
+        });
+
+        document.getElementById('sound-btn').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-btn').innerText = soundEnabled ? '🔊' : '🔇';
+        });
+
+        document.getElementById('pause-btn').addEventListener('click', () => {
+            isPaused = !isPaused;
+            document.getElementById('pause-btn').innerText = isPaused ? '▶️' : '⏸️';
+        });
+
+        window.onload = function() {
+            gameLoop();
+        };
+    </script>
+</body>
+</html>

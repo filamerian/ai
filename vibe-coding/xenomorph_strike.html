@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XENOMORPH STRIKE - 1990s FPS Raycaster</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050508;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff66;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        canvas#viewport {
+            width: 100%;
+            height: 100%;
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Overlay UI Screens */
+        .ui-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 12, 0.88);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            text-align: center;
+            padding: 20px;
+            box-shadow: inset 0 0 100px rgba(0, 255, 102, 0.2);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1.title {
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            color: #00ff66;
+            text-shadow: 0 0 20px #00ff66, 3px 3px 0px #990000;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+            color: #ff3366;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px #ff3366;
+        }
+
+        .instructions-box {
+            background: rgba(0, 20, 10, 0.8);
+            border: 2px solid #00ff66;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 650px;
+            width: 90%;
+            margin-bottom: 25px;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+
+        .instructions-box h3 {
+            color: #ffff00;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #ffff00;
+            padding-bottom: 5px;
+        }
+
+        .btn {
+            background: #00441b;
+            color: #00ff66;
+            border: 2px solid #00ff66;
+            padding: 14px 32px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+        }
+
+        .btn:hover {
+            background: #00ff66;
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* HUD overlay */
+        #hud-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px;
+            width: 100%;
+        }
+
+        .hud-card {
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #00ff66;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: #00ff66;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+            text-shadow: 0 0 5px #00ff66;
+        }
+
+        .hud-card span {
+            color: #fff;
+        }
+
+        #minimap-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            border: 2px solid #00ff66;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.85);
+            overflow: hidden;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
+        }
+
+        #minimap {
+            display: block;
+        }
+
+        /* Retro Status Bar at bottom */
+        #status-bar {
+            width: 100%;
+            height: 64px;
+            background: linear-gradient(180deg, #222 0%, #111 100%);
+            border-top: 3px solid #444;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .stat-block {
+            background: #000;
+            border: 2px inset #555;
+            padding: 4px 12px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ff3300;
+            text-shadow: 0 0 8px rgba(255, 51, 0, 0.6);
+        }
+
+        .stat-value.health-val { color: #00ff66; text-shadow: 0 0 8px rgba(0, 255, 102, 0.6); }
+        .stat-value.ammo-val { color: #ffff00; text-shadow: 0 0 8px rgba(255, 255, 0, 0.6); }
+        .stat-value.score-val { color: #00ccff; text-shadow: 0 0 8px rgba(0, 204, 255, 0.6); }
+
+        #face-avatar {
+            width: 48px;
+            height: 48px;
+            background: #111;
+            border: 2px solid #666;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        /* Touch On-Screen Controls for Mobile */
+        #touch-controls {
+            position: absolute;
+            bottom: 75px;
+            left: 0;
+            width: 100%;
+            display: none;
+            justify-content: space-between;
+            padding: 0 20px;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 900px) {
+            #touch-controls { display: flex; }
+        }
+
+        .dpad, .action-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 50px);
+            grid-template-rows: repeat(3, 50px);
+            gap: 5px;
+        }
+
+        .touch-btn {
+            background: rgba(0, 255, 102, 0.2);
+            border: 2px solid #00ff66;
+            color: #00ff66;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+
+        .touch-btn:active {
+            background: rgba(0, 255, 102, 0.6);
+            color: #000;
+        }
+
+        /* Flash damage indicator */
+        #damage-flash {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0.35);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s ease-out;
+            z-index: 20;
+        }
+
+        #pickup-flash {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 255, 102, 0.25);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s ease-out;
+            z-index: 20;
+        }
+
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        #crosshair::before, #crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 255, 102, 0.75);
+        }
+
+        #crosshair::before {
+            top: 7px; left: 0; width: 16px; height: 2px;
+        }
+
+        #crosshair::after {
+            top: 0; left: 7px; width: 2px; height: 16px;
+        }
+
+        #msg-log {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffff00;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px #000, 0 0 5px #ffff00;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 25;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!--
+    ================================================================================
+    RAYCASTING & AI-ASSISTED DEVELOPMENT ARCHITECTURE DOCUMENTATION
+    ================================================================================
+    1. HOW RAYCASTING WORKS IN THIS ENGINE:
+       - Raycasting simulates a 3D perspective inside a 2D grid map (Wolfenstein 3D style).
+       - For every vertical pixel column across the viewport width:
+         a) Calculate the ray angle relative to player position and direction vector + camera plane.
+         b) Execute DDA (Digital Differential Analysis) algorithm to step through grid squares until colliding with a wall.
+         c) Measure perpendicular distance from player to wall to prevent "fisheye" distortion.
+         d) Calculate rendered wall height on screen: height = (viewportHeight / distance).
+         e) Map exact texture coordinate column (wallX) and sample vertical color slices from procedural 64x64 textures.
+         f) Store wall distance in a depth array (zBuffer) for each screen column.
+       - Sprite Engine (Aliens & Items):
+         a) Sort entities from furthest to nearest.
+         b) Project 3D map coordinates to camera screen space using matrix transformation.
+         c) Draw vertical sprite slices only if sprite distance < zBuffer[column], granting realistic wall clipping!
+
+    2. AI-ASSISTED DEVELOPMENT HIGHLIGHTS:
+       - Procedural Generation: All textures (Classic Red Brick, Mossy Sci-Fi Brick, Metal Tech Walls, Exit Gates) and multi-frame alien sprites are generated algorithmically using Offscreen Canvases without external image files.
+       - Audio Synthesizer: Built-in sound generator using Web Audio API oscillators and noise buffers for weapons, alien screams, and pickups.
+       - Optimization: High frame-rate performance using integer slice mapping, pre-rendered procedural textures, and efficient DDA ray loops.
+    ================================================================================
+    -->
+
+    <div id="game-container">
+        <!-- Main Canvas -->
+        <canvas id="viewport"></canvas>
+
+        <!-- Flash Overlay FX -->
+        <div id="damage-flash"></div>
+        <div id="pickup-flash"></div>
+        <div id="crosshair"></div>
+        <div id="msg-log">SYSTEM ONLINE</div>
+
+        <!-- HUD Overlay -->
+        <div id="hud-layer">
+            <div class="top-hud">
+                <div class="hud-card">LEVEL: <span id="hud-level">1</span></div>
+                <div class="hud-card">ENEMIES: <span id="hud-enemies">0/0</span></div>
+            </div>
+
+            <div id="minimap-container">
+                <canvas id="minimap" width="130" height="130"></canvas>
+            </div>
+
+            <!-- Touch Controls for Mobile devices -->
+            <div id="touch-controls">
+                <div class="dpad">
+                    <div></div>
+                    <div class="touch-btn" id="t-up">▲</div>
+                    <div></div>
+                    <div class="touch-btn" id="t-left">◀</div>
+                    <div class="touch-btn" id="t-down">▼</div>
+                    <div class="touch-btn" id="t-right">▶</div>
+                </div>
+                <div class="action-pad">
+                    <div></div>
+                    <div class="touch-btn" id="t-strafe-l">⇇</div>
+                    <div></div>
+                    <div class="touch-btn" id="t-turn-l">↺</div>
+                    <div class="touch-btn" style="grid-column: span 1; background:rgba(255,51,0,0.4);" id="t-fire">🔥</div>
+                    <div class="touch-btn" id="t-turn-r">↻</div>
+                </div>
+            </div>
+
+            <!-- Retro Status Bar -->
+            <div id="status-bar">
+                <div class="stat-block">
+                    <div class="stat-label">HEALTH</div>
+                    <div class="stat-value health-val" id="hud-health">100%</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">AMMO</div>
+                    <div class="stat-value ammo-val" id="hud-ammo">50</div>
+                </div>
+                <div id="face-avatar">👽</div>
+                <div class="stat-block">
+                    <div class="stat-label">SCORE</div>
+                    <div class="stat-value score-val" id="hud-score">000000</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">EXIT GATE</div>
+                    <div class="stat-value" style="color:#ffff00; font-size:1rem;" id="hud-key">LOCKED</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Title / Start Screen -->
+        <div id="start-screen" class="ui-screen">
+            <h1 class="title">XENOMORPH STRIKE</h1>
+            <div class="subtitle">RETRO 1990s RAYCASTING FIRST-PERSON SHOOTER</div>
+            
+            <div class="instructions-box">
+                <h3>MISSION DIRECTIVE:</h3>
+                <p>An alien organism infestation has overrun the subterranean brick facility. Purge all alien creatures and locate the glowing teleporter portal to clear each sector!</p>
+                <br>
+                <h3>CONTROLS:</h3>
+                <p>• <b>W, A, S, D</b> : Move Forward / Strafe Left / Backward / Strafe Right</p>
+                <p>• <b>LEFT / RIGHT ARROWS</b> : Turn Camera Rotation</p>
+                <p>• <b>SPACEBAR or CLICK</b> : Fire Plasma Blaster</p>
+                <p>• <b>E Key</b> : Interact / Open Portal Exit when unlocked</p>
+            </div>
+
+            <button class="btn" id="btn-start">INITIALIZE MISSION</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="ui-screen hidden">
+            <h1 class="title" style="color:#ff0033; text-shadow:0 0 20px #ff0033;">SUBJECT TERMINATED</h1>
+            <div class="subtitle">YOU WERE OVERRUN BY THE ALIEN INFESTATION</div>
+            <div class="hud-card" style="margin-bottom: 20px;">FINAL SCORE: <span id="final-score-dead">0</span></div>
+            <button class="btn" id="btn-restart">REDEPLOY SOLDIER</button>
+        </div>
+
+        <!-- Level Complete / Victory Screen -->
+        <div id="victory-screen" class="ui-screen hidden">
+            <h1 class="title" style="color:#ffff00; text-shadow:0 0 20px #ffff00;">SECTOR CLEARED!</h1>
+            <div class="subtitle" id="victory-subtitle">WARP PORTAL STABILIZED</div>
+            <div class="hud-card" style="margin-bottom: 20px;">TOTAL SCORE: <span id="final-score-win">0</span></div>
+            <button class="btn" id="btn-next">PROCEED TO NEXT SECTOR</button>
+        </div>
+    </div>
+
+    <script>
+        /*
+         * SYNTHESIZED SOUND EFFECTS ENGINE (Web Audio API)
+         */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioCtx();
+                }
+            }
+
+            playShoot() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.15);
+            }
+
+            playHit() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.1);
+
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+
+            playAlienDeath() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.linearRampToValueAtTime(50, now + 0.3);
+
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+
+            playHurt() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(120, now);
+                osc.frequency.linearRampToValueAtTime(40, now + 0.2);
+
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+
+            playPickup() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.setValueAtTime(800, now + 0.08);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        }
+
+        const audio = new SoundEngine();
+
+        /*
+         * PROCEDURAL TEXTURE GENERATOR
+         * Creates 64x64 textures algorithmically on hidden canvas elements
+         */
+        const TEX_SIZE = 64;
+        const textures = {};
+
+        function createProceduralTextures() {
+            // Helper to build offscreen canvas texture
+            function buildTex(drawFn) {
+                const c = document.createElement('canvas');
+                c.width = TEX_SIZE;
+                c.height = TEX_SIZE;
+                const ctx = c.getContext('2d');
+                drawFn(ctx);
+                return c;
+            }
+
+            // Texture 1: Classic Red Brick Wall
+            textures[1] = buildTex(ctx => {
+                ctx.fillStyle = '#7a1f1d';
+                ctx.fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+
+                // Mortar background
+                ctx.fillStyle = '#2b2625';
+                
+                // Brick pattern lines
+                const brickH = 8;
+                const brickW = 16;
+                for (let y = 0; y < TEX_SIZE; y += brickH) {
+                    ctx.fillRect(0, y, TEX_SIZE, 1);
+                    const offset = (y / brickH) % 2 === 0 ? 0 : brickW / 2;
+                    for (let x = offset; x < TEX_SIZE; x += brickW) {
+                        ctx.fillRect(x, y, 1, brickH);
+                    }
+                }
+
+                // Add texture noise & shading highlights
+                for (let y = 0; y < TEX_SIZE; y++) {
+                    for (let x = 0; x < TEX_SIZE; x++) {
+                        if (Math.random() < 0.15) {
+                            ctx.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.2)';
+                            ctx.fillRect(x, y, 1, 1);
+                        }
+                    }
+                }
+            });
+
+            // Texture 2: Mossy Alien Hive Brick Wall
+            textures[2] = buildTex(ctx => {
+                ctx.fillStyle = '#1c1b29';
+                ctx.fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+
+                // Dark purple/indigo bricks with green slime veins
+                const brickH = 10;
+                const brickW = 21;
+                for (let y = 0; y < TEX_SIZE; y += brickH) {
+                    ctx.fillStyle = '#0f0e1a';
+                    ctx.fillRect(0, y, TEX_SIZE, 2);
+                    const offset = (y / brickH) % 2 === 0 ? 0 : brickW / 2;
+                    for (let x = offset; x < TEX_SIZE; x += brickW) {
+                        ctx.fillRect(x, y, 2, brickH);
+                    }
+                }
+
+                // Bio-luminescent green slime spots
+                for (let i = 0; i < 35; i++) {
+                    const sx = Math.floor(Math.random() * TEX_SIZE);
+                    const sy = Math.floor(Math.random() * TEX_SIZE);
+                    ctx.fillStyle = Math.random() < 0.6 ? '#10b981' : '#059669';
+                    ctx.fillRect(sx, sy, Math.random() * 3 + 1, Math.random() * 3 + 1);
+                }
+            });
+
+            // Texture 3: Sci-Fi Metallic Wall with Glowing Vents
+            textures[3] = buildTex(ctx => {
+                ctx.fillStyle = '#374151';
+                ctx.fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+
+                // Metal panels frame
+                ctx.strokeStyle = '#1f2937';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(2, 2, TEX_SIZE - 4, TEX_SIZE - 4);
+                ctx.strokeRect(10, 10, TEX_SIZE - 20, TEX_SIZE - 20);
+
+                // Glowing blue energy grill in middle
+                ctx.fillStyle = '#06b6d4';
+                for (let y = 16; y < 48; y += 6) {
+                    ctx.fillRect(16, y, 32, 3);
+                }
+
+                // Corner rivets
+                ctx.fillStyle = '#9ca3af';
+                const rivets = [[5, 5], [57, 5], [5, 57], [57, 57]];
+                rivets.forEach(([rx, ry]) => ctx.fillRect(rx, ry, 2, 2));
+            });
+
+            // Texture 4: Teleporter Exit Portal Gate
+            textures[4] = buildTex(ctx => {
+                ctx.fillStyle = '#111827';
+                ctx.fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+
+                // Arch frame
+                ctx.fillStyle = '#f59e0b';
+                ctx.fillRect(0, 0, 8, TEX_SIZE);
+                ctx.fillRect(TEX_SIZE - 8, 0, 8, TEX_SIZE);
+                ctx.fillRect(0, 0, TEX_SIZE, 8);
+
+                // Swirling portal center
+                const grad = ctx.createRadialGradient(32, 32, 2, 32, 32, 28);
+                grad.addColorStop(0, '#00ffff');
+                grad.addColorStop(0.5, '#a855f7');
+                grad.addColorStop(1, '#000000');
+                ctx.fillStyle = grad;
+                ctx.fillRect(8, 8, TEX_SIZE - 16, TEX_SIZE - 16);
+            });
+        }
+
+        /*
+         * PROCEDURAL SPRITE CANVAS GENERATOR
+         */
+        const spriteTextures = {
+            alienLurker: [],
+            alienGazer: [],
+            healthPack: null,
+            ammoPack: null
+        };
+
+        function createProceduralSprites() {
+            function build(w, h, drawFn) {
+                const c = document.createElement('canvas');
+                c.width = w;
+                c.height = h;
+                const ctx = c.getContext('2d');
+                drawFn(ctx, w, h);
+                return c;
+            }
+
+            // --- Alien Lurker (Quadruped Green Insectoid Alien) Frame 0 & Frame 1 ---
+            for (let frame = 0; frame < 2; frame++) {
+                spriteTextures.alienLurker.push(build(64, 64, (ctx, w, h) => {
+                    const legOffset = frame * 4;
+
+                    // Alien Body
+                    ctx.fillStyle = '#047857';
+                    ctx.beginPath();
+                    ctx.ellipse(32, 36, 18, 14, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Alien Head
+                    ctx.fillStyle = '#10b981';
+                    ctx.beginPath();
+                    ctx.arc(32, 22, 12, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Glowing Red Alien Eyes
+                    ctx.fillStyle = '#ff0033';
+                    ctx.fillRect(25, 18, 4, 4);
+                    ctx.fillRect(35, 18, 4, 4);
+                    ctx.fillRect(30, 24, 4, 3);
+
+                    // Mandibles / Fangs
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.moveTo(26, 30); ctx.lineTo(28, 36); ctx.lineTo(30, 30);
+                    ctx.moveTo(34, 30); ctx.lineTo(36, 36); ctx.lineTo(38, 30);
+                    ctx.fill();
+
+                    // Claws / Legs
+                    ctx.strokeStyle = '#059669';
+                    ctx.lineWidth = 4;
+                    // Left legs
+                    ctx.beginPath();
+                    ctx.moveTo(18, 36); ctx.lineTo(6, 48 - legOffset); ctx.lineTo(2, 60);
+                    ctx.moveTo(22, 42); ctx.lineTo(10, 54 + legOffset); ctx.lineTo(6, 62);
+                    // Right legs
+                    ctx.moveTo(46, 36); ctx.lineTo(58, 48 + legOffset); ctx.lineTo(62, 60);
+                    ctx.moveTo(42, 42); ctx.lineTo(54, 54 - legOffset); ctx.lineTo(58, 62);
+                    ctx.stroke();
+                }));
+            }
+
+            // --- Alien Gazer (Floating Purple Eyeball Beholder) Frame 0 & Frame 1 ---
+            for (let frame = 0; frame < 2; frame++) {
+                spriteTextures.alienGazer.push(build(64, 64, (ctx, w, h) => {
+                    const tentacleShift = frame * 3;
+
+                    // Tentacles
+                    ctx.strokeStyle = '#7e22ce';
+                    ctx.lineWidth = 3;
+                    for (let i = -2; i <= 2; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(32 + i * 6, 42);
+                        ctx.quadraticCurveTo(32 + i * 10 + tentacleShift, 52, 32 + i * 8 - tentacleShift, 62);
+                        ctx.stroke();
+                    }
+
+                    // Main Sphere Body
+                    const grad = ctx.createRadialGradient(28, 24, 4, 32, 28, 20);
+                    grad.addColorStop(0, '#c084fc');
+                    grad.addColorStop(1, '#581c87');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(32, 28, 20, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Giant Central Eye
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(32, 26, 10, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Pupil
+                    ctx.fillStyle = '#dc2626';
+                    ctx.beginPath();
+                    ctx.arc(32 + (frame * 2 - 1), 26, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#000000';
+                    ctx.fillRect(31, 24, 2, 4);
+                }));
+            }
+
+            // --- Health Pickup (Medkit) ---
+            spriteTextures.healthPack = build(32, 32, (ctx, w, h) => {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(4, 8, 24, 18);
+                ctx.strokeStyle = '#999999';
+                ctx.strokeRect(4, 8, 24, 18);
+
+                // Red Cross
+                ctx.fillStyle = '#dc2626';
+                ctx.fillRect(13, 11, 6, 12);
+                ctx.fillRect(10, 14, 12, 6);
+            });
+
+            // --- Ammo Pickup ---
+            spriteTextures.ammoPack = build(32, 32, (ctx, w, h) => {
+                ctx.fillStyle = '#15803d';
+                ctx.fillRect(6, 10, 20, 16);
+                ctx.fillStyle = '#eab308';
+                ctx.fillRect(9, 6, 4, 6);
+                ctx.fillRect(15, 6, 4, 6);
+                ctx.fillRect(21, 6, 4, 6);
+            });
+        }
+
+        /*
+         * GAME MAPS & LEVEL DATA
+         */
+        const MAP_WIDTH = 16;
+        const MAP_HEIGHT = 16;
+
+        const LEVELS = [
+            {
+                name: "SECTOR 1: ALIEN OUTPOST",
+                grid: [
+                    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                    1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,
+                    1,0,1,0,1,0,1,1,1,1,0,1,0,1,0,1,
+                    1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,1,
+                    1,0,1,1,1,1,1,0,0,1,1,1,0,1,0,1,
+                    1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,
+                    1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,
+                    1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,
+                    1,0,1,1,1,1,1,0,0,1,1,1,0,1,0,1,
+                    1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,
+                    1,1,1,1,0,0,1,1,0,1,0,1,0,1,1,1,
+                    1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,
+                    1,0,0,1,1,1,1,0,1,1,1,1,1,1,0,1,
+                    1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,
+                    1,0,1,0,0,0,0,0,1,0,0,0,0,0,4,1,
+                    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+                ],
+                playerStart: { x: 1.5, y: 1.5, dirX: 1, dirY: 0, planeX: 0, planeY: 0.66 },
+                entities: [
+                    { type: 'lurker', x: 5.5, y: 1.5 },
+                    { type: 'lurker', x: 12.5, y: 3.5 },
+                    { type: 'gazer', x: 8.5, y: 7.5 },
+                    { type: 'lurker', x: 4.5, y: 11.5 },
+                    { type: 'gazer', x: 11.5, y: 13.5 },
+                    { type: 'health', x: 3.5, y: 3.5 },
+                    { type: 'ammo', x: 13.5, y: 1.5 },
+                    { type: 'ammo', x: 1.5, y: 13.5 }
+                ]
+            },
+            {
+                name: "SECTOR 2: HIVE CHAMBERS",
+                grid: [
+                    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+                    2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,
+                    2,0,2,2,0,2,0,2,2,0,2,0,2,2,0,2,
+                    2,0,2,0,0,0,0,0,2,0,0,0,0,2,0,2,
+                    2,0,2,0,2,2,2,0,2,2,2,2,0,2,0,2,
+                    2,0,0,0,2,0,0,0,0,0,0,2,0,0,0,2,
+                    2,2,2,0,2,0,2,2,2,2,0,2,0,2,2,2,
+                    2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,
+                    2,0,2,2,2,0,2,0,0,2,0,2,2,2,0,2,
+                    2,0,0,0,2,0,0,0,0,0,0,2,0,0,0,2,
+                    2,2,2,0,2,2,2,0,0,2,2,2,0,2,2,2,
+                    2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,
+                    2,0,2,2,2,0,2,2,2,2,0,2,2,2,0,2,
+                    2,0,2,0,0,0,0,0,0,0,0,0,0,2,0,2,
+                    2,0,0,0,2,2,2,2,2,2,2,2,0,0,4,2,
+                    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+                ],
+                playerStart: { x: 1.5, y: 1.5, dirX: 0, dirY: 1, planeX: -0.66, planeY: 0 },
+                entities: [
+                    { type: 'gazer', x: 3.5, y: 3.5 },
+                    { type: 'lurker', x: 9.5, y: 3.5 },
+                    { type: 'lurker', x: 13.5, y: 1.5 },
+                    { type: 'gazer', x: 1.5, y: 9.5 },
+                    { type: 'gazer', x: 14.5, y: 9.5 },
+                    { type: 'lurker', x: 7.5, y: 13.5 },
+                    { type: 'health', x: 1.5, y: 5.5 },
+                    { type: 'health', x: 14.5, y: 5.5 },
+                    { type: 'ammo', x: 7.5, y: 1.5 }
+                ]
+            }
+        ];
+
+        class GameEngine {
+            constructor() {
+                this.canvas = document.getElementById('viewport');
+                this.ctx = this.canvas.getContext('2d');
+                this.miniCanvas = document.getElementById('minimap');
+                this.miniCtx = this.miniCanvas.getContext('2d');
+
+                this.currentLevelIndex = 0;
+                this.map = [];
+                this.player = {
+                    x: 2, y: 2,
+                    dirX: 1, dirY: 0,
+                    planeX: 0, planeY: 0.66,
+                    health: 100,
+                    ammo: 50,
+                    score: 0,
+                    moveSpeed: 0.045,
+                    rotSpeed: 0.038
+                };
+
+                this.entities = [];
+                this.zBuffer = []; // Z-depth buffer for sprite rendering
+                this.keys = {};
+                this.gunRecoil = 0;
+                this.isFiring = false;
+                this.isRunning = false;
+                this.portalUnlocked = false;
+
+                this.bindEvents();
+                this.resize();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.zBuffer = new Array(this.canvas.width).fill(0);
+            }
+
+            loadLevel(index) {
+                const lvl = LEVELS[index];
+                this.currentLevelIndex = index;
+                this.map = [...lvl.grid];
+                this.player.x = lvl.playerStart.x;
+                this.player.y = lvl.playerStart.y;
+                this.player.dirX = lvl.playerStart.dirX;
+                this.player.dirY = lvl.playerStart.dirY;
+                this.player.planeX = lvl.playerStart.planeX;
+                this.player.planeY = lvl.playerStart.planeY;
+
+                this.portalUnlocked = false;
+
+                // Create entities with safety check to relocate off wall tiles
+                this.entities = lvl.entities.map((e, id) => {
+                    let hp = 30, speed = 0.02, scoreVal = 100;
+                    if (e.type === 'gazer') { hp = 50; speed = 0.025; scoreVal = 200; }
+
+                    let spawnX = e.x;
+                    let spawnY = e.y;
+
+                    // Ensure spawn point is strictly inside an open corridor tile
+                    if (this.map[Math.floor(spawnY) * MAP_WIDTH + Math.floor(spawnX)] !== 0) {
+                        for (let r = 1; r < 4; r++) {
+                            let relocated = false;
+                            for (let dy = -r; dy <= r; dy++) {
+                                for (let dx = -r; dx <= r; dx++) {
+                                    const testX = Math.floor(spawnX) + dx;
+                                    const testY = Math.floor(spawnY) + dy;
+                                    if (testX >= 0 && testX < MAP_WIDTH && testY >= 0 && testY < MAP_HEIGHT) {
+                                        if (this.map[testY * MAP_WIDTH + testX] === 0) {
+                                            spawnX = testX + 0.5;
+                                            spawnY = testY + 0.5;
+                                            relocated = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (relocated) break;
+                            }
+                            if (relocated) break;
+                        }
+                    }
+
+                    return {
+                        id,
+                        type: e.type,
+                        x: spawnX,
+                        y: spawnY,
+                        hp: hp,
+                        maxHp: hp,
+                        speed: speed,
+                        scoreValue: scoreVal,
+                        state: 'idle', // idle, chasing, dead
+                        animFrame: 0,
+                        animTimer: 0,
+                        dist: 0
+                    };
+                });
+
+                document.getElementById('hud-level').innerText = (index + 1);
+                document.getElementById('hud-key').innerText = "LOCKED";
+                document.getElementById('hud-key').style.color = "#ff3300";
+                this.showMessage(`ENTERED: ${lvl.name}`);
+                this.updateHUD();
+            }
+
+            bindEvents() {
+                window.addEventListener('resize', () => this.resize());
+
+                // Keyboard Controls
+                window.addEventListener('keydown', (e) => {
+                    this.keys[e.code] = true;
+                    if (e.code === 'Space' && !this.isFiring) {
+                        this.shootWeapon();
+                    }
+                    if (e.code === 'KeyE') {
+                        this.interact();
+                    }
+                });
+
+                window.addEventListener('keyup', (e) => {
+                    this.keys[e.code] = false;
+                });
+
+                // Mouse Click to Shoot
+                this.canvas.addEventListener('mousedown', (e) => {
+                    if (this.isRunning && e.button === 0) {
+                        this.shootWeapon();
+                    }
+                });
+
+                // UI Buttons
+                document.getElementById('btn-start').addEventListener('click', () => {
+                    audio.init();
+                    document.getElementById('start-screen').classList.add('hidden');
+                    this.loadLevel(0);
+                    this.isRunning = true;
+                    this.gameLoop();
+                });
+
+                document.getElementById('btn-restart').addEventListener('click', () => {
+                    document.getElementById('gameover-screen').classList.add('hidden');
+                    this.player.health = 100;
+                    this.player.ammo = 50;
+                    this.player.score = 0;
+                    this.loadLevel(0);
+                    this.isRunning = true;
+                });
+
+                document.getElementById('btn-next').addEventListener('click', () => {
+                    document.getElementById('victory-screen').classList.add('hidden');
+                    const nextLvl = (this.currentLevelIndex + 1) % LEVELS.length;
+                    this.loadLevel(nextLvl);
+                    this.isRunning = true;
+                });
+
+                // Touch Controls Bindings
+                const bindTouch = (id, code) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.addEventListener('touchstart', (e) => { e.preventDefault(); this.keys[code] = true; });
+                    el.addEventListener('touchend', (e) => { e.preventDefault(); this.keys[code] = false; });
+                };
+
+                bindTouch('t-up', 'KeyW');
+                bindTouch('t-down', 'KeyS');
+                bindTouch('t-left', 'KeyA');
+                bindTouch('t-right', 'KeyD');
+                bindTouch('t-strafe-l', 'KeyA');
+                bindTouch('t-turn-l', 'ArrowLeft');
+                bindTouch('t-turn-r', 'ArrowRight');
+
+                const fireBtn = document.getElementById('t-fire');
+                if (fireBtn) {
+                    fireBtn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        this.shootWeapon();
+                    });
+                }
+            }
+
+            showMessage(txt) {
+                const el = document.getElementById('msg-log');
+                el.innerText = txt;
+                el.style.opacity = 1;
+                clearTimeout(this.msgTimer);
+                this.msgTimer = setTimeout(() => { el.style.opacity = 0; }, 2500);
+            }
+
+            shootWeapon() {
+                if (this.player.ammo <= 0) {
+                    this.showMessage("OUT OF AMMO!");
+                    return;
+                }
+
+                this.player.ammo--;
+                this.gunRecoil = 15;
+                this.isFiring = true;
+                audio.playShoot();
+                this.updateHUD();
+
+                setTimeout(() => { this.isFiring = false; }, 150);
+
+                // Hitscan Raycast for shooting aliens directly down middle of screen
+                let closestEntity = null;
+                let minDist = 12.0;
+
+                this.entities.forEach(ent => {
+                    if (ent.type === 'health' || ent.type === 'ammo' || ent.state === 'dead') return;
+
+                    // Calculate relative angle to alien
+                    const dx = ent.x - this.player.x;
+                    const dy = ent.y - this.player.y;
+
+                    // Dot product to check if entity is in front
+                    const angleToEnt = Math.atan2(dy, dx);
+                    const playerAngle = Math.atan2(this.player.dirY, this.player.dirX);
+                    let diff = angleToEnt - playerAngle;
+
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+
+                    // If alien is near center crosshair
+                    if (Math.abs(diff) < 0.25) {
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            closestEntity = ent;
+                        }
+                    }
+                });
+
+                if (closestEntity) {
+                    closestEntity.hp -= 25;
+                    closestEntity.state = 'chasing';
+                    audio.playHit();
+
+                    if (closestEntity.hp <= 0) {
+                        closestEntity.state = 'dead';
+                        this.player.score += closestEntity.scoreValue;
+                        audio.playAlienDeath();
+                        this.showMessage(`ALIEN PURGED! +${closestEntity.scoreValue} PTS`);
+                        this.checkPortalUnlock();
+                        this.updateHUD();
+                    }
+                }
+            }
+
+            checkPortalUnlock() {
+                const activeAliens = this.entities.filter(e => e.type !== 'health' && e.type !== 'ammo' && e.state !== 'dead');
+                if (activeAliens.length === 0 && !this.portalUnlocked) {
+                    this.portalUnlocked = true;
+                    document.getElementById('hud-key').innerText = "OPEN";
+                    document.getElementById('hud-key').style.color = "#00ff66";
+                    this.showMessage("ALL ALIEN THREATS PURGED! WARP PORTAL IS UNLOCKED!");
+                    audio.playPickup();
+                }
+            }
+
+            interact() {
+                // Check if near exit portal tile (value 4)
+                const pX = Math.floor(this.player.x);
+                const pY = Math.floor(this.player.y);
+
+                const neighbors = [
+                    [pX, pY], [pX+1, pY], [pX-1, pY], [pX, pY+1], [pX, pY-1]
+                ];
+
+                for (let [nx, ny] of neighbors) {
+                    if (nx >= 0 && nx < MAP_WIDTH && ny >= 0 && ny < MAP_HEIGHT) {
+                        if (this.map[ny * MAP_WIDTH + nx] === 4) {
+                            if (this.portalUnlocked) {
+                                this.triggerVictory();
+                            } else {
+                                this.showMessage("WARP PORTAL LOCKED! ELIMINATE ALL ENEMIES FIRST!");
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+
+            triggerVictory() {
+                this.isRunning = false;
+                audio.playPickup();
+                document.getElementById('final-score-win').innerText = this.player.score;
+                if (this.currentLevelIndex + 1 < LEVELS.length) {
+                    document.getElementById('victory-subtitle').innerText = "WARP PORTAL STABILIZED - READY FOR NEXT SECTOR";
+                    document.getElementById('btn-next').innerText = "PROCEED TO NEXT SECTOR";
+                } else {
+                    document.getElementById('victory-subtitle').innerText = "ALL SECTORS CLEARED! YOU SAVED THE FACILITY!";
+                    document.getElementById('btn-next').innerText = "RESTART CAMPAIGN";
+                }
+                document.getElementById('victory-screen').classList.remove('hidden');
+            }
+
+            triggerGameOver() {
+                this.isRunning = false;
+                document.getElementById('final-score-dead').innerText = this.player.score;
+                document.getElementById('gameover-screen').classList.remove('hidden');
+            }
+
+            updateHUD() {
+                document.getElementById('hud-health').innerText = `${Math.max(0, Math.floor(this.player.health))}%`;
+                document.getElementById('hud-ammo').innerText = this.player.ammo;
+                document.getElementById('hud-score').innerText = String(this.player.score).padStart(6, '0');
+
+                const activeAliens = this.entities.filter(e => e.type !== 'health' && e.type !== 'ammo' && e.state !== 'dead').length;
+                const totalAliens = this.entities.filter(e => e.type !== 'health' && e.type !== 'ammo').length;
+                document.getElementById('hud-enemies').innerText = `${totalAliens - activeAliens}/${totalAliens}`;
+
+                // Face Avatar state updates based on health
+                const face = document.getElementById('face-avatar');
+                if (this.player.health > 70) face.innerText = '👽';
+                else if (this.player.health > 30) face.innerText = '😰';
+                else face.innerText = '💀';
+            }
+
+            updatePlayer() {
+                let moveStep = 0;
+                let strafeStep = 0;
+
+                if (this.keys['KeyW']) moveStep += this.player.moveSpeed;
+                if (this.keys['KeyS']) moveStep -= this.player.moveSpeed;
+                if (this.keys['KeyD']) strafeStep += this.player.moveSpeed;
+                if (this.keys['KeyA']) strafeStep -= this.player.moveSpeed;
+
+                // Rotation
+                let rot = 0;
+                if (this.keys['ArrowLeft']) rot -= this.player.rotSpeed;
+                if (this.keys['ArrowRight']) rot += this.player.rotSpeed;
+
+                if (rot !== 0) {
+                    const oldDirX = this.player.dirX;
+                    this.player.dirX = this.player.dirX * Math.cos(rot) - this.player.dirY * Math.sin(rot);
+                    this.player.dirY = oldDirX * Math.sin(rot) + this.player.dirY * Math.cos(rot);
+
+                    const oldPlaneX = this.player.planeX;
+                    this.player.planeX = this.player.planeX * Math.cos(rot) - this.player.planeY * Math.sin(rot);
+                    this.player.planeY = oldPlaneX * Math.sin(rot) + this.player.planeY * Math.cos(rot);
+                }
+
+                // Movement & Collision Logic
+                const newX = this.player.x + (this.player.dirX * moveStep) + (this.player.planeX * strafeStep);
+                const newY = this.player.y + (this.player.dirY * moveStep) + (this.player.planeY * strafeStep);
+
+                // Collision buffer distance from walls
+                const pad = 0.25;
+
+                if (this.map[Math.floor(this.player.y) * MAP_WIDTH + Math.floor(newX + Math.sign(newX - this.player.x) * pad)] === 0) {
+                    this.player.x = newX;
+                }
+                if (this.map[Math.floor(newY + Math.sign(newY - this.player.y) * pad) * MAP_WIDTH + Math.floor(this.player.x)] === 0) {
+                    this.player.y = newY;
+                }
+
+                // Pickups Check
+                this.entities.forEach(ent => {
+                    if (ent.state === 'dead') return;
+                    const d = Math.hypot(ent.x - this.player.x, ent.y - this.player.y);
+                    if (d < 0.6) {
+                        if (ent.type === 'health' && this.player.health < 100) {
+                            this.player.health = Math.min(100, this.player.health + 30);
+                            ent.state = 'dead';
+                            audio.playPickup();
+                            this.showMessage("+30 HEALTH PACK");
+                            this.triggerFlash('pickup-flash');
+                            this.updateHUD();
+                        } else if (ent.type === 'ammo') {
+                            this.player.ammo += 25;
+                            ent.state = 'dead';
+                            audio.playPickup();
+                            this.showMessage("+25 PLASMA AMMO");
+                            this.triggerFlash('pickup-flash');
+                            this.updateHUD();
+                        }
+                    }
+                });
+            }
+
+            triggerFlash(elemId) {
+                const el = document.getElementById(elemId);
+                el.style.opacity = '1';
+                setTimeout(() => { el.style.opacity = '0'; }, 150);
+            }
+
+            updateAliens() {
+                this.entities.forEach(ent => {
+                    if (ent.type === 'health' || ent.type === 'ammo' || ent.state === 'dead') return;
+
+                    const dx = this.player.x - ent.x;
+                    const dy = this.player.y - ent.y;
+                    const dist = Math.hypot(dx, dy);
+                    ent.dist = dist;
+
+                    // Animation ticker
+                    ent.animTimer++;
+                    if (ent.animTimer > 15) {
+                        ent.animFrame = (ent.animFrame + 1) % 2;
+                        ent.animTimer = 0;
+                    }
+
+                    // Aggro trigger
+                    if (dist < 8.0) {
+                        ent.state = 'chasing';
+                    }
+
+                    if (ent.state === 'chasing') {
+                        if (dist > 0.8) {
+                            // Move towards player with wall padding collision check
+                            const stepX = (dx / dist) * ent.speed;
+                            const stepY = (dy / dist) * ent.speed;
+                            const pad = 0.3;
+
+                            if (this.map[Math.floor(ent.y) * MAP_WIDTH + Math.floor(ent.x + stepX + Math.sign(stepX) * pad)] === 0) {
+                                ent.x += stepX;
+                            }
+                            if (this.map[Math.floor(ent.y + stepY + Math.sign(stepY) * pad) * MAP_WIDTH + Math.floor(ent.x)] === 0) {
+                                ent.y += stepY;
+                            }
+                        } else {
+                            // Attack Player
+                            this.player.health -= 0.6;
+                            this.triggerFlash('damage-flash');
+                            audio.playHurt();
+                            this.updateHUD();
+
+                            if (this.player.health <= 0) {
+                                this.triggerGameOver();
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderRaycaster() {
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+
+                // Render Ceiling and Floor Gradients
+                const ceilingGrad = this.ctx.createLinearGradient(0, 0, 0, h / 2);
+                ceilingGrad.addColorStop(0, '#020208');
+                ceilingGrad.addColorStop(1, '#111827');
+                this.ctx.fillStyle = ceilingGrad;
+                this.ctx.fillRect(0, 0, w, h / 2);
+
+                const floorGrad = this.ctx.createLinearGradient(0, h / 2, 0, h);
+                floorGrad.addColorStop(0, '#1c1917');
+                floorGrad.addColorStop(1, '#050505');
+                this.ctx.fillStyle = floorGrad;
+                this.ctx.fillRect(0, h / 2, w, h / 2);
+
+                // --- MAIN DDA RAYCASTING LOOP ---
+                for (let x = 0; x < w; x++) {
+                    // Calculate ray position and direction
+                    const cameraX = (2 * x / w) - 1; // x-coordinate in camera space (-1 to +1)
+                    const rayDirX = this.player.dirX + this.player.planeX * cameraX;
+                    const rayDirY = this.player.dirY + this.player.planeY * cameraX;
+
+                    // Grid cell coordinates
+                    let mapX = Math.floor(this.player.x);
+                    let mapY = Math.floor(this.player.y);
+
+                    // Length of ray from current position to next x or y side
+                    let sideDistX, sideDistY;
+
+                    // Length of ray from one x or y-side to next x or y-side
+                    const deltaDistX = Math.abs(1 / rayDirX);
+                    const deltaDistY = Math.abs(1 / rayDirY);
+                    let perpWallDist;
+
+                    // Direction to step in x or y (-1 or +1)
+                    let stepX, stepY;
+
+                    let hit = 0; // Wall hit indicator
+                    let side = 0; // Was a NS or E-W wall hit? (0 = X side, 1 = Y side)
+
+                    // Calculate step and initial sideDist
+                    if (rayDirX < 0) {
+                        stepX = -1;
+                        sideDistX = (this.player.x - mapX) * deltaDistX;
+                    } else {
+                        stepX = 1;
+                        sideDistX = (mapX + 1.0 - this.player.x) * deltaDistX;
+                    }
+                    if (rayDirY < 0) {
+                        stepY = -1;
+                        sideDistY = (this.player.y - mapY) * deltaDistY;
+                    } else {
+                        stepY = 1;
+                        sideDistY = (mapY + 1.0 - this.player.y) * deltaDistY;
+                    }
+
+                    // Perform DDA (Digital Differential Analysis)
+                    while (hit === 0) {
+                        if (sideDistX < sideDistY) {
+                            sideDistX += deltaDistX;
+                            mapX += stepX;
+                            side = 0;
+                        } else {
+                            sideDistY += deltaDistY;
+                            mapY += stepY;
+                            side = 1;
+                        }
+
+                        // Check bounds and map wall hit
+                        if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
+                            const tile = this.map[mapY * MAP_WIDTH + mapX];
+                            if (tile > 0) hit = tile;
+                        } else {
+                            hit = 1; // Map edge boundary
+                        }
+                    }
+
+                    // Calculate perpendicular distance to avoid fisheye lens distortion
+                    if (side === 0) perpWallDist = (mapX - this.player.x + (1 - stepX) / 2) / rayDirX;
+                    else            perpWallDist = (mapY - this.player.y + (1 - stepY) / 2) / rayDirY;
+
+                    // Store depth in zBuffer for sprite clipping
+                    this.zBuffer[x] = perpWallDist;
+
+                    // Calculate height of wall line to render on screen
+                    const lineHeight = Math.floor(h / perpWallDist);
+
+                    // Calculate lowest and highest pixel to fill on screen
+                    let drawStart = -lineHeight / 2 + h / 2;
+                    if (drawStart < 0) drawStart = 0;
+                    let drawEnd = lineHeight / 2 + h / 2;
+                    if (drawEnd >= h) drawEnd = h - 1;
+
+                    // Calculate exact texture X coordinate
+                    let wallX;
+                    if (side === 0) wallX = this.player.y + perpWallDist * rayDirY;
+                    else            wallX = this.player.x + perpWallDist * rayDirX;
+                    wallX -= Math.floor(wallX);
+
+                    let texX = Math.floor(wallX * TEX_SIZE);
+                    if (side === 0 && rayDirX > 0) texX = TEX_SIZE - texX - 1;
+                    if (side === 1 && rayDirY < 0) texX = TEX_SIZE - texX - 1;
+
+                    // Draw vertical texture slice from offscreen canvas texture
+                    const texCanvas = textures[hit] || textures[1];
+                    this.ctx.drawImage(
+                        texCanvas,
+                        texX, 0, 1, TEX_SIZE,
+                        x, drawStart, 1, drawEnd - drawStart
+                    );
+
+                    // Apply distance fog & directional shading (Y-walls are slightly darker for 3D depth)
+                    const shade = Math.min(1, perpWallDist / 12);
+                    const darkFactor = side === 1 ? 0.45 + shade * 0.55 : shade;
+                    if (darkFactor > 0.05) {
+                        this.ctx.fillStyle = `rgba(0, 0, 0, ${darkFactor})`;
+                        this.ctx.fillRect(x, drawStart, 1, drawEnd - drawStart);
+                    }
+                }
+            }
+
+            renderSprites() {
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+
+                // Sort entities from furthest to nearest
+                const sorted = [...this.entities].sort((a, b) => b.dist - a.dist);
+
+                sorted.forEach(ent => {
+                    if (ent.state === 'dead' && ent.type !== 'health' && ent.type !== 'ammo') return;
+
+                    // Translate sprite position relative to player camera
+                    const spriteX = ent.x - this.player.x;
+                    const spriteY = ent.y - this.player.y;
+
+                    // Matrix transformation for camera projection
+                    const invDet = 1.0 / (this.player.planeX * this.player.dirY - this.player.dirX * this.player.planeY);
+                    const transformX = invDet * (this.player.dirY * spriteX - this.player.dirX * spriteY);
+                    const transformY = invDet * (-this.player.planeY * spriteX + this.player.planeX * spriteY); // depth
+
+                    if (transformY <= 0.1) return; // Behind player camera
+
+                    const spriteScreenX = Math.floor((w / 2) * (1 + transformX / transformY));
+
+                    // Calculate sprite width and height on screen based on distance depth
+                    const spriteHeight = Math.abs(Math.floor(h / transformY));
+                    const spriteWidth = spriteHeight;
+
+                    let drawStartY = Math.floor(-spriteHeight / 2 + h / 2);
+                    if (drawStartY < 0) drawStartY = 0;
+                    let drawEndY = Math.floor(spriteHeight / 2 + h / 2);
+                    if (drawEndY >= h) drawEndY = h - 1;
+
+                    let drawStartX = Math.floor(-spriteWidth / 2 + spriteScreenX);
+                    if (drawStartX < 0) drawStartX = 0;
+                    let drawEndX = Math.floor(spriteWidth / 2 + spriteScreenX);
+                    if (drawEndX >= w) drawEndX = w - 1;
+
+                    // Select sprite texture
+                    let spriteImg;
+                    if (ent.type === 'lurker') spriteImg = spriteTextures.alienLurker[ent.animFrame];
+                    else if (ent.type === 'gazer') spriteImg = spriteTextures.alienGazer[ent.animFrame];
+                    else if (ent.type === 'health') spriteImg = spriteTextures.healthPack;
+                    else if (ent.type === 'ammo') spriteImg = spriteTextures.ammoPack;
+
+                    if (!spriteImg) return;
+
+                    // Render vertical sprite slices checking zBuffer distance
+                    for (let stripe = drawStartX; stripe < drawEndX; stripe++) {
+                        const texX = Math.floor((stripe - (-spriteWidth / 2 + spriteScreenX)) * spriteImg.width / spriteWidth);
+
+                        if (transformY < this.zBuffer[stripe]) {
+                            this.ctx.drawImage(
+                                spriteImg,
+                                texX, 0, 1, spriteImg.height,
+                                stripe, drawStartY, 1, drawEndY - drawStartY
+                            );
+                        }
+                    }
+                });
+            }
+
+            renderWeapon() {
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+
+                const recoilOffset = this.gunRecoil;
+                if (this.gunRecoil > 0) this.gunRecoil -= 2;
+
+                const gunW = Math.min(320, w * 0.35);
+                const gunH = gunW * 1.2;
+                const gunX = (w - gunW) / 2;
+                const gunY = h - gunH + recoilOffset;
+
+                // Render Retro Sci-Fi Plasma Gun
+                this.ctx.save();
+
+                // Gun body frame
+                this.ctx.fillStyle = '#1f2937';
+                this.ctx.fillRect(gunX + gunW * 0.3, gunY + gunH * 0.3, gunW * 0.4, gunH * 0.7);
+
+                // Barrel
+                this.ctx.fillStyle = '#4b5563';
+                this.ctx.fillRect(gunX + gunW * 0.42, gunY + gunH * 0.05, gunW * 0.16, gunH * 0.35);
+
+                // Energy Core glowing coils
+                this.ctx.fillStyle = '#00ff66';
+                this.ctx.shadowColor = '#00ff66';
+                this.ctx.shadowBlur = 12;
+                this.ctx.fillRect(gunX + gunW * 0.44, gunY + gunH * 0.2, gunW * 0.12, gunH * 0.08);
+
+                // Muzzle Flash on firing
+                if (this.isFiring) {
+                    this.ctx.fillStyle = '#ffff00';
+                    this.ctx.shadowColor = '#ff3300';
+                    this.ctx.shadowBlur = 25;
+                    this.ctx.beginPath();
+                    this.ctx.arc(gunX + gunW * 0.5, gunY + gunH * 0.05, gunW * 0.22, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+
+                this.ctx.restore();
+            }
+
+            renderMinimap() {
+                const mCtx = this.miniCtx;
+                const mW = this.miniCanvas.width;
+                const mH = this.miniCanvas.height;
+                const scale = mW / MAP_WIDTH;
+
+                mCtx.fillStyle = 'rgba(0,0,0,0.9)';
+                mCtx.fillRect(0, 0, mW, mH);
+
+                // Draw map grid
+                for (let y = 0; y < MAP_HEIGHT; y++) {
+                    for (let x = 0; x < MAP_WIDTH; x++) {
+                        const tile = this.map[y * MAP_WIDTH + x];
+                        if (tile > 0) {
+                            mCtx.fillStyle = tile === 4 ? '#ffff00' : '#00ff66';
+                            mCtx.fillRect(x * scale, y * scale, scale - 1, scale - 1);
+                        }
+                    }
+                }
+
+                // Draw Aliens
+                this.entities.forEach(ent => {
+                    if (ent.state === 'dead') return;
+                    if (ent.type === 'health' || ent.type === 'ammo') {
+                        mCtx.fillStyle = '#00ffff';
+                    } else {
+                        mCtx.fillStyle = '#ff0033';
+                    }
+                    mCtx.fillRect(ent.x * scale - 2, ent.y * scale - 2, 4, 4);
+                });
+
+                // Draw Player direction arrow
+                mCtx.fillStyle = '#ffffff';
+                mCtx.beginPath();
+                mCtx.arc(this.player.x * scale, this.player.y * scale, 3, 0, Math.PI * 2);
+                mCtx.fill();
+
+                mCtx.strokeStyle = '#ffff00';
+                mCtx.lineWidth = 2;
+                mCtx.beginPath();
+                mCtx.moveTo(this.player.x * scale, this.player.y * scale);
+                mCtx.lineTo((this.player.x + this.player.dirX * 1.5) * scale, (this.player.y + this.player.dirY * 1.5) * scale);
+                mCtx.stroke();
+            }
+
+            gameLoop() {
+                if (!this.isRunning) return;
+
+                this.updatePlayer();
+                this.updateAliens();
+
+                this.renderRaycaster();
+                this.renderSprites();
+                this.renderWeapon();
+                this.renderMinimap();
+
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+
+        // Initialize Procedural Assets & Launch Game Engine on page load
+        window.onload = () => {
+            createProceduralTextures();
+            createProceduralSprites();
+            window.game = new GameEngine();
+        };
+    </script>
+</body>
+</html>

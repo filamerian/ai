@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeQuest: BSIT Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            900: '#134e4a',
+                            glow: '#00f0ff'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        glow: {
+                            '0%': { filter: 'drop-shadow(0 0 2px rgba(45, 212, 191, 0.4))' },
+                            '100%': { filter: 'drop-shadow(0 0 10px rgba(45, 212, 191, 0.9))' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for terminal and code editor */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .code-editor-line {
+            counter-increment: line;
+        }
+        .code-editor-line::before {
+            content: counter(line);
+            display: inline-block;
+            width: 2rem;
+            text-align: right;
+            margin-right: 1rem;
+            color: #475569;
+            user-select: none;
+        }
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0, 240, 255, 0.05) 50%,
+                rgba(0, 240, 255, 0.05)
+            );
+            background-size: 100% 4px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-x-hidden select-none bg-slate-950 text-slate-100">
+
+    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <!-- Game Title & Explorer Tag -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/20 animate-pulse">
+                    <i class="fa-solid font-mono text-xl fa-code"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        CodeQuest <span class="text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-mono">BSIT Edition</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Algorithmic Realm Explorer</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="flex items-center space-x-4 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800/80 text-xs sm:text-sm">
+                <!-- XP / Level -->
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-bolt text-amber-400 animate-bounce"></i>
+                    <div>
+                        <div class="text-[10px] text-slate-400 uppercase font-semibold">Level <span id="player-level" class="text-cyan-400 font-bold">1</span></div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-16 sm:w-24 bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div id="xp-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <span id="player-xp" class="text-xs font-mono text-slate-300">0 XP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-6 w-px bg-slate-800"></div>
+
+                <!-- Gems / Credits -->
+                <div class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-gem text-cyan-400"></i>
+                    <span id="player-gems" class="font-mono font-bold text-slate-200">50</span>
+                </div>
+
+                <div class="h-6 w-px bg-slate-800"></div>
+
+                <!-- Streak -->
+                <div class="flex items-center space-x-1.5" title="Solve challenges consecutively">
+                    <i class="fa-solid fa-fire text-orange-500"></i>
+                    <span id="player-streak" class="font-mono font-bold text-slate-200">0</span>
+                </div>
+            </div>
+
+            <!-- Top Controls & Navigation -->
+            <div class="flex items-center space-x-2">
+                <nav class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+                    <button onclick="switchTab('map')" id="nav-map" class="nav-btn active px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all bg-cyan-500 text-slate-950">
+                        <i class="fa-solid fa-map"></i> <span class="hidden sm:inline">World Map</span>
+                    </button>
+                    <button onclick="switchTab('stats')" id="nav-stats" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200">
+                        <i class="fa-solid fa-chart-pie"></i> <span class="hidden sm:inline">Mastery</span>
+                    </button>
+                    <button onclick="switchTab('achievements')" id="nav-achievements" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200">
+                        <i class="fa-solid fa-award"></i> <span class="hidden sm:inline">Badges</span>
+                    </button>
+                    <button onclick="switchTab('codex')" id="nav-codex" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-400 hover:text-slate-200">
+                        <i class="fa-solid fa-book"></i> <span class="hidden sm:inline">Codex</span>
+                    </button>
+                </nav>
+
+                <button onclick="toggleAudio()" id="audio-toggle" class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="Toggle Sound SFX">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <button onclick="resetData()" class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-400 transition-colors" title="Reset Progress">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col min-h-0">
+
+        <!-- ================= MAP TAB ================= -->
+        <section id="tab-map" class="tab-content flex-1 flex flex-col gap-6">
+            <!-- Explorer Hero Banner -->
+            <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 p-6 shadow-2xl">
+                <div class="absolute inset-0 bg-cover bg-center opacity-10 scanline"></div>
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-medium mb-2">
+                            <i class="fa-solid fa-compass animate-spin" style="animation-duration: 8s;"></i> Mission Status: Active Exploration
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The Algorithmic Archipelago</h2>
+                        <p class="text-slate-400 text-sm max-w-2xl mt-1">
+                            Traverse through 6 core programming domains designed for BSIT students. Restore logic energy, repair corrupted algorithms, and become a Master Systems Architect!
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="resumeNextStage()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25 flex items-center gap-2 transition-all transform hover:scale-105 active:scale-95 text-sm">
+                            <i class="fa-solid fa-play"></i> Continue Journey
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Biomes Level Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="biomes-grid">
+                <!-- Biomes generated via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ================= MISSION / CODE EDITOR VIEW ================= -->
+        <section id="tab-mission" class="tab-content hidden flex-1 flex flex-col gap-4">
+            <!-- Back & Stage Header -->
+            <div class="flex items-center justify-between bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button onclick="switchTab('map')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Map
+                    </button>
+                    <div>
+                        <div class="text-xs text-cyan-400 font-mono font-semibold" id="mission-realm-title">REALM 1: SYNTAX SANCTUARY</div>
+                        <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2" id="mission-title">
+                            Challenge 1: Quantum Array Aligning
+                        </h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="showHint()" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-lightbulb"></i> Hint (-10 <i class="fa-solid fa-gem text-[10px]"></i>)
+                    </button>
+                    <span id="difficulty-badge" class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold uppercase">
+                        Easy
+                    </span>
+                </div>
+            </div>
+
+            <!-- Workspace: Dual Column Layout (Simulation & Code Editor) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1">
+                
+                <!-- Left Column: Story, Lore & Interactive Canvas Animation (5 Cols) -->
+                <div class="lg:col-span-5 flex flex-col gap-4">
+                    <!-- Lore & Mission Instructions Card -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col gap-3">
+                        <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <i class="fa-solid fa-scroll text-cyan-400"></i> Explorer Mission Briefing
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed" id="mission-description">
+                            Loading briefing...
+                        </p>
+
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+                            <div class="text-xs font-semibold text-slate-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-bullseye text-indigo-400"></i> Goal Objective:
+                            </div>
+                            <div class="text-xs text-cyan-300 font-mono" id="mission-objective">
+                                --
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Game Canvas / World Simulator -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex-1 flex flex-col min-h-[220px]">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-gamepad text-emerald-400"></i> Live Explorer Simulation
+                            </span>
+                            <span id="sim-status" class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+                                Idle
+                            </span>
+                        </div>
+                        <div class="relative flex-1 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden flex items-center justify-center">
+                            <canvas id="game-canvas" class="w-full h-full object-contain block"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Code Editor & Test Cases (7 Cols) -->
+                <div class="lg:col-span-7 flex flex-col gap-4">
+                    <!-- Code Editor Panel -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[320px]">
+                        <!-- Editor Toolbar -->
+                        <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                                <span class="text-xs font-mono text-slate-400 ml-2">solution.js</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="resetEditorCode()" class="text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded bg-slate-800">
+                                    <i class="fa-solid fa-rotate-right"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Editor Textarea Area -->
+                        <div class="relative flex-1 bg-slate-950 p-3 font-mono text-xs sm:text-sm text-cyan-300 leading-6">
+                            <textarea id="code-editor" class="w-full h-full bg-transparent text-slate-100 font-mono resize-none focus:outline-none leading-6 tracking-wide" spellcheck="false" placeholder="// Write your code solution here..."></textarea>
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div class="bg-slate-900 p-3 border-t border-slate-800 flex items-center justify-between gap-2">
+                            <div class="text-xs text-slate-400 hidden sm:block">
+                                Press <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">Run</kbd> to test solution
+                            </div>
+                            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                                <button onclick="runCode()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 transition-all">
+                                    <i class="fa-solid fa-play text-cyan-400"></i> Run Code
+                                </button>
+                                <button onclick="submitChallenge()" class="flex-1 sm:flex-none px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20">
+                                    <i class="fa-solid fa-check-double"></i> Submit Solution
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terminal Output / Test Cases Panel -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 h-48 flex flex-col">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-terminal text-cyan-400"></i> Execution Terminal & Test Results
+                            </span>
+                            <span id="test-summary" class="text-xs font-mono text-slate-400">0/0 Passed</span>
+                        </div>
+                        <div id="console-output" class="flex-1 bg-slate-950 rounded-lg p-3 font-mono text-xs overflow-y-auto space-y-1.5 border border-slate-800">
+                            <div class="text-slate-500">// Ready to execute code...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= STATS / MASTERY TAB ================= -->
+        <section id="tab-stats" class="tab-content hidden flex-1 flex flex-col gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-xl font-bold text-white mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-brain text-cyan-400"></i> BSIT Knowledge Matrix
+                </h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Comprehensive breakdown of your problem-solving mastery across core IT topics.</p>
+
+                <!-- Topic Mastery Bars -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6" id="mastery-bars-container">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Analytics Overview Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                    <div class="text-slate-400 text-xs mb-1">Total Solved</div>
+                    <div class="text-2xl font-black text-cyan-400 font-mono" id="stat-solved">0/18</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                    <div class="text-slate-400 text-xs mb-1">Accuracy Rate</div>
+                    <div class="text-2xl font-black text-emerald-400 font-mono" id="stat-accuracy">100%</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                    <div class="text-slate-400 text-xs mb-1">Total XP Earned</div>
+                    <div class="text-2xl font-black text-amber-400 font-mono" id="stat-total-xp">0</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                    <div class="text-slate-400 text-xs mb-1">Current Title</div>
+                    <div class="text-sm font-bold text-indigo-400 truncate mt-1" id="stat-rank-title">Novice Coder</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ACHIEVEMENTS TAB ================= -->
+        <section id="tab-achievements" class="tab-content hidden flex-1 flex flex-col gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-xl font-bold text-white mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-amber-400"></i> Explorer Badges & Honors
+                </h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Unlock achievements by completing coding challenges, maintaining streaks, and mastering concepts.</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6" id="achievements-grid">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CODEX TAB ================= -->
+        <section id="tab-codex" class="tab-content hidden flex-1 flex flex-col gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-xl font-bold text-white mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-indigo-400"></i> BSIT Syntax & Concept Codex
+                </h2>
+                <p class="text-slate-400 text-xs sm:text-sm">Quick reference guide for programming fundamentals, syntax structures, and best practices.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <!-- Topic 1 -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="font-bold text-cyan-400 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-cube"></i> Variables & Data Types
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">Containers for storing data values. Common types include Integer, Float, String, and Boolean.</p>
+                        <pre class="bg-slate-900 p-2.5 rounded text-xs font-mono text-emerald-300">let age = 20; // Number
+let studentName = "Alex"; // String
+let isEnrolled = true; // Boolean</pre>
+                    </div>
+
+                    <!-- Topic 2 -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="font-bold text-cyan-400 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-code-branch"></i> Control Structures (If/Else)
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">Execute different code blocks based on conditional Boolean statements.</p>
+                        <pre class="bg-slate-900 p-2.5 rounded text-xs font-mono text-emerald-300">if (grade >= 75) {
+    return "Passed";
+} else {
+    return "Remedial";
+}</pre>
+                    </div>
+
+                    <!-- Topic 3 -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="font-bold text-cyan-400 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-rotate"></i> Loops & Iteration
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">Repeat a block of code multiple times while a specific condition holds true.</p>
+                        <pre class="bg-slate-900 p-2.5 rounded text-xs font-mono text-emerald-300">for (let i = 0; i < 5; i++) {
+    console.log("Iteration: " + i);
+}</pre>
+                    </div>
+
+                    <!-- Topic 4 -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="font-bold text-cyan-400 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group"></i> Arrays & Collections
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">Ordered lists of elements accessible via zero-based index numbers.</p>
+                        <pre class="bg-slate-900 p-2.5 rounded text-xs font-mono text-emerald-300">let servers = ["Web", "Database", "DNS"];
+console.log(servers[0]); // Output: "Web"
+servers.push("API"); // Add item</pre>
+                    </div>
+
+                    <!-- Topic 5 -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="font-bold text-cyan-400 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-gears"></i> Functions & Parameters
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">Reusable blocks of code designed to perform a specific computational task.</p>
+                        <pre class="bg-slate-900 p-2.5 rounded text-xs font-mono text-emerald-300">function calculateTotal(price, tax) {
+    return price + (price * tax);
+}</pre>
+                    </div>
+
+                    <!-- Topic 6 -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="font-bold text-cyan-400 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-bug"></i> Debugging Principles
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">Identify Off-by-One errors, Type Coercion pitfalls, and Null reference exceptions.</p>
+                        <pre class="bg-slate-900 p-2.5 rounded text-xs font-mono text-emerald-300">// Check loop bounds: i < arr.length
+// Check loose vs strict equality: ===
+// Use console.log for value tracing</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Level Completion / Victory -->
+    <div id="victory-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center relative overflow-hidden">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 flex items-center justify-center text-3xl mx-auto mb-4 animate-bounce">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3 class="text-2xl font-black text-white mb-1">Challenge Completed!</h3>
+            <p class="text-xs text-slate-400 mb-6" id="modal-subtitle">You have successfully repaired the algorithm!</p>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-around mb-6">
+                <div>
+                    <div class="text-[10px] text-slate-400 uppercase font-semibold">XP Gained</div>
+                    <div class="text-lg font-bold text-amber-400 font-mono" id="modal-xp-gained">+100</div>
+                </div>
+                <div class="h-8 w-px bg-slate-800"></div>
+                <div>
+                    <div class="text-[10px] text-slate-400 uppercase font-semibold">Gems Earned</div>
+                    <div class="text-lg font-bold text-cyan-400 font-mono" id="modal-gems-gained">+20</div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeModal('victory-modal'); switchTab('map');" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold">
+                    Return to Map
+                </button>
+                <button onclick="closeModal('victory-modal'); resumeNextStage();" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 text-xs font-bold shadow-lg shadow-cyan-500/20">
+                    Next Challenge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hint Modal -->
+    <div id="hint-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
+            <div class="flex items-center gap-2 text-amber-400 font-bold mb-3">
+                <i class="fa-solid fa-lightbulb"></i> Explorer Hint
+            </div>
+            <p id="hint-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
+                Hint text here...
+            </p>
+            <button onclick="closeModal('hint-modal')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold">
+                Got It
+            </button>
+        </div>
+    </div>
+
+    <script>
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = true;
+            }
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+            playTone(freq, duration, type = 'sine') {
+                if (!this.enabled) return;
+                try {
+                    this.init();
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch (e) {}
+            }
+            playSuccess() {
+                this.playTone(523.25, 0.1, 'triangle'); // C5
+                setTimeout(() => this.playTone(659.25, 0.1, 'triangle'), 100); // E5
+                setTimeout(() => this.playTone(783.99, 0.2, 'triangle'), 200); // G5
+            }
+            playError() {
+                this.playTone(220, 0.15, 'sawtooth');
+                setTimeout(() => this.playTone(180, 0.25, 'sawtooth'), 120);
+            }
+            playClick() {
+                this.playTone(800, 0.03, 'sine');
+            }
+        }
+        const sfx = new SoundEngine();
+
+        function toggleAudio() {
+            sfx.enabled = !sfx.enabled;
+            const btn = document.getElementById('audio-toggle');
+            btn.innerHTML = sfx.enabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark text-slate-600"></i>';
+        }
+
+        const GAME_BIOMES = [
+            {
+                id: 1,
+                name: "Syntax Sanctuary",
+                concept: "Variables & Data Types",
+                icon: "fa-cube",
+                color: "from-cyan-500 to-blue-500",
+                description: "Master variables, initialization, string concatenation, and fundamental data types.",
+                challenges: [
+                    {
+                        id: "1-1",
+                        title: "Variable Declaration",
+                        difficulty: "Easy",
+                        lore: "The Explorer's scanner power is uninitialized! Declare a variable named `powerLevel` set to the integer value `100`.",
+                        objective: "Create a variable `powerLevel` with value 100.",
+                        initialCode: "// Declare your variable below:\n",
+                        solutionCheck: (code, logs) => {
+                            let powerLevel;
+                            try {
+                                eval(code);
+                                return typeof powerLevel !== 'undefined' && powerLevel === 100;
+                            } catch (e) { return false; }
+                        },
+                        hint: "Syntax: let powerLevel = 100;",
+                        xp: 50,
+                        gems: 10,
+                        simType: "power"
+                    },
+                    {
+                        id: "1-2",
+                        title: "String Concatenation",
+                        difficulty: "Easy",
+                        lore: "Format the data string to initialize the security gate protocol. Combine `greeting` and `playerName` into `welcomeMessage`.",
+                        objective: "Create `welcomeMessage` equal to `greeting + ' ' + playerName`.",
+                        initialCode: "let greeting = 'Welcome Explorer';\nlet playerName = 'Alex';\n// Create welcomeMessage below:\n",
+                        solutionCheck: (code) => {
+                            try {
+                                let greeting = 'Welcome Explorer';
+                                let playerName = 'Alex';
+                                let welcomeMessage;
+                                eval(code);
+                                return welcomeMessage === 'Welcome Explorer Alex';
+                            } catch(e) { return false; }
+                        },
+                        hint: "Concatenate strings using the '+' operator: let welcomeMessage = greeting + ' ' + playerName;",
+                        xp: 60,
+                        gems: 12,
+                        simType: "gate"
+                    },
+                    {
+                        id: "1-3",
+                        title: "Type Coercion Repair",
+                        difficulty: "Medium",
+                        lore: "The sensor input received numeric data as a string! Convert `inputSensor` to a Number and assign it to `validSensor`.",
+                        objective: "Convert string '42' to a number using Number() or parseInt().",
+                        initialCode: "let inputSensor = '42';\n// Convert inputSensor to a number:\nlet validSensor = ",
+                        solutionCheck: (code) => {
+                            try {
+                                let inputSensor = '42';
+                                let validSensor;
+                                eval(code);
+                                return typeof validSensor === 'number' && validSensor === 42;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Use Number(inputSensor) or parseInt(inputSensor).",
+                        xp: 75,
+                        gems: 15,
+                        simType: "sensor"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "Logic Lagoon",
+                concept: "Conditionals & Booleans",
+                icon: "fa-code-branch",
+                color: "from-emerald-500 to-teal-500",
+                description: "Master if/else conditions, boolean logic operators (&&, ||), and switch statements.",
+                challenges: [
+                    {
+                        id: "2-1",
+                        title: "Bridge Crossing Check",
+                        difficulty: "Easy",
+                        lore: "The energy bridge only activates if `hasKey` is true AND `energyLevel` is greater than or equal to 50. Write a function `canCross(hasKey, energyLevel)`.",
+                        objective: "Return true if hasKey is true and energyLevel >= 50, otherwise return false.",
+                        initialCode: "function canCross(hasKey, energyLevel) {\n    // Write conditional logic here:\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = canCross;");
+                                return window.__fn(true, 80) === true && window.__fn(true, 30) === false && window.__fn(false, 90) === false;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Use logical AND (&&): return hasKey && energyLevel >= 50;",
+                        xp: 80,
+                        gems: 15,
+                        simType: "bridge"
+                    },
+                    {
+                        id: "2-2",
+                        title: "Security Clearance Level",
+                        difficulty: "Medium",
+                        lore: "Categorize player access: return 'Admin' if score >= 90, 'User' if score >= 50, otherwise return 'Guest'.",
+                        objective: "Implement function getRole(score) using if / else if / else statements.",
+                        initialCode: "function getRole(score) {\n    // Return 'Admin', 'User', or 'Guest'\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = getRole;");
+                                return window.__fn(95) === 'Admin' && window.__fn(70) === 'User' && window.__fn(20) === 'Guest';
+                            } catch(e) { return false; }
+                        },
+                        hint: "Use if (score >= 90) { return 'Admin'; } else if (score >= 50) { return 'User'; } else { return 'Guest'; }",
+                        xp: 90,
+                        gems: 18,
+                        simType: "security"
+                    },
+                    {
+                        id: "2-3",
+                        title: "Ternary Quantum Lock",
+                        difficulty: "Medium",
+                        lore: "Shorten the guard logic using a ternary operator. Function `getStatus(isOnline)` returns 'ACTIVE' if true, 'OFFLINE' if false.",
+                        objective: "Use a ternary operator condition ? 'ACTIVE' : 'OFFLINE'.",
+                        initialCode: "function getStatus(isOnline) {\n    return // your ternary here\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = getStatus;");
+                                return window.__fn(true) === 'ACTIVE' && window.__fn(false) === 'OFFLINE';
+                            } catch(e) { return false; }
+                        },
+                        hint: "return isOnline ? 'ACTIVE' : 'OFFLINE';",
+                        xp: 100,
+                        gems: 20,
+                        simType: "quantum"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: "Loop Laboratory",
+                concept: "Iteration & Loops",
+                icon: "fa-rotate",
+                color: "from-amber-500 to-orange-500",
+                description: "Master for loops, while loops, accumulator pattern, and loop counters.",
+                challenges: [
+                    {
+                        id: "3-1",
+                        title: "Reactor Power Counter",
+                        difficulty: "Easy",
+                        lore: "Calculate the total energy output generated by powering 5 consecutive thrusters. Write function `sumEnergy(n)` that returns sum of numbers from 1 to n.",
+                        objective: "Return sum 1 + 2 + ... + n using a loop.",
+                        initialCode: "function sumEnergy(n) {\n    let total = 0;\n    // Write loop here:\n    \n    return total;\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = sumEnergy;");
+                                return window.__fn(5) === 15 && window.__fn(10) === 55;
+                            } catch(e) { return false; }
+                        },
+                        hint: "for (let i = 1; i <= n; i++) { total += i; }",
+                        xp: 100,
+                        gems: 20,
+                        simType: "reactor"
+                    },
+                    {
+                        id: "3-2",
+                        title: "Countdown Sequence",
+                        difficulty: "Medium",
+                        lore: "Generates countdown array from `start` down to 1. Write `countdown(start)` returning array [start, start-1, ..., 1].",
+                        objective: "Return array of numbers counting down.",
+                        initialCode: "function countdown(start) {\n    let result = [];\n    // Write countdown while or for loop:\n    \n    return result;\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = countdown;");
+                                const res = window.__fn(5);
+                                return Array.isArray(res) && res.join(',') === "5,4,3,2,1";
+                            } catch(e) { return false; }
+                        },
+                        hint: "for (let i = start; i >= 1; i--) { result.push(i); }",
+                        xp: 110,
+                        gems: 22,
+                        simType: "countdown"
+                    },
+                    {
+                        id: "3-3",
+                        title: "Even Beam Collector",
+                        difficulty: "Hard",
+                        lore: "Collect only even energy frequencies from a given limit. Write `getEvenBeams(limit)` returning array of even integers up to limit.",
+                        objective: "Return array of even numbers from 2 up to limit.",
+                        initialCode: "function getEvenBeams(limit) {\n    let evens = [];\n    // Iterate and push even numbers:\n    \n    return evens;\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = getEvenBeams;");
+                                const res = window.__fn(8);
+                                return Array.isArray(res) && res.join(',') === "2,4,6,8";
+                            } catch(e) { return false; }
+                        },
+                        hint: "Loop i from 2 to limit step 2, or check if (i % 2 === 0).",
+                        xp: 125,
+                        gems: 25,
+                        simType: "beam"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                name: "Array Archipelago",
+                concept: "Arrays & Data Collections",
+                icon: "fa-layer-group",
+                color: "from-indigo-500 to-purple-500",
+                description: "Master zero-indexed arrays, array traversal, filtering, and aggregate calculations.",
+                challenges: [
+                    {
+                        id: "4-1",
+                        title: "First Data Signal",
+                        difficulty: "Easy",
+                        lore: "Extract the first and last signals from the incoming transmission array. Return an object `{ first: arr[0], last: arr[arr.length - 1] }`.",
+                        objective: "Return first and last elements of array.",
+                        initialCode: "function getEndpoints(arr) {\n    // Return object { first: ..., last: ... }\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = getEndpoints;");
+                                const res = window.__fn([10, 20, 30, 40]);
+                                return res.first === 10 && res.last === 40;
+                            } catch(e) { return false; }
+                        },
+                        hint: "first is arr[0], last is arr[arr.length - 1].",
+                        xp: 110,
+                        gems: 22,
+                        simType: "signal"
+                    },
+                    {
+                        id: "4-2",
+                        title: "Shield Value Peak",
+                        difficulty: "Medium",
+                        lore: "Scan an array of shield levels and return the maximum shield value found.",
+                        objective: "Find maximum number in array `shields`.",
+                        initialCode: "function findMaxShield(shields) {\n    let max = shields[0];\n    // Iterate and find max:\n    \n    return max;\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = findMaxShield;");
+                                return window.__fn([45, 89, 12, 99, 34]) === 99;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Loop through array: if (shields[i] > max) max = shields[i]; or Math.max(...shields)",
+                        xp: 130,
+                        gems: 25,
+                        simType: "shield"
+                    },
+                    {
+                        id: "4-3",
+                        title: "Corrupt Signal Filter",
+                        difficulty: "Hard",
+                        lore: "Filter out corrupted negative values from signal packet array. Return array containing only positive numbers.",
+                        objective: "Filter array to contain values >= 0.",
+                        initialCode: "function sanitizeSignals(signals) {\n    // Return array of numbers >= 0\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = sanitizeSignals;");
+                                const res = window.__fn([10, -5, 20, -1, 0, 30]);
+                                return Array.isArray(res) && res.join(',') === "10,20,0,30";
+                            } catch(e) { return false; }
+                        },
+                        hint: "Use signals.filter(val => val >= 0);",
+                        xp: 140,
+                        gems: 28,
+                        simType: "filter"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                name: "Function Forest",
+                concept: "Functions & Modular Code",
+                icon: "fa-gears",
+                color: "from-pink-500 to-rose-500",
+                description: "Master function declarations, parameters, return values, arrow functions, and scope.",
+                challenges: [
+                    {
+                        id: "5-1",
+                        title: "Data Unit Converter",
+                        difficulty: "Easy",
+                        lore: "Convert Megabytes (MB) to Kilobytes (KB). 1 MB = 1024 KB. Write function `mbToKb(mb)`.",
+                        objective: "Return mb * 1024.",
+                        initialCode: "function mbToKb(mb) {\n    // Convert MB to KB:\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = mbToKb;");
+                                return window.__fn(2) === 2048 && window.__fn(5) === 5120;
+                            } catch(e) { return false; }
+                        },
+                        hint: "return mb * 1024;",
+                        xp: 120,
+                        gems: 24,
+                        simType: "converter"
+                    },
+                    {
+                        id: "5-2",
+                        title: "Average Latency Calculator",
+                        difficulty: "Medium",
+                        lore: "Calculate average ping latency from array of response times. Write `avgLatency(pings)`.",
+                        objective: "Return average of numbers in pings array.",
+                        initialCode: "function avgLatency(pings) {\n    // Sum pings and divide by length:\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = avgLatency;");
+                                return window.__fn([100, 200, 300]) === 200;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Sum items using loop/reduce, then return sum / pings.length;",
+                        xp: 140,
+                        gems: 28,
+                        simType: "latency"
+                    },
+                    {
+                        id: "5-3",
+                        title: "Modular Cipher Encoder",
+                        difficulty: "Hard",
+                        lore: "Encode string by shifting ASCII character codes by `shift` units. Write `encodeMsg(str, shift)`.",
+                        objective: "Return string with shifted char codes.",
+                        initialCode: "function encodeMsg(str, shift) {\n    // Shift characters:\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = encodeMsg;");
+                                return window.__fn("ABC", 1) === "BCD";
+                            } catch(e) { return false; }
+                        },
+                        hint: "Split string, use String.fromCharCode(char.charCodeAt(0) + shift), join string.",
+                        xp: 160,
+                        gems: 32,
+                        simType: "cipher"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                name: "Debug Dungeon",
+                concept: "Debugging & Optimization",
+                icon: "fa-bug",
+                color: "from-rose-600 to-red-600",
+                description: "Identify and fix logic errors, syntax mistakes, infinite loops, and array index overflow.",
+                challenges: [
+                    {
+                        id: "6-1",
+                        title: "Off-By-One Bug Fix",
+                        difficulty: "Medium",
+                        lore: "The loop attempts to access array index past length causing undefined error! Fix the bug.",
+                        objective: "Fix loop boundary condition in `readData(arr)`.",
+                        initialCode: "function readData(arr) {\n    let items = [];\n    // Bug: <= causes out-of-bounds error!\n    for (let i = 0; i <= arr.length; i++) {\n        if(arr[i] !== undefined) items.push(arr[i]);\n    }\n    return items.length;\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = readData;");
+                                // Verify loop was fixed without needing undefined check check hack
+                                return code.includes('i < arr.length') && window.__fn([1,2,3]) === 3;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Change `i <= arr.length` to `i < arr.length`.",
+                        xp: 150,
+                        gems: 30,
+                        simType: "offbyone"
+                    },
+                    {
+                        id: "6-2",
+                        title: "Infinite Loop Repair",
+                        difficulty: "Hard",
+                        lore: "The infinite loop freezes the ship AI! The counter variable `i` is never incremented.",
+                        objective: "Fix while loop increment.",
+                        initialCode: "function processQueue(n) {\n    let count = 0;\n    let i = 0;\n    while (i < n) {\n        count += 10;\n        // Missing increment!\n    }\n    return count;\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = processQueue;");
+                                return window.__fn(3) === 30;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Add `i++;` or `i += 1;` inside the while loop.",
+                        xp: 170,
+                        gems: 35,
+                        simType: "infiniteloop"
+                    },
+                    {
+                        id: "6-3",
+                        title: "Final Boss: Core Algorithm Repair",
+                        difficulty: "Boss",
+                        lore: "The Central Server AI is corrupted! Implement `repairCore(data)` to sum only unique numbers from data array.",
+                        objective: "Return sum of unique array elements.",
+                        initialCode: "function repairCore(data) {\n    // Return sum of unique numbers in array:\n}",
+                        solutionCheck: (code) => {
+                            try {
+                                eval(code + "\n window.__fn = repairCore;");
+                                return window.__fn([1, 2, 2, 3, 4, 4]) === 10;
+                            } catch(e) { return false; }
+                        },
+                        hint: "Use Array.from(new Set(data)).reduce((a,b) => a+b, 0)",
+                        xp: 250,
+                        gems: 50,
+                        simType: "boss"
+                    }
+                ]
+            }
+        ];
+
+        const ACHIEVEMENTS = [
+            { id: 'first_step', title: 'Hello World', desc: 'Complete your 1st coding challenge', icon: 'fa-play', unlocked: false },
+            { id: 'syntax_master', title: 'Syntax Apprentice', desc: 'Clear all Syntax Sanctuary challenges', icon: 'fa-cube', unlocked: false },
+            { id: 'logic_wizard', title: 'Logic Wizard', desc: 'Clear all Logic Lagoon challenges', icon: 'fa-code-branch', unlocked: false },
+            { id: 'loop_hero', title: 'Loop Master', desc: 'Clear all Loop Laboratory challenges', icon: 'fa-rotate', unlocked: false },
+            { id: 'array_ace', title: 'Array Architect', desc: 'Clear all Array Archipelago challenges', icon: 'fa-layer-group', unlocked: false },
+            { id: 'debug_god', title: 'Bug Slayer', desc: 'Defeat the Final Boss in Debug Dungeon', icon: 'fa-bug', unlocked: false },
+            { id: 'streak_3', title: 'On Fire', desc: 'Achieve a 3-challenge streak', icon: 'fa-fire', unlocked: false },
+            { id: 'gem_hoarder', title: 'Resourceful', desc: 'Accumulate 150 Gems', icon: 'fa-gem', unlocked: false }
+        ];
+
+        let state = {
+            xp: 0,
+            level: 1,
+            gems: 50,
+            streak: 0,
+            solvedChallenges: [],
+            achievements: ACHIEVEMENTS,
+            currentChallenge: null,
+            attempts: 0
+        };
+
+        function loadState() {
+            const saved = localStorage.getItem('codequest_bsit_save');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                } catch(e) {}
+            }
+            updatePlayerUI();
+        }
+
+        function saveState() {
+            localStorage.setItem('codequest_bsit_save', JSON.stringify(state));
+            updatePlayerUI();
+        }
+
+        function resetData() {
+            if (confirm("Reset all game progress, XP, and badges?")) {
+                localStorage.removeItem('codequest_bsit_save');
+                location.reload();
+            }
+        }
+
+        function updatePlayerUI() {
+            // Level calculation: Every 200 XP = 1 Level
+            state.level = Math.floor(state.xp / 200) + 1;
+            const currentLevelXP = state.xp % 200;
+            const xpPercent = Math.min(100, Math.floor((currentLevelXP / 200) * 100));
+
+            document.getElementById('player-level').innerText = state.level;
+            document.getElementById('player-xp').innerText = `${state.xp} XP`;
+            document.getElementById('xp-bar').style.width = `${xpPercent}%`;
+            document.getElementById('player-gems').innerText = state.gems;
+            document.getElementById('player-streak').innerText = state.streak;
+
+            // Stats tab updates
+            document.getElementById('stat-solved').innerText = `${state.solvedChallenges.length}/18`;
+            document.getElementById('stat-total-xp').innerText = state.xp;
+            
+            const titles = ["Novice Explorer", "Junior Developer", "Systems Analyst", "Software Engineer", "Full-Stack Architect", "Principal Algorithm Wizard"];
+            const titleIdx = Math.min(titles.length - 1, Math.floor(state.level / 2));
+            document.getElementById('stat-rank-title').innerText = titles[titleIdx];
+
+            checkAchievements();
+            renderBiomes();
+            renderMasteryBars();
+            renderAchievements();
+        }
+
+        function switchTab(tabId) {
+            sfx.playClick();
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500', 'text-slate-950');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-cyan-500', 'text-slate-950');
+                activeNav.classList.remove('text-slate-400');
+            }
+
+            if (tabId === 'map') renderBiomes();
+        }
+
+        function renderBiomes() {
+            const container = document.getElementById('biomes-grid');
+            container.innerHTML = '';
+
+            GAME_BIOMES.forEach((biome, bIndex) => {
+                const prevBiomeCleared = bIndex === 0 || GAME_BIOMES[bIndex - 1].challenges.every(c => state.solvedChallenges.includes(c.id));
+                const solvedInBiome = biome.challenges.filter(c => state.solvedChallenges.includes(c.id)).length;
+                const progressPct = Math.round((solvedInBiome / biome.challenges.length) * 100);
+
+                const card = document.createElement('div');
+                card.className = `bg-slate-900 border ${prevBiomeCleared ? 'border-slate-800 hover:border-slate-700' : 'border-slate-800/40 opacity-70'} rounded-2xl p-5 flex flex-col justify-between transition-all`;
+
+                let challengesHTML = biome.challenges.map((c, cIdx) => {
+                    const isSolved = state.solvedChallenges.includes(c.id);
+                    const isUnlocked = prevBiomeCleared && (cIdx === 0 || state.solvedChallenges.includes(biome.challenges[cIdx - 1].id));
+
+                    return `
+                        <button onclick="${isUnlocked ? `startChallenge('${c.id}')` : ''}" 
+                                class="w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between ${
+                                    isSolved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' :
+                                    isUnlocked ? 'bg-slate-950 border-slate-800 hover:border-cyan-500/50 text-slate-200' :
+                                    'bg-slate-950/40 border-slate-900 text-slate-600 cursor-not-allowed'
+                                }">
+                            <div class="flex items-center gap-3">
+                                <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-mono font-bold ${
+                                    isSolved ? 'bg-emerald-500 text-slate-950' :
+                                    isUnlocked ? 'bg-slate-800 text-cyan-400' : 'bg-slate-900 text-slate-700'
+                                }">
+                                    ${isSolved ? '<i class="fa-solid fa-check"></i>' : cIdx + 1}
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold">${c.title}</div>
+                                    <div class="text-[10px] text-slate-500 font-mono">+${c.xp} XP • ${c.difficulty}</div>
+                                </div>
+                            </div>
+                            <div>
+                                ${isSolved ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' : 
+                                  isUnlocked ? '<i class="fa-solid fa-chevron-right text-slate-500 text-xs"></i>' : 
+                                  '<i class="fa-solid fa-lock text-slate-700 text-xs"></i>'}
+                            </div>
+                        </button>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr ${biome.color} flex items-center justify-center text-white text-lg shadow-md">
+                                    <i class="fa-solid ${biome.icon}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-extrabold text-slate-100 text-base">${biome.name}</h3>
+                                    <span class="text-[11px] font-mono text-cyan-400">${biome.concept}</span>
+                                </div>
+                            </div>
+                            <span class="text-xs font-mono ${progressPct === 100 ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+                                ${solvedInBiome}/${biome.challenges.length}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">${biome.description}</p>
+                        
+                        <div class="space-y-2">
+                            ${challengesHTML}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function startChallenge(challengeId) {
+            sfx.playClick();
+            let challenge = null;
+            let biomeObj = null;
+
+            for (const b of GAME_BIOMES) {
+                const found = b.challenges.find(c => c.id === challengeId);
+                if (found) {
+                    challenge = found;
+                    biomeObj = b;
+                    break;
+                }
+            }
+
+            if (!challenge) return;
+
+            state.currentChallenge = challenge;
+            document.getElementById('mission-realm-title').innerText = `${biomeObj.name.toUpperCase()} - ${biomeObj.concept.toUpperCase()}`;
+            document.getElementById('mission-title').innerText = challenge.title;
+            document.getElementById('mission-description').innerText = challenge.lore;
+            document.getElementById('mission-objective').innerText = challenge.objective;
+            document.getElementById('difficulty-badge').innerText = challenge.difficulty;
+
+            document.getElementById('code-editor').value = challenge.initialCode;
+            document.getElementById('console-output').innerHTML = '<div class="text-slate-500">// Ready to execute code...</div>';
+            document.getElementById('test-summary').innerText = '0/1 Passed';
+
+            switchTab('mission');
+            initCanvasSimulation(challenge.simType);
+        }
+
+        function resumeNextStage() {
+            for (const b of GAME_BIOMES) {
+                for (const c of b.challenges) {
+                    if (!state.solvedChallenges.includes(c.id)) {
+                        startChallenge(c.id);
+                        return;
+                    }
+                }
+            }
+            // If all solved
+            startChallenge('1-1');
+        }
+
+        function resetEditorCode() {
+            if (state.currentChallenge) {
+                document.getElementById('code-editor').value = state.currentChallenge.initialCode;
+            }
+        }
+
+        function runCode() {
+            sfx.playClick();
+            const code = document.getElementById('code-editor').value;
+            const consoleBox = document.getElementById('console-output');
+            consoleBox.innerHTML = '';
+
+            let logs = [];
+            const originalLog = console.log;
+            console.log = function(...args) {
+                logs.push(args.join(' '));
+                originalLog.apply(console, args);
+            };
+
+            try {
+                const result = eval(code);
+                console.log = originalLog;
+
+                logs.forEach(msg => {
+                    consoleBox.innerHTML += `<div class="text-slate-300">&gt; ${msg}</div>`;
+                });
+
+                if (result !== undefined) {
+                    consoleBox.innerHTML += `<div class="text-emerald-400">&gt; Return: ${JSON.stringify(result)}</div>`;
+                }
+
+                consoleBox.innerHTML += `<div class="text-cyan-400 mt-2">// Code executed without syntax errors.</div>`;
+                animateSimulationSuccess();
+            } catch (e) {
+                console.log = originalLog;
+                sfx.playError();
+                consoleBox.innerHTML += `<div class="text-rose-400">&gt; Runtime Error: ${e.message}</div>`;
+            }
+        }
+
+        function submitChallenge() {
+            if (!state.currentChallenge) return;
+
+            const code = document.getElementById('code-editor').value;
+            const consoleBox = document.getElementById('console-output');
+            consoleBox.innerHTML = '';
+
+            let passed = false;
+            try {
+                passed = state.currentChallenge.solutionCheck(code);
+            } catch(e) {
+                passed = false;
+            }
+
+            if (passed) {
+                sfx.playSuccess();
+                consoleBox.innerHTML = `<div class="text-emerald-400 font-bold">&gt; TEST PASSED! All assertions satisfied.</div>`;
+                document.getElementById('test-summary').innerText = '1/1 Passed';
+
+                if (!state.solvedChallenges.includes(state.currentChallenge.id)) {
+                    state.solvedChallenges.push(state.currentChallenge.id);
+                    state.xp += state.currentChallenge.xp;
+                    state.gems += state.currentChallenge.gems;
+                    state.streak += 1;
+                }
+
+                saveState();
+                animateSimulationSuccess();
+
+                document.getElementById('modal-xp-gained').innerText = `+${state.currentChallenge.xp} XP`;
+                document.getElementById('modal-gems-gained').innerText = `+${state.currentChallenge.gems}`;
+                document.getElementById('modal-subtitle').innerText = `You solved: ${state.currentChallenge.title}`;
+                document.getElementById('victory-modal').classList.remove('hidden');
+            } else {
+                sfx.playError();
+                state.streak = 0;
+                saveState();
+                consoleBox.innerHTML = `<div class="text-rose-400 font-bold">&gt; TEST FAILED! Solution does not meet required output.</div>`;
+                consoleBox.innerHTML += `<div class="text-slate-400">&gt; Check your logic, return statements, or conditions and try again.</div>`;
+                document.getElementById('test-summary').innerText = '0/1 Passed';
+            }
+        }
+
+        function showHint() {
+            if (!state.currentChallenge) return;
+            if (state.gems < 10) {
+                alert("Not enough Gems! Clear more challenges to earn gems.");
+                return;
+            }
+
+            state.gems -= 10;
+            saveState();
+
+            document.getElementById('hint-text').innerText = state.currentChallenge.hint;
+            document.getElementById('hint-modal').classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function checkAchievements() {
+            if (state.solvedChallenges.length >= 1) unlockAchievement('first_step');
+
+            const checkBiomeSolved = (bIndex) => GAME_BIOMES[bIndex].challenges.every(c => state.solvedChallenges.includes(c.id));
+            if (checkBiomeSolved(0)) unlockAchievement('syntax_master');
+            if (checkBiomeSolved(1)) unlockAchievement('logic_wizard');
+            if (checkBiomeSolved(2)) unlockAchievement('loop_hero');
+            if (checkBiomeSolved(3)) unlockAchievement('array_ace');
+            if (state.solvedChallenges.includes('6-3')) unlockAchievement('debug_god');
+            if (state.streak >= 3) unlockAchievement('streak_3');
+            if (state.gems >= 150) unlockAchievement('gem_hoarder');
+        }
+
+        function unlockAchievement(id) {
+            const ach = state.achievements.find(a => a.id === id);
+            if (ach && !ach.unlocked) {
+                ach.unlocked = true;
+            }
+        }
+
+        function renderMasteryBars() {
+            const container = document.getElementById('mastery-bars-container');
+            container.innerHTML = '';
+
+            GAME_BIOMES.forEach(biome => {
+                const solvedCount = biome.challenges.filter(c => state.solvedChallenges.includes(c.id)).length;
+                const pct = Math.round((solvedCount / biome.challenges.length) * 100);
+
+                const item = document.createElement('div');
+                item.className = 'bg-slate-950 p-4 rounded-xl border border-slate-800';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid ${biome.icon} text-cyan-400"></i> ${biome.name}
+                        </span>
+                        <span class="text-xs font-mono font-bold text-cyan-400">${pct}%</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
+                        <div class="bg-gradient-to-r ${biome.color} h-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievements-grid');
+            container.innerHTML = '';
+
+            state.achievements.forEach(ach => {
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-xl border flex items-center gap-3 transition-all ${
+                    ach.unlocked ? 'bg-slate-900 border-amber-500/40 text-slate-100' : 'bg-slate-950/50 border-slate-800/40 opacity-50'
+                }`;
+                item.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl ${ach.unlocked ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' : 'bg-slate-900 text-slate-600'} flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid ${ach.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-xs ${ach.unlocked ? 'text-amber-300' : 'text-slate-400'}">${ach.title}</div>
+                        <div class="text-[11px] text-slate-400">${ach.desc}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        let canvas, ctx, simAnimationId;
+        let simState = { x: 50, pulse: 0, status: 'idle' };
+
+        function initCanvasSimulation(type) {
+            canvas = document.getElementById('game-canvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            
+            // Set resolution
+            canvas.width = 400;
+            canvas.height = 200;
+
+            simState = { x: 50, pulse: 0, status: 'idle', type: type };
+            drawSimulation();
+        }
+
+        function drawSimulation() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Grid background
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            for(let x = 0; x < canvas.width; x += 20) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for(let y = 0; y < canvas.height; y += 20) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Draw BSIT Explorer Character
+            ctx.fillStyle = '#00f0ff';
+            ctx.shadowColor = '#00f0ff';
+            ctx.shadowBlur = 10;
+            ctx.fillRect(simState.x, 110, 24, 24);
+
+            // Explorer Head/Visor
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(simState.x + 14, 114, 8, 6);
+
+            // Ground Line / Energy Platform
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(0, 134, canvas.width, 66);
+
+            // Goal/Target Beacon
+            ctx.fillStyle = simState.status === 'success' ? '#10b981' : '#f59e0b';
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(320, 110, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Status label overlay
+            document.getElementById('sim-status').innerText = simState.status.toUpperCase();
+            document.getElementById('sim-status').className = `text-[11px] font-mono px-2 py-0.5 rounded ${
+                simState.status === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'
+            }`;
+        }
+
+        function animateSimulationSuccess() {
+            simState.status = 'success';
+            let targetX = 300;
+            function step() {
+                if (simState.x < targetX) {
+                    simState.x += 4;
+                    drawSimulation();
+                    requestAnimationFrame(step);
+                } else {
+                    drawSimulation();
+                }
+            }
+            step();
+        }
+
+        window.onload = function() {
+            loadState();
+            switchTab('map');
+        };
+    </script>
+</body>
+</html>
