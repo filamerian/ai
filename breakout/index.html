@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NEON BREAKER V6</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="app">
+<header class="hud"><div class="brand"><i></i>NEON BREAKER</div><div class="stats">
+<div><small>SCORE</small><strong id="score">000000</strong></div><div><small>BEST</small><strong id="best">000000</strong></div><div><small>LEVEL</small><strong id="level">01</strong></div><div><small>LIVES</small><strong id="lives">03</strong></div><div><small>COMBO</small><strong id="combo">x1</strong></div></div><div id="activePowerups"></div></header>
+<main class="game"><canvas id="game"></canvas>
+<section id="menu" class="overlay"><div class="panel"><label>ARCADE // 06</label><h1>NEON<br><em>BREAKER</em></h1><p id="menuText">Break the grid. Build the combo. Survive the neon.</p><button id="play">START GAME</button><button id="how" class="secondary">HOW TO PLAY</button><small class="keys">← → / A D • MOUSE • TOUCH</small></div></section>
+<section id="pause" class="overlay hidden"><div class="panel compact"><label>PAUSED</label><h2>TAKE A BREATH</h2><p>Resume when you're ready.</p><button id="resume">RESUME</button><button id="restart" class="secondary">RESTART</button></div></section>
+<section id="help" class="overlay hidden"><div class="panel compact"><label>HOW TO PLAY</label><h2>BREAK THE GRID</h2><p>Move the paddle with keyboard, mouse, or touch. Keep the ball alive and clear every block.</p><p class="power"><b>W</b> Wide Paddle &nbsp; <b>M</b> Multi Ball &nbsp; <b>F</b> Fireball &nbsp; <b>L</b> Extra Life &nbsp; <b>S</b> Slow Motion &nbsp; <b>G</b> Magnet</p><button id="closeHelp">GOT IT</button></div></section>
+<div id="countdown"></div><div id="toast"></div><div id="levelBanner"></div></main>
+<footer><span>ESC PAUSE</span><span>R RESTART</span><span>LEVELS ADAPT AS YOU PLAY</span></footer>
+</div><script src="script.js"></script></body></html>
