@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 3: Responsible AI Use in Research</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            950: '#060913',
+                            900: '#0b0f19',
+                            800: '#111827',
+                            700: '#1e293b'
+                        },
+                        cyan: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            glow: 'rgba(34, 211, 238, 0.25)'
+                        },
+                        violet: {
+                            500: '#8b5cf6',
+                            glow: 'rgba(139, 92, 246, 0.25)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #060913;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grid background pattern */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Glassmorphism styling */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card-hover:hover {
+            transform: translateY(-4px);
+            border-color: rgba(34, 211, 238, 0.3);
+            box-shadow: 0 12px 40px -10px rgba(34, 211, 238, 0.15);
+        }
+
+        .glow-border-cyan {
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.15);
+        }
+
+        .glow-border-violet {
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060913;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+
+        /* Custom glow animation */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .pulse-glow {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern min-h-screen text-slate-100 antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Reading Progress Bar -->
+    <div id="progress-container" class="fixed top-0 left-0 w-full h-1 bg-navy-900 z-50">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- Sticky Navigation -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-xl bg-navy-950/80 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Logo / Title -->
+                <a href="#hero" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-brain text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-mono tracking-wider text-cyan-400 block uppercase font-semibold">Session 3</span>
+                        <span class="text-sm font-bold text-slate-100 tracking-tight group-hover:text-cyan-300 transition-colors">Responsible AI in Research</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-1 text-xs font-medium text-slate-300">
+                    <a href="#hero" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Home</a>
+                    <a href="#overview" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Overview</a>
+                    <a href="#ai-capabilities" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Capabilities</a>
+                    <a href="#data-inspection" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Inspection</a>
+                    <a href="#data-viz" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Visualization</a>
+                    <a href="#human-validation" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Validation</a>
+                    <a href="#ethics-privacy" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Ethics & Privacy</a>
+                    <a href="#workflow" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Workflow</a>
+                    <a href="#scenarios" class="nav-link px-3 py-2 rounded-lg hover:bg-slate-800/60 hover:text-cyan-400 transition-all">Scenarios</a>
+                    <a href="#quiz" class="nav-link px-3 py-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 transition-all font-semibold">Self-Check</a>
+                </nav>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="lg:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 focus:outline-none" aria-label="Toggle Navigation">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-navy-950/95 border-b border-slate-800 px-4 pt-2 pb-6 space-y-2 max-h-[80vh] overflow-y-auto">
+            <a href="#hero" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Home</a>
+            <a href="#overview" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Session Overview</a>
+            <a href="#learning-objectives" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Learning Objectives</a>
+            <a href="#big-idea" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">The Big Idea</a>
+            <a href="#workflow-comparison" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Workflow Comparison</a>
+            <a href="#ai-capabilities" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">AI Capabilities</a>
+            <a href="#data-inspection" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Data Inspection</a>
+            <a href="#test-selection" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Statistical Test Selection</a>
+            <a href="#prompt-chaining" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Prompt Chaining</a>
+            <a href="#causation-warning" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Correlation vs Causation</a>
+            <a href="#data-viz" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Data Visualization</a>
+            <a href="#interpretation" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">AI Interpretation</a>
+            <a href="#human-validation" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Human Validation</a>
+            <a href="#ai-statistician" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">AI + Statistician</a>
+            <a href="#ethics-privacy" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Ethics & Privacy</a>
+            <a href="#writing-disclosure" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Writing & Disclosure</a>
+            <a href="#workflow" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Responsible Workflow</a>
+            <a href="#scenarios" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Practical Scenarios</a>
+            <a href="#takeaways" class="mobile-link block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-cyan-400">Key Takeaways</a>
+            <a href="#quiz" class="mobile-link block px-3 py-2 rounded-lg text-sm text-cyan-400 font-semibold bg-cyan-500/10 border border-cyan-500/30 text-center">Self-Check Quiz</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative pt-12 pb-20 overflow-hidden">
+        <!-- Glowing background gradient blobs -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none pulse-glow"></div>
+        <div class="absolute top-1/3 right-10 w-[400px] h-[300px] bg-violet-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <!-- Session Badge -->
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/80 mb-6 backdrop-blur-md">
+                <span class="flex h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
+                <span class="text-xs font-mono tracking-widest text-cyan-300 uppercase font-bold">SESSION 3</span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-4">
+                RESPONSIBLE AI USE IN <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400">RESEARCH</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-lg sm:text-xl text-slate-300 font-medium max-w-3xl mx-auto mb-6">
+                Generative AI for Quantitative Data Analysis, Visualization, Interpretation, and Reporting
+            </p>
+
+            <!-- Introductory Statement -->
+            <div class="glass-card p-6 rounded-2xl max-w-3xl mx-auto mb-8 text-slate-300 text-sm sm:text-base leading-relaxed border-l-4 border-l-cyan-400">
+                <p>
+                    <i class="fa-solid fa-quote-left text-cyan-400/40 text-2xl mr-2"></i>
+                    Generative AI can make research analysis faster and more accessible—but responsible research requires human judgment, statistical understanding, validation, transparency, and ethical use.
+                </p>
+            </div>
+
+            <!-- Badges -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <span class="px-3.5 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> Quantitative Research
+                </span>
+                <span class="px-3.5 py-1.5 rounded-lg bg-violet-500/10 text-violet-300 border border-violet-500/30 text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-microchip"></i> Generative AI
+                </span>
+                <span class="px-3.5 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> Responsible Research
+                </span>
+            </div>
+
+            <!-- EMBEDDED YOUTUBE VIDEO SECTION -->
+            <div class="mt-8 max-w-4xl mx-auto">
+                <div class="glass-card p-4 sm:p-6 rounded-2xl glow-border-cyan text-left">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                        <div class="flex items-center space-x-3">
+                            <span class="p-2 rounded-lg bg-red-500/10 text-red-400">
+                                <i class="fa-brands fa-youtube text-xl"></i>
+                            </span>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">SESSION 3 SEMINAR VIDEO</h3>
+                                <p class="text-xs text-slate-400">Watch the complete Session 3 discussion before exploring the interactive learning sections.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 16:9 Responsive Video Container -->
+                    <div class="relative w-full rounded-xl overflow-hidden shadow-2xl bg-black aspect-video border border-slate-800">
+                 
+						
+						
+						<iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/videoseries?si=wi9SlCQr0-rYdFOs&amp;list=PLJXQrjhByf6Y" title="Session 3: Responsible AI Use in Research" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+
+                    <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                        <p class="text-xs text-slate-400 italic">
+                            * Comprehensive lecture and guidance for faculty, researchers, thesis advisers, statisticians, and BSIT students.
+                        </p>
+                        <a href="#overview" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-xs uppercase tracking-wider hover:opacity-90 transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+                            <span>Watch / Continue Learning</span>
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 2: SESSION OVERVIEW -->
+    <section id="overview" class="py-16 border-t border-slate-800/80 relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Core Concept</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">What Is Session 3 About?</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Large Glassmorphism Quote Card -->
+            <div class="glass-card p-8 rounded-3xl mb-12 border border-slate-700/80 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 text-slate-800/30 text-9xl pointer-events-none">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="relative z-10 max-w-4xl mx-auto text-center space-y-4">
+                    <p class="text-lg sm:text-xl text-slate-200 font-medium leading-relaxed">
+                        "The central message of Session 3 is that Generative AI can assist researchers throughout the data-analysis process, but it should function as an <span class="text-cyan-400 font-bold">assistant</span> rather than a replacement for the researcher, statistician, or research adviser."
+                    </p>
+                </div>
+            </div>
+
+            <!-- 6 Interactive Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer transition-all border-l-4 border-l-cyan-500" onClick="toggleCardDetail('overview-1')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-cyan-500/10 text-cyan-400"><i class="fa-solid fa-calculator text-xl"></i></span>
+                        <span class="text-xs font-mono text-slate-500">01</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">AI-Assisted Data Analysis</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Leveraging LLMs to streamline routine statistical tasks, inspect variables, and generate code.</p>
+                    <div id="overview-1" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <p>AI helps structure datasets, calculate basic statistics, and write syntax for R, Python, or SPSS while preserving human oversight.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer transition-all border-l-4 border-l-blue-500" onClick="toggleCardDetail('overview-2')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-blue-500/10 text-blue-400"><i class="fa-solid fa-chart-pie text-xl"></i></span>
+                        <span class="text-xs font-mono text-slate-500">02</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Data Visualization</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Recommending visually compelling, accurate graphical representations for research questions.</p>
+                    <div id="overview-2" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <p>AI assists in choosing histograms, scatter plots, or box plots that accurately reflect distribution without visual deception.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer transition-all border-l-4 border-l-violet-500" onClick="toggleCardDetail('overview-3')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-violet-500/10 text-violet-400"><i class="fa-solid fa-magnifying-glass-chart text-xl"></i></span>
+                        <span class="text-xs font-mono text-slate-500">03</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Statistical Interpretation</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Translating complex statistical outputs into clear, context-aware scholarly narratives.</p>
+                    <div id="overview-3" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <p>AI provides technical breakdowns and plain-language summaries that researchers contextualize within literature.</p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer transition-all border-l-4 border-l-amber-500" onClick="toggleCardDetail('overview-4')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-amber-500/10 text-amber-400"><i class="fa-solid fa-user-check text-xl"></i></span>
+                        <span class="text-xs font-mono text-slate-500">04</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Human Validation</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Maintaining mandatory human verification over calculations, assumptions, and claims.</p>
+                    <div id="overview-4" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <p>Every automated output must be independently checked by researchers or statisticians for accuracy and logic.</p>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer transition-all border-l-4 border-l-emerald-500" onClick="toggleCardDetail('overview-5')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-scale-balanced text-xl"></i></span>
+                        <span class="text-xs font-mono text-slate-500">05</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Research Ethics</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Preventing data fabrication, citation hallucination, and selective reporting.</p>
+                    <div id="overview-5" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <p>Strictly avoiding p-hacking, artificial result generation, or submitting AI unverified content as personal scholarly work.</p>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer transition-all border-l-4 border-l-rose-500" onClick="toggleCardDetail('overview-6')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-rose-500/10 text-rose-400"><i class="fa-solid fa-lock text-xl"></i></span>
+                        <span class="text-xs font-mono text-slate-500">06</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Data Privacy</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Safeguarding participant datasets from unauthorized AI training uploads.</p>
+                    <div id="overview-6" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <p>Ensuring complete anonymization and institutional compliance before introducing datasets to public AI models.</p>
+                    </div>
+                </div>
+
+            </div>
+            <p class="text-center text-xs text-slate-500 mt-4">* Click any card to reveal details.</p>
+        </div>
+    </section>
+
+    <!-- SECTION 3: LEARNING OBJECTIVES -->
+    <section id="learning-objectives" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-violet-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Target Outcomes</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">After This Session, You Should Be Able To...</h2>
+                <p class="text-xs text-slate-400 mt-2">Click each objective as you master it to track your progress.</p>
+                <div class="w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div id="objectives-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Objective Cards populated via JavaScript for clean tracking -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: THE BIG IDEA -->
+    <section id="big-idea" class="py-16 border-t border-slate-800/80 relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-10">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Core Philosophy</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-slate-100 tracking-tight uppercase">THE BIG IDEA</h2>
+            </div>
+
+            <!-- Prominent Statement Banner -->
+            <div class="p-8 rounded-3xl bg-gradient-to-r from-cyan-950/80 via-navy-900 to-violet-950/80 border border-cyan-500/30 text-center shadow-2xl mb-10">
+                <h3 class="text-2xl sm:text-4xl font-extrabold text-cyan-300 tracking-wide uppercase mb-4">
+                    "AI IS AN ASSISTANT, NOT THE RESEARCHER."
+                </h3>
+                <p class="text-slate-300 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed">
+                    AI can help inspect, summarize, analyze, visualize, explain, interpret, and improve research reporting. However, the researcher remains responsible for methodological decisions, interpretation, conclusions, ethical judgment, and validation.
+                </p>
+            </div>
+
+            <!-- Side-by-side Interactive Comparison -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- AI Side -->
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-t-cyan-400">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold">
+                            <i class="fa-solid fa-robot text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-100">AI Role</h4>
+                            <span class="text-xs text-cyan-400 font-mono">Automated Execution & Drafting</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-check text-cyan-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Assists</strong> with data structuring & syntax</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-check text-cyan-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Suggests</strong> statistical test options</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-check text-cyan-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Computes</strong> descriptive and inferential math</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-check text-cyan-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Explains</strong> raw code & numeric outputs</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-check text-cyan-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Visualizes</strong> distributions and charts</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-check text-cyan-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Drafts</strong> initial wording & summaries</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Researcher Side -->
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-t-violet-400">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center text-violet-400 font-bold">
+                            <i class="fa-solid fa-user-gear text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-100">Researcher Role</h4>
+                            <span class="text-xs text-violet-400 font-mono">Critical Authority & Ownership</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-star text-violet-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Decides</strong> methodology & study design</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-star text-violet-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Validates</strong> assumptions & calculation accuracy</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-star text-violet-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Interprets</strong> results within domain context</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-star text-violet-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Contextualizes</strong> findings with literature</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-star text-violet-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Defends</strong> claims during defense & peer review</span>
+                        </li>
+                        <li class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <i class="fa-solid fa-star text-violet-400 text-sm"></i>
+                            <span class="text-sm text-slate-200"><strong>Takes Responsibility</strong> for final paper</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: TRADITIONAL VS GENAI WORKFLOW -->
+    <section id="workflow-comparison" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Process Evolution</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">From Traditional Analysis to AI-Assisted Analysis</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Workflow Comparison Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Traditional Pipeline -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-base font-bold text-slate-300 mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-slate-500"></i> Traditional Research Workflow
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">1. Research Question</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">2. Data Collection</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">3. Data Preparation (Manual)</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">4. Statistical Method Selection</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">5. Statistical Software (SPSS/R)</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">6. Statistical Computation</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">7. Manual Interpretation</div>
+                        <div class="text-center text-slate-600 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono">8. Reporting</div>
+                    </div>
+                </div>
+
+                <!-- GenAI-Assisted Pipeline -->
+                <div class="glass-card p-6 rounded-2xl border border-cyan-500/30 glow-border-cyan">
+                    <h3 class="text-base font-bold text-cyan-400 mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> GenAI-Assisted Research Workflow
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">1. Research Question + Context + Dataset</div>
+                        <div class="text-center text-cyan-500 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">2. Natural Language Prompting</div>
+                        <div class="text-center text-cyan-500 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">3. AI-Assisted Inspection & Quality Check</div>
+                        <div class="text-center text-cyan-500 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">4. Suggested Analysis & Script Generation</div>
+                        <div class="text-center text-cyan-500 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">5. Automated Computation & Visualization</div>
+                        <div class="text-center text-cyan-500 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">6. AI-Drafted Statistical Explanation</div>
+                        <div class="text-center text-emerald-400 font-bold my-1 flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-shield-halved text-xs"></i>
+                            <i class="fa-solid fa-arrow-down text-xs"></i>
+                        </div>
+                        <div class="p-3 bg-emerald-500/20 rounded-xl border-2 border-emerald-400 text-xs text-emerald-300 font-bold font-mono animate-pulse text-center">
+                            7. HUMAN VALIDATION (CRITICAL STEP)
+                        </div>
+                        <div class="text-center text-cyan-500 my-1"><i class="fa-solid fa-arrow-down text-xs"></i></div>
+                        <div class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-500/30 text-xs text-cyan-200 font-mono">8. Researcher-Authored Reporting</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Key Highlight Note -->
+            <div class="mt-8 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center">
+                <p class="text-sm font-semibold text-emerald-300">
+                    <i class="fa-solid fa-circle-check mr-2"></i> Key Insight: Human validation is <span class="underline uppercase">added</span>—not removed.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: WHAT CAN GENERATIVE AI DO? -->
+    <section id="ai-capabilities" class="py-16 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Capabilities Dashboard</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">What Can Generative AI Do in Research?</h2>
+                <p class="text-xs text-slate-400 mt-2">Click any capability card to explore technical functions.</p>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- 1. UNDERSTAND -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer" onClick="toggleCapability('cap-1')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 font-bold"><i class="fa-solid fa-database text-lg"></i></span>
+                        <span class="text-xs font-mono text-cyan-400 uppercase">01 / UNDERSTAND</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Understand Data Context</h3>
+                    <p class="text-xs text-slate-400">Processes metadata, identifies variable types, and evaluates measurement levels.</p>
+                    <ul id="cap-1" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-solid fa-angle-right text-cyan-400 mr-1.5"></i> Identify independent & dependent variables</li>
+                        <li><i class="fa-solid fa-angle-right text-cyan-400 mr-1.5"></i> Classify nominal, ordinal, interval, ratio levels</li>
+                        <li><i class="fa-solid fa-angle-right text-cyan-400 mr-1.5"></i> Map survey Likert scales automatically</li>
+                    </ul>
+                </div>
+
+                <!-- 2. INSPECT -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer" onClick="toggleCapability('cap-2')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-blue-500/10 text-blue-400 font-bold"><i class="fa-solid fa-filter-circle-xmark text-lg"></i></span>
+                        <span class="text-xs font-mono text-blue-400 uppercase">02 / INSPECT</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Inspect Quality & Anomaly</h3>
+                    <p class="text-xs text-slate-400">Scans datasets for missing parameters, duplicates, and impossible values.</p>
+                    <ul id="cap-2" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-solid fa-angle-right text-blue-400 mr-1.5"></i> Flag blank cells & non-standard missing codes</li>
+                        <li><i class="fa-solid fa-angle-right text-blue-400 mr-1.5"></i> Detect duplicated response rows</li>
+                        <li><i class="fa-solid fa-angle-right text-blue-400 mr-1.5"></i> Highlight extreme statistical outliers</li>
+                    </ul>
+                </div>
+
+                <!-- 3. SUMMARIZE -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer" onClick="toggleCapability('cap-3')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-bold"><i class="fa-solid fa-list-check text-lg"></i></span>
+                        <span class="text-xs font-mono text-indigo-400 uppercase">03 / SUMMARIZE</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Summarize Distributions</h3>
+                    <p class="text-xs text-slate-400">Computes descriptive statistics, central tendency, and dispersion metrics.</p>
+                    <ul id="cap-3" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-solid fa-angle-right text-indigo-400 mr-1.5"></i> Means, medians, modes, standard deviations</li>
+                        <li><i class="fa-solid fa-angle-right text-indigo-400 mr-1.5"></i> Frequencies and demographic percentages</li>
+                        <li><i class="fa-solid fa-angle-right text-indigo-400 mr-1.5"></i> Skewness and kurtosis initial checks</li>
+                    </ul>
+                </div>
+
+                <!-- 4. ANALYZE -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer" onClick="toggleCapability('cap-4')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-violet-500/10 text-violet-400 font-bold"><i class="fa-solid fa-diagram-project text-lg"></i></span>
+                        <span class="text-xs font-mono text-violet-400 uppercase">04 / ANALYZE</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Analyze Procedures</h3>
+                    <p class="text-xs text-slate-400">Executes or scripts t-tests, ANOVA, correlations, and regression models.</p>
+                    <ul id="cap-4" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-solid fa-angle-right text-violet-400 mr-1.5"></i> Group differences (ANOVA / Independent t-test)</li>
+                        <li><i class="fa-solid fa-angle-right text-violet-400 mr-1.5"></i> Pearson r & Spearman rank correlations</li>
+                        <li><i class="fa-solid fa-angle-right text-violet-400 mr-1.5"></i> Multiple linear & logistic regressions</li>
+                    </ul>
+                </div>
+
+                <!-- 5. VISUALIZE -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer" onClick="toggleCapability('cap-5')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-teal-500/10 text-teal-400 font-bold"><i class="fa-solid fa-chart-column text-lg"></i></span>
+                        <span class="text-xs font-mono text-teal-400 uppercase">05 / VISUALIZE</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Visualize Insights</h3>
+                    <p class="text-xs text-slate-400">Recommends visual chart formats and generates code for publication graphics.</p>
+                    <ul id="cap-5" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-solid fa-angle-right text-teal-400 mr-1.5"></i> Scatter plots with trendlines</li>
+                        <li><i class="fa-solid fa-angle-right text-teal-400 mr-1.5"></i> Box plots for group spread comparisons</li>
+                        <li><i class="fa-solid fa-angle-right text-teal-400 mr-1.5"></i> High-resolution APA-styled graphics</li>
+                    </ul>
+                </div>
+
+                <!-- 6. EXPLAIN -->
+                <div class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer" onClick="toggleCapability('cap-6')">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="p-3 rounded-xl bg-amber-500/10 text-amber-400 font-bold"><i class="fa-solid fa-language text-lg"></i></span>
+                        <span class="text-xs font-mono text-amber-400 uppercase">06 / EXPLAIN</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Explain Statistical Output</h3>
+                    <p class="text-xs text-slate-400">Translates complex math, p-values, and effect sizes into clear English.</p>
+                    <ul id="cap-6" class="hidden mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-solid fa-angle-right text-amber-400 mr-1.5"></i> Explains p-value threshold significance</li>
+                        <li><i class="fa-solid fa-angle-right text-amber-400 mr-1.5"></i> Converts confidence intervals into plain language</li>
+                        <li><i class="fa-solid fa-angle-right text-amber-400 mr-1.5"></i> Outlines statistical limitations clearly</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: AI FOR DATA INSPECTION -->
+    <section id="data-inspection" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-violet-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Data Quality Assurance</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">AI for Data Inspection</h2>
+                <p class="text-sm text-slate-300 max-w-2xl mx-auto mt-2">
+                    Before executing statistical tests, AI can assist in evaluating raw data hygiene to prevent "garbage in, garbage out" analysis.
+                </p>
+                <div class="w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Interactive "Before You Upload" Checklist -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl border border-violet-500/30 max-w-3xl mx-auto">
+                <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-slate-800">
+                    <span class="p-2.5 rounded-xl bg-violet-500/20 text-violet-400"><i class="fa-solid fa-clipboard-check text-xl"></i></span>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-100">Interactive "Before You Upload" Checklist</h3>
+                        <p class="text-xs text-slate-400">Complete these mandatory pre-inspection checks prior to introducing AI models.</p>
+                    </div>
+                </div>
+
+                <div id="inspection-checklist" class="space-y-3">
+                    <!-- Dynamic Checklist Items inserted by JS -->
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+                    <span id="checklist-counter" class="text-slate-400 font-mono">0 of 7 items verified</span>
+                    <button onClick="resetInspectionChecklist()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all">Reset List</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: AI FOR STATISTICAL TEST SELECTION -->
+    <section id="test-selection" class="py-16 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Methodological Evaluation</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">CAN AI CHOOSE THE STATISTICAL TEST?</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl max-w-3xl mx-auto text-center mb-10 border border-slate-700">
+                <p class="text-slate-200 text-sm sm:text-base font-medium">
+                    "AI can suggest an appropriate statistical procedure, but the recommendation must be evaluated and validated by the researcher."
+                </p>
+            </div>
+
+            <!-- Interactive Example Simulator -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl border border-cyan-500/30">
+                <div class="mb-6 p-4 rounded-xl bg-slate-900 border border-slate-800">
+                    <span class="text-xs font-mono text-cyan-400 block mb-1">RESEARCH QUESTION SIMULATION:</span>
+                    <h4 class="text-base sm:text-lg font-bold text-white">"Is there a significant relationship between daily social media usage (hours) and academic performance (GPA) among BSIT students?"</h4>
+                </div>
+
+                <p class="text-xs text-slate-400 mb-4 uppercase tracking-wider font-semibold">Select an AI-recommended statistical test to evaluate validity:</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <button onClick="selectTestRecommendation('pearson')" class="test-btn p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500 text-left transition-all">
+                        <div class="font-bold text-sm text-cyan-400 mb-1">Pearson Correlation (r)</div>
+                        <div class="text-xs text-slate-400">Parametric test</div>
+                    </button>
+                    <button onClick="selectTestRecommendation('spearman')" class="test-btn p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500 text-left transition-all">
+                        <div class="font-bold text-sm text-cyan-400 mb-1">Spearman Rank (&rho;)</div>
+                        <div class="text-xs text-slate-400">Non-parametric test</div>
+                    </button>
+                    <button onClick="selectTestRecommendation('regression')" class="test-btn p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500 text-left transition-all">
+                        <div class="font-bold text-sm text-cyan-400 mb-1">Linear Regression</div>
+                        <div class="text-xs text-slate-400">Predictive modeling</div>
+                    </button>
+                </div>
+
+                <!-- Recommendation Detail Output Box -->
+                <div id="test-recommendation-output" class="p-6 rounded-2xl bg-slate-950/90 border border-slate-800 text-xs text-slate-300 space-y-3">
+                    <p class="text-slate-500 italic">Click one of the recommended tests above to inspect why it may or may not be valid.</p>
+                </div>
+
+                <div class="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-lg text-amber-400"></i>
+                    <span>IMPORTANT RULE: AI recommendation &ne; automatic statistical validity. Always verify distribution normality and level of measurement manually.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: PROMPT CHAINING -->
+    <section id="prompt-chaining" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-violet-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Prompt Engineering Strategy</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">PROMPT CHAINING</h2>
+                <p class="text-sm text-slate-300 max-w-2xl mx-auto mt-2">
+                    Instead of asking AI to analyze everything in one prompt, guide the AI through a structured sequence of research-specific questions.
+                </p>
+                <div class="w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- 12-Step Interactive Chain Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="prompt-chain-container">
+                <!-- Javascript will insert 12 prompt cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 10: CORRELATION ≠ CAUSATION -->
+    <section id="causation-warning" class="py-16 border-t border-slate-800/80 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="glass-card p-8 sm:p-12 rounded-3xl border-2 border-red-500/40 bg-gradient-to-br from-red-950/20 via-navy-900 to-navy-950 text-center relative shadow-2xl">
+                
+                <div class="inline-flex p-4 rounded-2xl bg-red-500/10 text-red-400 mb-4 animate-bounce">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+                </div>
+
+                <h2 class="text-3xl sm:text-5xl font-black text-red-400 tracking-tight uppercase mb-4">
+                    CORRELATION &ne; CAUSATION
+                </h2>
+
+                <p class="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto mb-8 leading-relaxed">
+                    A statistically significant relationship does not automatically mean that one variable causes another. AI might describe strong mathematical co-occurrence, but researchers must avoid making unsupported causal leaps.
+                </p>
+
+                <!-- Interactive Comparison Tool -->
+                <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                    
+                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-emerald-500/30">
+                        <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase mb-2">
+                            <i class="fa-solid fa-circle-check"></i> Valid Scientific Claim
+                        </div>
+                        <p class="text-xs text-slate-300 font-mono">
+                            "Variable X and Variable Y exhibit a significant correlation (r = .68, p < .01)."
+                        </p>
+                    </div>
+
+                    <div id="unsupported-claim-card" class="p-5 rounded-2xl bg-slate-900/80 border border-red-500/30 cursor-pointer hover:bg-red-950/20 transition-all" onClick="triggerCausationWarning()">
+                        <div class="flex items-center justify-between text-red-400 font-bold text-xs uppercase mb-2">
+                            <span><i class="fa-solid fa-circle-xmark"></i> Unsupported Causal Claim</span>
+                            <span class="text-[10px] bg-red-500/20 px-2 py-0.5 rounded text-red-300">CLICK TO TEST</span>
+                        </div>
+                        <p class="text-xs text-slate-300 font-mono">
+                            "Variable X directly causes Variable Y to increase."
+                        </p>
+                    </div>
+
+                </div>
+
+                <div id="causation-alert-box" class="hidden mt-6 p-4 rounded-xl bg-red-500/20 border border-red-500 text-red-200 text-xs text-left max-w-2xl mx-auto">
+                    <p class="font-bold mb-1"><i class="fa-solid fa-shield-virus mr-2"></i> METHODOLOGICAL WARNING TRIPPED!</p>
+                    <p>Unless your study uses a randomized experimental design with controlled confounding variables, claiming causality from observational correlation is a fatal methodological error!</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 11: DATA VISUALIZATION -->
+    <section id="data-viz" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-teal-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Graphical Representation</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">AI FOR DATA VISUALIZATION</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-teal-500 to-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Principle & Warning Callouts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-l-cyan-400 flex items-start gap-4">
+                    <span class="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 text-xl"><i class="fa-solid fa-bullseye"></i></span>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-100 mb-1">Guiding Principle</h4>
+                        <p class="text-xs text-slate-300 font-semibold">"Start with the research question—not the chart."</p>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-l-amber-400 flex items-start gap-4">
+                    <span class="p-3 rounded-xl bg-amber-500/10 text-amber-400 text-xl"><i class="fa-solid fa-eye-slash"></i></span>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-100 mb-1">Visualization Warning</h4>
+                        <p class="text-xs text-slate-300 font-semibold">"A visually attractive graph can still be scientifically misleading."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Visualization Chart Selector -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl">
+                <div class="flex flex-wrap gap-2 mb-6 justify-center">
+                    <button onClick="showChartPreview('bar')" class="viz-tab px-4 py-2 rounded-xl bg-cyan-500/20 text-cyan-300 text-xs font-bold border border-cyan-500/30">BAR CHART</button>
+                    <button onClick="showChartPreview('line')" class="viz-tab px-4 py-2 rounded-xl bg-slate-900 text-slate-400 text-xs font-bold border border-slate-800">LINE GRAPH</button>
+                    <button onClick="showChartPreview('scatter')" class="viz-tab px-4 py-2 rounded-xl bg-slate-900 text-slate-400 text-xs font-bold border border-slate-800">SCATTERPLOT</button>
+                    <button onClick="showChartPreview('histogram')" class="viz-tab px-4 py-2 rounded-xl bg-slate-900 text-slate-400 text-xs font-bold border border-slate-800">HISTOGRAM</button>
+                    <button onClick="showChartPreview('boxplot')" class="viz-tab px-4 py-2 rounded-xl bg-slate-900 text-slate-400 text-xs font-bold border border-slate-800">BOX PLOT</button>
+                </div>
+
+                <!-- Dynamic Chart Interactive Canvas / Display Area -->
+                <div id="chart-display-area" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <!-- Javascript populates graph graphic and description -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 12: AI-ASSISTED INTERPRETATION -->
+    <section id="interpretation" class="py-16 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Output Breakdown</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">AI-ASSISTED INTERPRETATION</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Hypothetical Statistical Output Card -->
+            <div class="glass-card p-6 rounded-2xl mb-8 border border-slate-700">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-mono text-cyan-400 block uppercase">HYPOTHETICAL STATISTICAL OUTPUT:</span>
+                        <h3 class="text-lg font-bold text-slate-100">Correlation: Study Hours vs. Test Anxiety</h3>
+                    </div>
+                    <div class="flex gap-4 font-mono text-sm bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
+                        <span class="text-cyan-300">r = -0.62</span>
+                        <span class="text-emerald-400">p &lt; .05</span>
+                        <span class="text-violet-300">N = 120</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Interactive Tabs -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl">
+                <div class="flex border-b border-slate-800 mb-6">
+                    <button onClick="switchInterpretationTab('tech')" class="interp-tab pb-3 px-4 font-bold text-xs uppercase border-b-2 border-cyan-400 text-cyan-400">
+                        TECHNICAL
+                    </button>
+                    <button onClick="switchInterpretationTab('plain')" class="interp-tab pb-3 px-4 font-bold text-xs uppercase border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                        PLAIN LANGUAGE
+                    </button>
+                    <button onClick="switchInterpretationTab('research')" class="interp-tab pb-3 px-4 font-bold text-xs uppercase border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                        RESEARCH INTERPRETATION
+                    </button>
+                </div>
+
+                <div id="interp-content" class="min-h-[120px] text-sm text-slate-300 leading-relaxed font-sans">
+                    <!-- JavaScript dynamically updates -->
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800 flex items-center gap-2 text-xs text-amber-400 font-semibold">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>"AI can explain. The researcher must validate."</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 13: HUMAN VALIDATION -->
+    <section id="human-validation" class="py-16 bg-navy-950/60 border-t border-slate-800/80 relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-flex p-4 rounded-3xl bg-cyan-500/10 text-cyan-400 mb-4 border border-cyan-500/30">
+                    <i class="fa-solid fa-shield-halved text-4xl"></i>
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black text-slate-100 uppercase tracking-tight">
+                    HUMAN VALIDATION IS ESSENTIAL
+                </h2>
+                <p class="text-base text-cyan-300 max-w-2xl mx-auto mt-3 font-medium">
+                    "The more automated the process becomes, the more important human validation becomes."
+                </p>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Interactive Validation Checklist -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto border border-cyan-500/30 mb-10">
+                <h3 class="text-base font-bold text-slate-100 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-cyan-400"></i> Researcher Validation Checklist
+                </h3>
+                <div id="human-val-checklist" class="space-y-3 text-xs sm:text-sm">
+                    <!-- JavaScript populates 8 validation checkboxes -->
+                </div>
+            </div>
+
+            <!-- Animated Progress Indicator: AI Output -> Validated Research Finding -->
+            <div class="glass-card p-6 rounded-2xl max-w-2xl mx-auto text-center border border-slate-700">
+                <div class="text-xs font-mono text-slate-400 mb-2">TRANSFORMATION STATUS</div>
+                <div class="relative w-full h-4 bg-slate-900 rounded-full overflow-hidden mb-4 border border-slate-800">
+                    <div id="val-progress-bar" class="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-emerald-400 w-1/4 transition-all duration-500"></div>
+                </div>
+                <div class="flex justify-between items-center text-xs font-bold font-mono">
+                    <span id="status-left" class="text-slate-500">UNCHECKED AI OUTPUT</span>
+                    <span id="status-right" class="text-emerald-400 hidden"><i class="fa-solid fa-circle-check"></i> VALIDATED RESEARCH FINDING</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 14: AI + STATISTICIAN -->
+    <section id="ai-statistician" class="py-16 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="text-violet-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Expert Collaboration</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">DOES AI REPLACE THE STATISTICIAN?</h2>
+                <div class="mt-4 text-5xl sm:text-6xl font-black text-red-500 tracking-wider uppercase">NO.</div>
+                <div class="w-16 h-1 bg-gradient-to-r from-red-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl max-w-3xl mx-auto text-center mb-10 border border-slate-700">
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    AI may reduce some routine computational work, but statistical expertise remains crucial for methodological decisions, validation, assumption checking, interpretation, and defensible conclusions.
+                </p>
+            </div>
+
+            <!-- Comparison Table / Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- GenAI Strengths -->
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-t-cyan-400">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-bolt"></i> GenAI Capabilities
+                    </h3>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-circle text-cyan-400 text-[8px] mr-2"></i> Fast computation & syntax generation</li>
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-circle text-cyan-400 text-[8px] mr-2"></i> Conversational explanations of formulas</li>
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-circle text-cyan-400 text-[8px] mr-2"></i> Immediate 24/7 availability for drafting</li>
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-circle text-cyan-400 text-[8px] mr-2"></i> Broad preliminary chart recommendations</li>
+                    </ul>
+                </div>
+
+                <!-- Statistician Critical Role -->
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-t-violet-400">
+                    <h3 class="text-lg font-bold text-violet-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-user-graduate"></i> Statistician Expertise
+                    </h3>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-star text-violet-400 text-[10px] mr-2"></i> Deep methodological domain judgment</li>
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-star text-violet-400 text-[10px] mr-2"></i> Contextual assumption & normality verification</li>
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-star text-violet-400 text-[10px] mr-2"></i> Study design, sampling, & power calculations</li>
+                        <li class="p-2.5 rounded-lg bg-slate-900"><i class="fa-solid fa-star text-violet-400 text-[10px] mr-2"></i> Professional accountability & thesis defense backing</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="mt-8 text-center text-xs font-mono text-cyan-300 bg-cyan-950/40 p-4 rounded-xl border border-cyan-500/30">
+                "AI can change the role of the statistician—but it does not eliminate the need for statistical expertise."
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 15: ETHICAL AI USE -->
+    <section id="ethics-privacy" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-emerald-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Research Integrity</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">ETHICAL VS. UNETHICAL AI USE</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-emerald-500 to-red-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Responsible Use -->
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-t-emerald-400">
+                    <h3 class="text-base font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i> RESPONSIBLE USE
+                    </h3>
+                    <ul class="space-y-2.5 text-xs text-slate-200">
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-emerald-950/20"><i class="fa-solid fa-check text-emerald-400"></i> Improve writing clarity & grammar</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-emerald-950/20"><i class="fa-solid fa-check text-emerald-400"></i> Explain complex statistical formulas</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-emerald-950/20"><i class="fa-solid fa-check text-emerald-400"></i> Suggest analytical approaches for consideration</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-emerald-950/20"><i class="fa-solid fa-check text-emerald-400"></i> Assist with chart visualization styling</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-emerald-950/20"><i class="fa-solid fa-check text-emerald-400"></i> Identify possible data-quality anomalies</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-emerald-950/20"><i class="fa-solid fa-check text-emerald-400"></i> Help organize researcher-provided information</li>
+                    </ul>
+                </div>
+
+                <!-- Irresponsible Use -->
+                <div class="glass-card p-6 rounded-2xl border-t-4 border-t-red-500">
+                    <h3 class="text-base font-bold text-red-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-xmark"></i> IRRESPONSIBLE USE
+                    </h3>
+                    <ul class="space-y-2.5 text-xs text-slate-200">
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-red-950/20"><i class="fa-solid fa-xmark text-red-400"></i> Manufacture or fabricate survey results</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-red-950/20"><i class="fa-solid fa-xmark text-red-400"></i> Manipulate data to make nonsignificant findings significant</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-red-950/20"><i class="fa-solid fa-xmark text-red-400"></i> Invent methodology that was never conducted</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-red-950/20"><i class="fa-solid fa-xmark text-red-400"></i> Claim causation from correlation without proof</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-red-950/20"><i class="fa-solid fa-xmark text-red-400"></i> Ignore limitations or cherry-pick favorable data</li>
+                        <li class="flex items-center gap-2.5 p-2 rounded-lg bg-red-950/20"><i class="fa-solid fa-xmark text-red-400"></i> Submit unverified AI output as original thesis work</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 16: DATA PRIVACY -->
+    <section class="py-16 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-rose-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Participant Rights</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">PROTECT YOUR RESEARCH PARTICIPANTS</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-rose-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Privacy Shield Card -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto border border-rose-500/30 mb-10">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="p-3 rounded-xl bg-rose-500/20 text-rose-400"><i class="fa-solid fa-user-shield text-2xl"></i></span>
+                    <h3 class="text-lg font-bold text-slate-100">Mandatory Anonymization Rule</h3>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed mb-6">
+                    Do not upload identifiable research data directly into cloud AI systems. Removing only participant names is often insufficient; combinations of age, address, and phone number can lead to re-identification.
+                </p>
+
+                <!-- Interactive "Is This Dataset Safe?" Exercise -->
+                <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800">
+                    <span class="text-xs font-mono text-rose-400 block mb-2">EXERCISE: IS THIS DATASET SAFE TO UPLOAD?</span>
+                    
+                    <div class="overflow-x-auto mb-4">
+                        <table class="w-full text-left text-xs font-mono text-slate-300 border border-slate-800">
+                            <thead class="bg-slate-900 text-slate-400">
+                                <tr>
+                                    <th class="p-2 border border-slate-800">Name</th>
+                                    <th class="p-2 border border-slate-800">Age</th>
+                                    <th class="p-2 border border-slate-800">Address</th>
+                                    <th class="p-2 border border-slate-800">Telephone</th>
+                                    <th class="p-2 border border-slate-800">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="p-2 border border-slate-800">John Doe</td>
+                                    <td class="p-2 border border-slate-800">21</td>
+                                    <td class="p-2 border border-slate-800">Quezon City</td>
+                                    <td class="p-2 border border-slate-800">0917-XXX-XXXX</td>
+                                    <td class="p-2 border border-slate-800">88</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="text-xs text-slate-300 mb-4 font-semibold">Would you upload this directly to a public AI model?</p>
+
+                    <div class="flex gap-4">
+                        <button onClick="answerPrivacyExercise('YES')" class="px-5 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/40 text-xs font-bold hover:bg-red-500/30">YES</button>
+                        <button onClick="answerPrivacyExercise('NO')" class="px-5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30">NO</button>
+                    </div>
+
+                    <div id="privacy-feedback" class="hidden mt-4 p-3 rounded-xl text-xs"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 17: RESPONSIBLE RESEARCH WRITING & DISCLOSURE -->
+    <section id="writing-disclosure" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Academic Transparency</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">WRITING & AI DISCLOSURE</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Continuum Slider Component -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl mb-12 max-w-3xl mx-auto border border-cyan-500/30">
+                <h3 class="text-base font-bold text-slate-100 mb-2">The Author Continuum</h3>
+                <p class="text-xs text-slate-400 mb-6">Target the recommended sweet spot for academic thesis writing.</p>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-red-400">AI GENERATES EVERYTHING</span>
+                        <span class="text-emerald-400 font-bold">RESEARCHER CREATES + AI ASSISTS</span>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-4 border border-slate-800 relative">
+                        <div class="bg-gradient-to-r from-red-500 via-emerald-400 to-blue-500 h-full rounded-full w-full"></div>
+                        <div class="absolute top-0 left-[75%] -translate-x-1/2 w-6 h-6 bg-white rounded-full shadow-lg border-2 border-cyan-500 -mt-1 cursor-pointer" title="Recommended Position"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Digital AI Disclosure Log Generator -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="p-3 rounded-xl bg-cyan-500/20 text-cyan-400"><i class="fa-solid fa-file-signature text-xl"></i></span>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-100">Interactive AI Use Disclosure Record</h3>
+                        <p class="text-xs text-slate-400">Generate a transparent AI log entry for your thesis methodology appendix.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-slate-400 mb-1">AI Tool Used:</label>
+                        <input id="log-tool" type="text" placeholder="e.g. ChatGPT / Claude 3.5 Sonnet" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Purpose / Task:</label>
+                        <input id="log-purpose" type="text" placeholder="e.g. Generated R syntax for correlation matrix inspection" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Validation Executed By Researcher:</label>
+                        <input id="log-validation" type="text" placeholder="e.g. Cross-checked with SPSS calculations and verified with thesis adviser" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 focus:border-cyan-400 focus:outline-none">
+                    </div>
+                    <button onClick="generateAILogRecord()" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold uppercase tracking-wider text-xs">Generate Log Record</button>
+                </div>
+
+                <div id="log-output-box" class="hidden mt-4 p-4 rounded-xl bg-slate-950 font-mono text-xs text-cyan-300 border border-slate-800"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 18: COMPLETE RESPONSIBLE AI WORKFLOW -->
+    <section id="workflow" class="py-16 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Master Framework</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">THE RESPONSIBLE GENAI RESEARCH WORKFLOW</h2>
+                <p class="text-xs text-slate-400 mt-2">Click any stage in the cycle to review its protocol.</p>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- 10-Step Interactive Cycle Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="master-workflow-grid">
+                <!-- JavaScript will generate 10 circular workflow steps -->
+            </div>
+
+            <div id="workflow-detail-modal" class="hidden mt-8 p-6 rounded-2xl glass-card border border-cyan-500/40 text-xs text-slate-200">
+                <!-- Dynamic Detail populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 19: PRACTICAL SCENARIOS -->
+    <section id="scenarios" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-violet-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Case Studies</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">PRACTICAL SCENARIOS</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="space-y-6 max-w-4xl mx-auto" id="scenarios-container">
+                <!-- Javascript will insert 5 scenario cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 20: QUICK KNOWLEDGE CHECK (QUIZ) -->
+    <section id="quiz" class="py-16 border-t border-slate-800/80 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="text-cyan-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Self-Assessment</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">QUICK KNOWLEDGE CHECK</h2>
+                <p class="text-xs text-slate-400 mt-2">Test your understanding of Session 3 principles with this 10-question quiz.</p>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Quiz Box -->
+            <div class="glass-card p-6 sm:p-10 rounded-3xl border border-cyan-500/30">
+                <div id="quiz-header" class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800 text-xs font-mono">
+                    <span id="quiz-progress-text" class="text-cyan-400">Question 1 of 10</span>
+                    <span id="quiz-score-live" class="text-slate-400">Score: 0</span>
+                </div>
+
+                <div id="quiz-body">
+                    <!-- Dynamic Question Content -->
+                </div>
+
+                <div id="quiz-results" class="hidden text-center space-y-6 py-6">
+                    <div class="text-5xl font-black text-cyan-400" id="quiz-score-final">0 / 10</div>
+                    <p class="text-base text-slate-200 font-medium" id="quiz-feedback-text"></p>
+                    <button onClick="resetQuiz()" class="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs uppercase tracking-wider">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 21: KEY TAKEAWAYS -->
+    <section id="takeaways" class="py-16 bg-navy-950/60 border-t border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-violet-400 text-xs font-mono font-bold uppercase tracking-widest block mb-2">Summary</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100">10 PRINCIPLES TO REMEMBER</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-violet-500 to-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="takeaways-container">
+                <!-- JS populates 10 numbered glowing cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 22: FINAL MESSAGE -->
+    <section class="py-20 border-t border-slate-800/80 relative overflow-hidden text-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
+            <h2 class="text-4xl sm:text-6xl font-black tracking-tight text-white uppercase">
+                EMBRACE AI.<br>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400">KEEP HUMAN JUDGMENT.</span>
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+                Generative AI can make research faster and more accessible. Responsible research requires knowledge, critical thinking, validation, transparency, privacy protection, and ethical judgment.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4 pt-4">
+                <a href="#quiz" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs uppercase tracking-wider hover:opacity-90 shadow-lg shadow-cyan-500/25">
+                    Take The Self-Check
+                </a>
+                <a href="#overview" class="px-8 py-3.5 rounded-xl bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider hover:bg-slate-700">
+                    Back To Session Overview
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Back To Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 p-3.5 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 backdrop-blur-md opacity-0 pointer-events-none transition-all hover:bg-cyan-500 hover:text-black z-40">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-950 border-t border-slate-800/80 py-12 text-slate-400 text-xs">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 pb-8 border-b border-slate-800">
+                <div>
+                    <div class="flex items-center space-x-2 text-slate-100 font-bold text-sm mb-2">
+                        <i class="fa-solid fa-brain text-cyan-400"></i>
+                        <span>SESSION 3 | RESPONSIBLE AI USE IN RESEARCH</span>
+                    </div>
+                    <p class="text-slate-500 max-w-md">
+                        GenAI for Quantitative Data Analysis, Visualization, Interpretation, and Reporting. Educational resource for faculty, researchers, thesis advisers, statisticians, and BSIT students.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-6 text-slate-400">
+                    <div>
+                        <h5 class="text-slate-200 font-bold mb-2 uppercase text-[10px]">Quick Links</h5>
+                        <ul class="space-y-1">
+                            <li><a href="#overview" class="hover:text-cyan-400">Session Overview</a></li>
+                            <li><a href="#workflow" class="hover:text-cyan-400">Responsible Workflow</a></li>
+                            <li><a href="#ethics-privacy" class="hover:text-cyan-400">Ethics & Privacy</a></li>
+                            <li><a href="#quiz" class="hover:text-cyan-400">Self-Check Quiz</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-slate-600">
+                <p>Educational resource for responsible and ethical AI use in research.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        /* Mobile menu toggle */
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        /* Scroll Progress Bar & Back to top button */
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+
+            const btt = document.getElementById('back-to-top');
+            if (winScroll > 300) {
+                btt.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                btt.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        document.getElementById('back-to-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        /* Toggle Detail Cards */
+        function toggleCardDetail(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function toggleCapability(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        /* Populate Objectives Grid */
+        const objectives = [
+            "Explain the role of GenAI in quantitative research.",
+            "Identify appropriate uses of AI in data analysis.",
+            "Use AI to assist with data inspection and statistical analysis.",
+            "Evaluate AI-generated statistical interpretations.",
+            "Use AI responsibly for data visualization.",
+            "Protect research participants' privacy.",
+            "Recognize inappropriate and unethical AI use.",
+            "Explain why human validation remains necessary.",
+            "Understand the continuing role of statisticians and research advisers.",
+            "Properly document or disclose AI use when appropriate."
+        ];
+
+        const objectivesGrid = document.getElementById('objectives-grid');
+        objectives.forEach((obj, idx) => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-4 rounded-xl flex items-center justify-between cursor-pointer border border-slate-800 hover:border-violet-500 transition-all';
+            card.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <span class="w-7 h-7 rounded-lg bg-violet-500/10 text-violet-400 font-mono text-xs font-bold flex items-center justify-center">${idx + 1}</span>
+                    <span class="text-xs sm:text-sm text-slate-200 font-medium">${obj}</span>
+                </div>
+                <i class="fa-regular fa-circle-check text-slate-600 text-lg check-icon"></i>
+            `;
+            card.addEventListener('click', function() {
+                const icon = this.querySelector('.check-icon');
+                if (icon.classList.contains('fa-regular')) {
+                    icon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg check-icon';
+                    this.classList.add('border-emerald-500/40', 'bg-emerald-950/10');
+                } else {
+                    icon.className = 'fa-regular fa-circle-check text-slate-600 text-lg check-icon';
+                    this.classList.remove('border-emerald-500/40', 'bg-emerald-950/10');
+                }
+            });
+            objectivesGrid.appendChild(card);
+        });
+
+        /* Inspection Checklist Logic */
+        const inspectionItems = [
+            "Remove unnecessary identifying information (names, emails, IDs)",
+            "Check variable names for clarity and standard formatting",
+            "Verify levels of measurement (nominal, ordinal, interval, ratio)",
+            "Identify and handle missing data codes appropriately",
+            "Screen for inconsistent or duplicate participant entries",
+            "Review unusual or extreme statistical values/outliers",
+            "Understand the dataset structure thoroughly before asking AI to analyze it"
+        ];
+
+        let checkedInspectionCount = 0;
+        function renderInspectionChecklist() {
+            const container = document.getElementById('inspection-checklist');
+            container.innerHTML = '';
+            inspectionItems.forEach((item, idx) => {
+                const row = document.createElement('label');
+                row.className = 'flex items-center space-x-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:bg-slate-800/80 transition-all';
+                row.innerHTML = `
+                    <input type="checkbox" onchange="updateInspectionCounter()" class="w-4 h-4 accent-violet-500 rounded cursor-pointer">
+                    <span class="text-xs text-slate-300">${item}</span>
+                `;
+                container.appendChild(row);
+            });
+            updateInspectionCounter();
+        }
+
+        function updateInspectionCounter() {
+            const checkboxes = document.querySelectorAll('#inspection-checklist input[type="checkbox"]');
+            checkedInspectionCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            document.getElementById('checklist-counter').innerText = `${checkedInspectionCount} of ${inspectionItems.length} items verified`;
+        }
+
+        function resetInspectionChecklist() {
+            renderInspectionChecklist();
+        }
+
+        renderInspectionChecklist();
+
+        /* Statistical Test Recommendation Simulator */
+        const testDetails = {
+            pearson: {
+                title: "Pearson Correlation Coefficient (r)",
+                appropriate: "Appropriate if both variables are continuous (interval/ratio), normally distributed, and linearly related.",
+                assumptions: "Check: Normality (Shapiro-Wilk), linearity (scatterplot inspection), and absence of significant outliers.",
+                needed: "Requires continuous measurement scales for both hours and GPA.",
+                validation: "Researcher must run formal normality tests rather than assuming normality."
+            },
+            spearman: {
+                title: "Spearman Rank-Order Correlation (&rho;)",
+                appropriate: "Appropriate if data is ordinal or continuous data violates parametric normality assumptions.",
+                assumptions: "Monotonic relationship between the two variables.",
+                needed: "Useful if GPA or social media hours are measured in ranked categories.",
+                validation: "Verify if monotonic trend holds across ranked data points."
+            },
+            regression: {
+                title: "Simple Linear Regression",
+                appropriate: "Appropriate if the goal is predicting GPA (dependent) based on social media hours (independent).",
+                assumptions: "Homoscedasticity, independence of observations, normal distribution of residuals.",
+                needed: "Clear directional hypothesis and theoretical justification.",
+                validation: "Check residual plots to prevent invalid standard error estimates."
+            }
+        };
+
+        function selectTestRecommendation(key) {
+            const data = testDetails[key];
+            const output = document.getElementById('test-recommendation-output');
+            output.innerHTML = `
+                <div class="font-bold text-cyan-400 text-sm mb-2"><i class="fa-solid fa-microchip mr-2"></i> ${data.title}</div>
+                <div class="space-y-2">
+                    <p><strong>Why Appropriate:</strong> ${data.appropriate}</p>
+                    <p><strong>Assumptions to Check:</strong> ${data.assumptions}</p>
+                    <p><strong>Information Needed:</strong> ${data.needed}</p>
+                    <p class="text-amber-300"><strong>Researcher Validation Role:</strong> ${data.validation}</p>
+                </div>
+            `;
+        }
+
+        /* Prompt Chaining Steps Generator */
+        const promptChainSteps = [
+            { step: 1, title: "Understand Problem", text: "Help me understand the research problem and context..." },
+            { step: 2, title: "Examine Variables", text: "Examine these variables and classify their level of measurement..." },
+            { step: 3, title: "Review Questions", text: "Analyze my specific research questions for analytical alignment..." },
+            { step: 4, title: "Evaluate Design", text: "Examine my quantitative research design constraints..." },
+            { step: 5, title: "Inspect Dataset", text: "Inspect this dataset summary for missing values and anomalies..." },
+            { step: 6, title: "Recommend Test", text: "Recommend appropriate statistical procedures with rationale..." },
+            { step: 7, title: "Explain Method", text: "Explain why this statistical procedure is methodologically appropriate..." },
+            { step: 8, title: "Perform/Script Analysis", text: "Generate the R/Python/SPSS code required to perform analysis..." },
+            { step: 9, title: "Check Assumptions", text: "Check normality and homoscedasticity assumption results..." },
+            { step: 10, title: "Interpret Results", text: "Interpret the statistical output (p-values, effect sizes)..." },
+            { step: 11, title: "Relate to Question", text: "Relate these numerical findings back to the core research question..." },
+            { step: 12, title: "Identify Limitations", text: "Identify statistical and methodological limitations..." }
+        ];
+
+        const promptContainer = document.getElementById('prompt-chain-container');
+        promptChainSteps.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-4 rounded-xl border border-slate-800 hover:border-violet-500 transition-all cursor-pointer';
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-mono font-bold text-violet-400">STEP ${s.step < 10 ? '0' + s.step : s.step}</span>
+                    <i class="fa-solid fa-link text-slate-600 text-xs"></i>
+                </div>
+                <h4 class="text-xs font-bold text-slate-100 mb-1">${s.title}</h4>
+                <p class="text-[11px] text-slate-400 font-mono italic truncate">"${s.text}"</p>
+            `;
+            promptContainer.appendChild(card);
+        });
+
+        /* Correlation Causation Warning Toast */
+        function triggerCausationWarning() {
+            const box = document.getElementById('causation-alert-box');
+            box.classList.remove('hidden');
+        }
+
+        /* Visualization Interactive Selector */
+        const chartData = {
+            bar: {
+                title: "BAR CHART",
+                desc: "Ideal for comparing discrete groups or categorical variables (e.g., mean GPA across different academic departments).",
+                svg: `<svg class="w-full h-48" viewBox="0 0 300 150">
+                    <rect x="30" y="40" width="35" height="90" fill="#06b6d4" rx="4"/>
+                    <rect x="95" y="20" width="35" height="110" fill="#3b82f6" rx="4"/>
+                    <rect x="160" y="60" width="35" height="70" fill="#8b5cf6" rx="4"/>
+                    <rect x="225" y="30" width="35" height="100" fill="#14b8a6" rx="4"/>
+                </svg>`
+            },
+            line: {
+                title: "LINE GRAPH",
+                desc: "Best for tracking continuous changes over time or ordered sequences (e.g., student performance trajectories across 4 semesters).",
+                svg: `<svg class="w-full h-48" viewBox="0 0 300 150">
+                    <path d="M 30 110 Q 80 40 140 80 T 270 20" fill="none" stroke="#22d3ee" stroke-width="4"/>
+                    <circle cx="30" cy="110" r="5" fill="#22d3ee"/>
+                    <circle cx="140" cy="80" r="5" fill="#22d3ee"/>
+                    <circle cx="270" cy="20" r="5" fill="#22d3ee"/>
+                </svg>`
+            },
+            scatter: {
+                title: "SCATTERPLOT",
+                desc: "Essential for examining relationships between two continuous variables (e.g., social media usage hours vs test anxiety score).",
+                svg: `<svg class="w-full h-48" viewBox="0 0 300 150">
+                    <circle cx="40" cy="120" r="4" fill="#8b5cf6"/>
+                    <circle cx="70" cy="100" r="4" fill="#8b5cf6"/>
+                    <circle cx="110" cy="85" r="4" fill="#8b5cf6"/>
+                    <circle cx="150" cy="65" r="4" fill="#8b5cf6"/>
+                    <circle cx="190" cy="50" r="4" fill="#8b5cf6"/>
+                    <circle cx="240" cy="30" r="4" fill="#8b5cf6"/>
+                    <line x1="30" y1="130" x2="260" y2="20" stroke="#06b6d4" stroke-width="2" stroke-dasharray="4"/>
+                </svg>`
+            },
+            histogram: {
+                title: "HISTOGRAM",
+                desc: "Crucial for inspecting continuous data distribution shape, variance, and checking normality assumptions.",
+                svg: `<svg class="w-full h-48" viewBox="0 0 300 150">
+                    <rect x="20" y="110" width="25" height="20" fill="#06b6d4" opacity="0.6"/>
+                    <rect x="47" y="80" width="25" height="50" fill="#06b6d4" opacity="0.8"/>
+                    <rect x="74" y="40" width="25" height="90" fill="#06b6d4"/>
+                    <rect x="101" y="20" width="25" height="110" fill="#06b6d4"/>
+                    <rect x="128" y="40" width="25" height="90" fill="#06b6d4"/>
+                    <rect x="155" y="70" width="25" height="60" fill="#06b6d4" opacity="0.8"/>
+                    <rect x="182" y="100" width="25" height="30" fill="#06b6d4" opacity="0.6"/>
+                </svg>`
+            },
+            boxplot: {
+                title: "BOX PLOT",
+                desc: "Provides median, interquartile range (IQR), and visual identification of potential statistical outliers.",
+                svg: `<svg class="w-full h-48" viewBox="0 0 300 150">
+                    <line x1="150" y1="20" x2="150" y2="130" stroke="#8b5cf6" stroke-width="2"/>
+                    <rect x="100" y="45" width="100" height="60" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="2" rx="4"/>
+                    <line x1="100" y1="75" x2="200" y2="75" stroke="#22d3ee" stroke-width="3"/>
+                    <circle cx="150" cy="10" r="4" fill="#ef4444"/>
+                </svg>`
+            }
+        };
+
+        function showChartPreview(type) {
+            const item = chartData[type];
+            const area = document.getElementById('chart-display-area');
+            area.innerHTML = `
+                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center">
+                    ${item.svg}
+                </div>
+                <div>
+                    <span class="text-xs font-mono text-cyan-400 block mb-1">SELECTED CHARTTYPE</span>
+                    <h3 class="text-xl font-bold text-white mb-3">${item.title}</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-4">${item.desc}</p>
+                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400 font-mono">
+                        Rule: Start with your analytical research question—not aesthetic chart preference.
+                    </div>
+                </div>
+            `;
+        }
+        showChartPreview('bar');
+
+        /* Interpretation Tabs Switcher */
+        const interpTexts = {
+            tech: "A Pearson correlation analysis revealed a statistically significant negative association between study hours and test anxiety levels, r(118) = -.62, p < .05.",
+            plain: "As student study hours increase, reported test anxiety levels tend to decrease moderately-to-strongly.",
+            research: "The finding suggests an inverse relationship between study duration and anxiety; however, because this is observational, results must be interpreted within design limitations without assuming studying eliminates anxiety."
+        };
+
+        function switchInterpretationTab(tab) {
+            document.querySelectorAll('.interp-tab').forEach(btn => {
+                btn.className = 'interp-tab pb-3 px-4 font-bold text-xs uppercase border-b-2 border-transparent text-slate-400 hover:text-slate-200';
+            });
+            event.target.className = 'interp-tab pb-3 px-4 font-bold text-xs uppercase border-b-2 border-cyan-400 text-cyan-400';
+            document.getElementById('interp-content').innerText = interpTexts[tab];
+        }
+        switchInterpretationTab('tech');
+
+        /* Human Validation Checklist */
+        const valItems = [
+            "Is the statistical method appropriate for data types?",
+            "Are distributional assumptions satisfied?",
+            "Are mathematical calculations verified for accuracy?",
+            "Does the interpretation strictly match statistical output?",
+            "Does the finding directly answer the research question?",
+            "Is the conclusion fully supported by data?",
+            "Were methodological limitations transparently considered?",
+            "Can the researcher defend this result in defense?"
+        ];
+
+        let valChecked = 0;
+        const valContainer = document.getElementById('human-val-checklist');
+        valItems.forEach((item, idx) => {
+            const row = document.createElement('label');
+            row.className = 'flex items-center space-x-3 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer';
+            row.innerHTML = `
+                <input type="checkbox" onchange="updateValProgress()" class="val-cb w-4 h-4 accent-cyan-400 rounded">
+                <span class="text-slate-300">${item}</span>
+            `;
+            valContainer.appendChild(row);
+        });
+
+        function updateValProgress() {
+            const cbs = document.querySelectorAll('.val-cb');
+            valChecked = Array.from(cbs).filter(c => c.checked).length;
+            const pct = Math.max(15, (valChecked / valItems.length) * 100);
+            document.getElementById('val-progress-bar').style.width = pct + '%';
+
+            if (valChecked === valItems.length) {
+                document.getElementById('status-right').classList.remove('hidden');
+            } else {
+                document.getElementById('status-right').classList.add('hidden');
+            }
+        }
+
+        /* Exercise Data Privacy */
+        function answerPrivacyExercise(ans) {
+            const box = document.getElementById('privacy-feedback');
+            box.classList.remove('hidden');
+            if (ans === 'NO') {
+                box.className = 'mt-4 p-3 rounded-xl text-xs bg-emerald-500/20 border border-emerald-500/40 text-emerald-300';
+                box.innerHTML = '<strong>CORRECT!</strong> The dataset contains direct PII (Name, Address, Phone Number). It must be thoroughly anonymized or de-identified according to institutional privacy policy before uploading.';
+            } else {
+                box.className = 'mt-4 p-3 rounded-xl text-xs bg-red-500/20 border border-red-500/40 text-red-300';
+                box.innerHTML = '<strong>INCORRECT!</strong> Uploading names and phone numbers to public AI systems violates participant data privacy standards.';
+            }
+        }
+
+        /* Generate AI Log Record */
+        function generateAILogRecord() {
+            const tool = document.getElementById('log-tool').value || 'ChatGPT Plus (GPT-4o)';
+            const purpose = document.getElementById('log-purpose').value || 'Assisted with code syntax for correlation analysis';
+            const val = document.getElementById('log-validation').value || 'Verified calculations manually in SPSS and reviewed with research adviser';
+            const date = new Date().toISOString().split('T')[0];
+
+            const out = document.getElementById('log-output-box');
+            out.classList.remove('hidden');
+            out.innerText = `[AI DISCLOSURE LOG ENTRY]\nDate: ${date}\nAI System: ${tool}\nTask Purpose: ${purpose}\nValidation Strategy: ${val}\nStatus: Verified & Researcher Approved`;
+        }
+
+        /* Master Circular 10-Step Workflow */
+        const masterSteps = [
+            { num: "01", name: "DEFINE", desc: "Formulate research problem, objectives, and quantitative research questions." },
+            { num: "02", name: "PREPARE", desc: "Structure dataset, clean variable labels, and verify measurement scales." },
+            { num: "03", name: "INSPECT", desc: "Check data hygiene, scan missing entries, and verify privacy compliance." },
+            { num: "04", name: "ANALYZE", desc: "Select and execute appropriate parametric or non-parametric procedures." },
+            { num: "05", name: "VISUALIZE", desc: "Generate clear, accurate charts aligned directly with research questions." },
+            { num: "06", name: "INTERPRET", desc: "Translate statistical outputs into plain language and domain context." },
+            { num: "07", name: "VALIDATE", desc: "Perform critical human validation over all code, math, and assumptions." },
+            { num: "08", name: "REPORT", desc: "Author scholarly manuscript with full researcher intellectual ownership." },
+            { num: "09", name: "DISCLOSE", desc: "Transparently document AI tools and verification procedures used." },
+            { num: "10", name: "PROTECT", desc: "Ensure ongoing participant data security and institutional compliance." }
+        ];
+
+        const masterGrid = document.getElementById('master-workflow-grid');
+        masterSteps.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-4 rounded-xl border border-slate-800 hover:border-cyan-400 cursor-pointer transition-all text-center';
+            card.innerHTML = `
+                <span class="text-xs font-mono font-bold text-cyan-400 block mb-1">${s.num}</span>
+                <h4 class="text-sm font-bold text-white mb-1">${s.name}</h4>
+                <p class="text-[11px] text-slate-400 leading-tight">${s.desc}</p>
+            `;
+            masterGrid.appendChild(card);
+        });
+
+        /* Practical Scenarios */
+        const scenarioData = [
+            {
+                q: "Scenario 1: A student uploads a complete survey dataset containing student names and phone numbers to ChatGPT.",
+                options: ["Responsible", "Irresponsible"],
+                correct: 1,
+                exp: "Irresponsible. Unanonymized dataset uploads violate research participant privacy protocols."
+            },
+            {
+                q: "Scenario 2: A student asks AI to modify p-values to make a nonsignificant result significant.",
+                options: ["Responsible", "Irresponsible"],
+                correct: 1,
+                exp: "Irresponsible. Manipulating statistical findings is academic dishonesty and falsification."
+            },
+            {
+                q: "Scenario 3: A student asks AI to explain an SPSS output and then checks the interpretation with their thesis adviser.",
+                options: ["Responsible", "Irresponsible"],
+                correct: 0,
+                exp: "Responsible. Using AI for educational explanation while maintaining advisor oversight is encouraged."
+            },
+            {
+                q: "Scenario 4: A student uses AI to improve grammar and sentence flow in a researcher-authored Chapter 4.",
+                options: ["Responsible", "Irresponsible"],
+                correct: 0,
+                exp: "Responsible. AI language enhancement over researcher-authored text is an acceptable assistive use."
+            },
+            {
+                q: "Scenario 5: A student asks AI to invent a methodology section describing procedures that were never performed.",
+                options: ["Responsible", "Irresponsible"],
+                correct: 1,
+                exp: "Irresponsible. Inventing unperformed procedures constitutes research fabrication."
+            }
+        ];
+
+        const scenarioContainer = document.getElementById('scenarios-container');
+        scenarioData.forEach((sc, idx) => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-6 rounded-2xl border border-slate-800';
+            card.innerHTML = `
+                <h4 class="text-sm font-bold text-slate-100 mb-3">${sc.q}</h4>
+                <div class="flex gap-3 mb-3">
+                    <button onclick="checkScenario(${idx}, 0)" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 hover:border-cyan-400">Responsible</button>
+                    <button onclick="checkScenario(${idx}, 1)" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 hover:border-cyan-400">Irresponsible</button>
+                </div>
+                <div id="sc-exp-${idx}" class="hidden p-3 rounded-xl text-xs"></div>
+            `;
+            scenarioContainer.appendChild(card);
+        });
+
+        function checkScenario(sIdx, choice) {
+            const sc = scenarioData[sIdx];
+            const box = document.getElementById(`sc-exp-${sIdx}`);
+            box.classList.remove('hidden');
+            if (choice === sc.correct) {
+                box.className = 'mt-3 p-3 rounded-xl text-xs bg-emerald-500/20 border border-emerald-500/40 text-emerald-300';
+                box.innerHTML = `<strong>CORRECT!</strong> ${sc.exp}`;
+            } else {
+                box.className = 'mt-3 p-3 rounded-xl text-xs bg-red-500/20 border border-red-500/40 text-red-300';
+                box.innerHTML = `<strong>INCORRECT.</strong> ${sc.exp}`;
+            }
+        }
+
+        /* 10-Question Quiz Logic */
+        const quizQuestions = [
+            {
+                q: "1. What is the proper role of Generative AI in quantitative research?",
+                opts: ["Replace the researcher", "Replace the statistician", "Assist the researcher", "Make all research decisions"],
+                ans: 2
+            },
+            {
+                q: "2. Does statistical significance prove causation?",
+                opts: ["Yes, always", "No, correlation does not prove causation", "Only when p < .01", "If AI generated the graph"],
+                ans: 1
+            },
+            {
+                q: "3. What must researchers do before uploading identifiable research data to AI?",
+                opts: ["Nothing", "Appropriately anonymize/protect data", "Increase font size", "Add participant names"],
+                ans: 1
+            },
+            {
+                q: "4. Can AI recommend statistical procedures?",
+                opts: ["Yes, but the researcher must validate recommendations", "No, AI cannot generate code", "Yes, and AI recommendations are automatically true", "Only for qualitative papers"],
+                ans: 0
+            },
+            {
+                q: "5. What is prompt chaining?",
+                opts: ["Using one massive prompt for everything", "Guiding AI through a sequence of context-specific questions", "Deleting prompt history", "Locking AI software"],
+                ans: 1
+            },
+            {
+                q: "6. Should AI be used to make nonsignificant findings significant?",
+                opts: ["Yes, if needed for graduation", "No, that is data manipulation", "Only in preliminary drafts", "Yes, if recommended by AI"],
+                ans: 1
+            },
+            {
+                q: "7. Who remains accountable for research conclusions?",
+                opts: ["The AI software vendor", "The statistician only", "The primary researcher", "The university library"],
+                ans: 2
+            },
+            {
+                q: "8. Can AI assist with data visualization?",
+                opts: ["Yes", "No", "Only for bar charts", "Never"],
+                ans: 0
+            },
+            {
+                q: "9. Should researchers understand the statistical results they submit?",
+                opts: ["No, as long as p < .05", "Yes, essential for research defense and validity", "Only if requested by peer reviewers", "Never"],
+                ans: 1
+            },
+            {
+                q: "10. Does Generative AI eliminate the need for statistical expertise?",
+                opts: ["Yes", "No, statistical judgment remains vital for assumptions & validation", "Only in computer science", "Yes, LLMs are always flawless"],
+                ans: 1
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function renderQuizQuestion() {
+            if (currentQ >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+
+            const q = quizQuestions[currentQ];
+            document.getElementById('quiz-progress-text').innerText = `Question ${currentQ + 1} of ${quizQuestions.length}`;
+            document.getElementById('quiz-score-live').innerText = `Score: ${score}`;
+
+            const body = document.getElementById('quiz-body');
+            body.innerHTML = `
+                <h3 class="text-base font-bold text-slate-100 mb-6">${q.q}</h3>
+                <div class="space-y-3">
+                    ${q.opts.map((opt, oIdx) => `
+                        <button onclick="submitQuizAnswer(${oIdx})" class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-left text-xs text-slate-200 hover:border-cyan-400 hover:bg-slate-800 transition-all flex items-center justify-between">
+                            <span>${opt}</span>
+                            <i class="fa-solid fa-angle-right text-slate-600"></i>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function submitQuizAnswer(oIdx) {
+            if (oIdx === quizQuestions[currentQ].ans) {
+                score++;
+            }
+            currentQ++;
+            renderQuizQuestion();
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-header').classList.add('hidden');
+            document.getElementById('quiz-body').classList.add('hidden');
+            const res = document.getElementById('quiz-results');
+            res.classList.remove('hidden');
+
+            document.getElementById('quiz-score-final').innerText = `${score} / ${quizQuestions.length}`;
+            const pct = (score / quizQuestions.length) * 100;
+            document.getElementById('quiz-feedback-text').innerText = pct >= 80 ? 
+                "Outstanding! You have mastered the principles of Responsible AI Use in Quantitative Research." : 
+                "Good effort! Review the session sections above and try the self-check again.";
+        }
+
+        function resetQuiz() {
+            currentQ = 0;
+            score = 0;
+            document.getElementById('quiz-header').classList.remove('hidden');
+            document.getElementById('quiz-body').classList.remove('hidden');
+            document.getElementById('quiz-results').classList.add('hidden');
+            renderQuizQuestion();
+        }
+
+        renderQuizQuestion();
+
+        /* 10 Key Takeaways Generator */
+        const takeawaysList = [
+            "AI is an assistant, not the researcher.",
+            "Human validation is essential.",
+            "Context matters in research.",
+            "Prompt clearly and specifically.",
+            "Correlation does not mean causation.",
+            "Validate statistical recommendations.",
+            "Never manipulate findings.",
+            "Protect participant privacy.",
+            "Be transparent about AI use.",
+            "Researchers remain accountable."
+        ];
+
+        const takeawaysContainer = document.getElementById('takeaways-container');
+        takeawaysList.forEach((text, idx) => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-4 rounded-xl border border-slate-800 hover:border-violet-400 transition-all';
+            card.innerHTML = `
+                <span class="text-xs font-mono font-bold text-violet-400 block mb-1">0${idx + 1}</span>
+                <p class="text-xs font-bold text-slate-200">${text}</p>
+            `;
+            takeawaysContainer.appendChild(card);
+        });
+    </script>
+</body>
+</html>

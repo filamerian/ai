@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 4: Responsible AI Use in Research | University Seminar Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0B0F17',
+                            card: '#111827',
+                            border: '#1F2937',
+                            cyan: '#06B6D4',
+                            cyanGlow: '#22D3EE',
+                            violet: '#8B5CF6',
+                            purple: '#A855F7',
+                            blue: '#3B82F6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0F17;
+            color: #F3F4F6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(31, 41, 55, 0.8);
+        }
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.15);
+            transform: translateY(-2px);
+        }
+        .cyan-glow {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+        .violet-glow {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #22D3EE 0%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-violet {
+            background: linear-gradient(135deg, #A855F7 0%, #06B6D4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F17;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1F2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06B6D4;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
+
+    <!-- READING PROGRESS BAR -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-900 z-50">
+        <div id="scrollProgress" class="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- STICKY NAVBAR -->
+    <nav class="sticky top-0 z-40 bg-[#0B0F17]/90 backdrop-blur-md border-b border-gray-800 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <a href="#home" class="flex items-center gap-3 group">
+                    <div class="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 group-hover:border-cyan-400 transition">
+                        <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+                    </div>
+                    <div>
+                        <span class="font-heading font-bold text-sm tracking-wider uppercase text-white block">SESSION 4</span>
+                        <span class="text-xs text-gray-400 block -mt-1 font-mono">RESPONSIBLE AI IN RESEARCH</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden lg:flex items-center space-x-1 text-xs font-medium text-gray-300">
+                    <a href="#home" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">HOME</a>
+                    <a href="#overview" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">OVERVIEW</a>
+                    <a href="#qualitative" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">QUALITATIVE AI</a>
+                    <a href="#coding" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">AI & CODING</a>
+                    <a href="#limitations" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">LIMITATIONS</a>
+                    <a href="#privacy" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">DATA PRIVACY</a>
+                    <a href="#consent" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">CONSENT</a>
+                    <a href="#prompting" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">PROMPTING</a>
+                    <a href="#disclosure" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">DISCLOSURE</a>
+                    <a href="#workflow" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">WORKFLOW</a>
+                    <a href="#takeaways" class="nav-link px-3 py-2 rounded-md hover:text-cyan-400 hover:bg-gray-800/50 transition">TAKEAWAYS</a>
+                    <a href="#quiz" class="px-3 py-1.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition font-semibold">QUIZ</a>
+                </div>
+
+                <!-- Progress Pill & Mobile Menu Button -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 bg-gray-900 px-3 py-1 rounded-full border border-gray-800 text-xs font-mono text-cyan-400">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        <span id="navProgressText">PROGRESS: 0%</span>
+                    </div>
+
+                    <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-gray-900/95 border-b border-gray-800 px-4 pt-2 pb-6 space-y-1">
+            <a href="#home" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">HOME</a>
+            <a href="#overview" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">OVERVIEW</a>
+            <a href="#qualitative" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">QUALITATIVE AI</a>
+            <a href="#coding" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">AI & CODING</a>
+            <a href="#limitations" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">LIMITATIONS</a>
+            <a href="#privacy" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">DATA PRIVACY</a>
+            <a href="#consent" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">CONSENT</a>
+            <a href="#prompting" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">PRIVACY-SAFE PROMPTING</a>
+            <a href="#disclosure" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">DISCLOSURE</a>
+            <a href="#workflow" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">RESPONSIBLE WORKFLOW</a>
+            <a href="#takeaways" class="mobile-nav-link block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-cyan-400 hover:bg-gray-800">KEY TAKEAWAYS</a>
+            <a href="#quiz" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-semibold text-cyan-400 bg-cyan-950/50 border border-cyan-800">KNOWLEDGE CHECK</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+
+        <!-- 1. HERO SECTION -->
+        <section id="home" class="relative pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden border-b border-gray-800/60">
+            <!-- Canvas Animation Background -->
+            <canvas id="heroCanvas" class="absolute inset-0 w-full h-full opacity-30 pointer-events-none"></canvas>
+            
+            <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-widest mb-6">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
+                    Academic Seminar Series • Session 4
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-heading font-extrabold tracking-tight text-white mb-4">
+                    RESPONSIBLE AI USE <br class="hidden sm:inline" />IN <span class="text-gradient-cyan">RESEARCH</span>
+                </h1>
+
+                <p class="text-xs sm:text-sm font-medium tracking-wide text-gray-400 uppercase mb-8">
+                    AI-Assisted Qualitative Research • Data Privacy • Ethical AI Use • Research Accountability
+                </p>
+
+                <!-- Hero Quote -->
+                <div class="max-w-2xl mx-auto p-6 rounded-2xl glass-card border border-cyan-500/20 mb-8 relative">
+                    <i data-lucide="quote" class="w-8 h-8 text-cyan-500/20 absolute top-3 left-3"></i>
+                    <p class="text-lg sm:text-xl italic text-cyan-100 font-serif leading-relaxed">
+                        "AI can accelerate research.<br />Human judgment must remain responsible."
+                    </p>
+                </div>
+
+                <p class="max-w-3xl mx-auto text-gray-300 text-sm sm:text-base leading-relaxed mb-10">
+                    This session explores the responsible use of Generative AI in qualitative research, AI-assisted thematic analysis, data privacy, participant consent, research transparency, AI disclosure, and the continuing responsibility of the researcher.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#overview" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-heading font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2">
+                        <span>START SESSION</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#topics" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gray-900 border border-gray-700 hover:border-gray-500 text-gray-200 font-heading font-semibold text-sm transition flex items-center justify-center gap-2">
+                        <span>EXPLORE TOPICS</span>
+                        <i data-lucide="compass" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. YOUTUBE VIDEO SECTION -->
+        <section class="py-12 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center gap-2 text-cyan-400 text-xs font-mono uppercase tracking-wider mb-2">
+                        <i data-lucide="play-circle" class="w-4 h-4"></i> Seminar Recording
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-heading font-bold text-white">SESSION 4 SEMINAR VIDEO</h2>
+                    <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                        Watch the seminar session before exploring the organized concepts, activities, and responsible-AI principles below.
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-3 border border-gray-800 shadow-2xl overflow-hidden">
+                    <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
+                        <iframe 
+                            class="absolute inset-0 w-full h-full"
+                            src="https://www.youtube.com/embed/videoseries?list=PLVJDN0Zu1OAM" 
+                            title="Session 4 Seminar Video Playlist" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="mt-4 px-3 py-2 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-2">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="youtube" class="w-4 h-4 text-red-500"></i>
+                            Official Seminar YouTube Playlist
+                        </span>
+                        <a href="https://youtube.com/playlist?list=PLVJDN0Zu1OAM&si=wdhmr4dJOYFgqby3" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline flex items-center gap-1">
+                            Open directly on YouTube <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SESSION OVERVIEW -->
+        <section id="overview" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-cyan-400 text-xs font-mono uppercase tracking-widest block mb-2">Curriculum Breakdown</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white">WHAT THIS SESSION IS ABOUT</h2>
+                <p class="text-gray-400 text-sm mt-2">Click any module card below to inspect its core concepts and objectives.</p>
+            </div>
+
+            <div id="topics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- 10 Interactive Cards -->
+                <div onclick="openTopicModal(1)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-cyan-500/10 text-cyan-400 w-fit mb-3 group-hover:bg-cyan-500 group-hover:text-black transition">
+                        <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">1. Qualitative AI</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">AI's role in processing text vs interpreting meaning.</p>
+                </div>
+
+                <div onclick="openTopicModal(2)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-violet-500/10 text-violet-400 w-fit mb-3 group-hover:bg-violet-500 group-hover:text-black transition">
+                        <i data-lucide="code-2" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">2. AI-Assisted Coding</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Generating initial codes and grouping transcripts.</p>
+                </div>
+
+                <div onclick="openTopicModal(3)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-blue-500/10 text-blue-400 w-fit mb-3 group-hover:bg-blue-500 group-hover:text-black transition">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">3. Thematic Analysis</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Identifying candidate themes vs synthesizing core meaning.</p>
+                </div>
+
+                <div onclick="openTopicModal(4)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-cyan-500/10 text-cyan-400 w-fit mb-3 group-hover:bg-cyan-500 group-hover:text-black transition">
+                        <i data-lucide="globe" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">4. Context & Meaning</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Navigating multilingual text, culture, and nuance.</p>
+                </div>
+
+                <div onclick="openTopicModal(5)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-400 w-fit mb-3 group-hover:bg-emerald-500 group-hover:text-black transition">
+                        <i data-lucide="user-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">5. Human Validation</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Non-negotiable verification of AI-generated insights.</p>
+                </div>
+
+                <div onclick="openTopicModal(6)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-red-500/10 text-red-400 w-fit mb-3 group-hover:bg-red-500 group-hover:text-black transition">
+                        <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">6. Data Privacy</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Protecting direct identifiers and sensitive participant data.</p>
+                </div>
+
+                <div onclick="openTopicModal(7)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-amber-500/10 text-amber-400 w-fit mb-3 group-hover:bg-amber-500 group-hover:text-black transition">
+                        <i data-lucide="file-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">7. Participant Consent</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Ensuring consent covers third-party AI platform processing.</p>
+                </div>
+
+                <div onclick="openTopicModal(8)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-cyan-500/10 text-cyan-400 w-fit mb-3 group-hover:bg-cyan-500 group-hover:text-black transition">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">8. Privacy Prompting</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Techniques to anonymize prompts and sanitize inputs.</p>
+                </div>
+
+                <div onclick="openTopicModal(9)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-purple-500/10 text-purple-400 w-fit mb-3 group-hover:bg-purple-500 group-hover:text-black transition">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">9. AI Disclosure</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Transparently documenting AI tool usage in methodologies.</p>
+                </div>
+
+                <div onclick="openTopicModal(10)" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer group">
+                    <div class="p-3 rounded-lg bg-indigo-500/10 text-indigo-400 w-fit mb-3 group-hover:bg-indigo-500 group-hover:text-black transition">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-heading font-semibold text-white text-base mb-1">10. Accountability</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Final responsibility always rests with the researcher.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic Modal -->
+        <div id="topicModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div class="glass-card max-w-lg w-full rounded-2xl p-6 border border-cyan-500/30 shadow-2xl relative">
+                <button onclick="closeTopicModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+
+        <!-- 4. CORE IDEA (AI vs RESEARCHER) -->
+        <section class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Core Philosophical Foundation</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">THE CENTRAL IDEA</h2>
+                    <div class="mt-4 p-4 rounded-xl bg-cyan-950/40 border border-cyan-500/30 max-w-3xl mx-auto">
+                        <p class="text-lg sm:text-xl font-heading font-bold text-cyan-300">
+                            "AI is a research assistant, not a replacement for the researcher."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Visual Balance Scale Comparison -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                    <!-- Column 1: AI CAN -->
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-t-cyan-500 relative">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-3 rounded-lg bg-cyan-500/20 text-cyan-400">
+                                <i data-lucide="bot" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-white">AI CAN:</h3>
+                                <p class="text-xs text-gray-400">Processing & Pattern Recognition</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                                <span>Process large amounts of qualitative text rapidly</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                                <span>Identify recurring words, phrases, and linguistic patterns</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                                <span>Suggest preliminary codes and group related codes</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                                <span>Suggest initial categories and candidate themes</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                                <span>Summarize lengthy interview transcripts</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 2: RESEARCHER MUST -->
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-t-violet-500 relative">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-3 rounded-lg bg-violet-500/20 text-violet-400">
+                                <i data-lucide="user-check" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-white">RESEARCHER MUST:</h3>
+                                <p class="text-xs text-gray-400">Interpretation & Methodological Control</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-violet-400 shrink-0 mt-0.5"></i>
+                                <span>Understand context, participant experience, and culture</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-violet-400 shrink-0 mt-0.5"></i>
+                                <span>Interpret deeper meaning, irony, and subtle emotional cues</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-violet-400 shrink-0 mt-0.5"></i>
+                                <span>Apply rigorous methodological judgment and consider positionality</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-violet-400 shrink-0 mt-0.5"></i>
+                                <span>Validate all AI outputs against raw empirical transcripts</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-violet-400 shrink-0 mt-0.5"></i>
+                                <span>Make final analytical decisions and defend the research findings</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. QUALITATIVE RESEARCH + AI (PATTERN VS MEANING) -->
+        <section id="qualitative" class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Methodological Rigor</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">AI IN QUALITATIVE RESEARCH</h2>
+                <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                    Qualitative research is not simply about finding patterns. It is about understanding what those patterns mean within human experience.
+                </p>
+            </div>
+
+            <!-- Interactive Pattern vs Meaning Container -->
+            <div class="glass-card rounded-2xl p-6 md:p-8 border border-gray-800">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Left: Pattern Detection -->
+                    <div class="bg-gray-900/80 p-6 rounded-xl border border-cyan-500/30">
+                        <div class="flex items-center gap-2 text-cyan-400 font-heading font-bold mb-3 text-lg">
+                            <i data-lucide="search-code" class="w-5 h-5"></i>
+                            PATTERN DETECTION (AI)
+                        </div>
+                        <p class="text-xs text-gray-400 mb-4">AI algorithms excel at mechanical text organization:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 text-xs font-mono border border-cyan-800">Recurring Words</span>
+                            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 text-xs font-mono border border-cyan-800">Frequent Phrases</span>
+                            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 text-xs font-mono border border-cyan-800">Topic Clustering</span>
+                            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 text-xs font-mono border border-cyan-800">Textual Similarities</span>
+                            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 text-xs font-mono border border-cyan-800">Surface Categories</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Meaning-Making -->
+                    <div class="bg-gray-900/80 p-6 rounded-xl border border-violet-500/30">
+                        <div class="flex items-center gap-2 text-violet-400 font-heading font-bold mb-3 text-lg">
+                            <i data-lucide="brain" class="w-5 h-5"></i>
+                            MEANING-MAKING (RESEARCHER)
+                        </div>
+                        <p class="text-xs text-gray-400 mb-4">Researchers perform deep analytical synthesis:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-300 text-xs font-mono border border-violet-800">Cultural Context</span>
+                            <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-300 text-xs font-mono border border-violet-800">Participant Lived Experience</span>
+                            <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-300 text-xs font-mono border border-violet-800">Sarcasm & Irony</span>
+                            <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-300 text-xs font-mono border border-violet-800">Researcher Positionality</span>
+                            <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-300 text-xs font-mono border border-violet-800">Theoretical Lenses</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Banner -->
+                <div class="mt-8 p-4 rounded-xl bg-gradient-to-r from-cyan-950 via-gray-900 to-violet-950 border border-cyan-500/40 text-center">
+                    <p class="text-base sm:text-lg font-heading font-bold text-white">
+                        ⚡ "Finding a pattern is not the same as understanding its meaning."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. AI-ASSISTED QUALITATIVE ANALYSIS PROCESS DIAGRAM -->
+        <section class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Interactive Qualitative Pipeline</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">10-STAGE ANALYSIS WORKFLOW</h2>
+                    <p class="text-gray-400 text-sm mt-2">Click any stage below to examine researcher duties vs AI capabilities.</p>
+                </div>
+
+                <!-- Stage Pipeline Horizontal/Grid Scroll -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8" id="stagePipelineButtons">
+                    <!-- JS will populate buttons -->
+                </div>
+
+                <!-- Stage Inspector Box -->
+                <div id="stageInspector" class="glass-card rounded-2xl p-6 border border-cyan-500/30">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. AI-ASSISTED CODING & PROMPT COMPARISON -->
+        <section id="coding" class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Prompt Engineering for Research</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">AI CAN SUGGEST CODES — BUT CODES MUST BE VALIDATED</h2>
+                <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                    AI can suggest initial codes, categories, and themes, but researchers must always return to original raw transcripts to verify grounding.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Code Prompt Box -->
+                <div class="glass-card rounded-2xl p-6 border border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-mono text-cyan-400 uppercase tracking-wide">Sample Methodological Prompt</span>
+                            <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 text-xs font-mono">Constrained Input</span>
+                        </div>
+                        <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 font-mono text-xs text-gray-300 leading-relaxed mb-4">
+                            "Using only this transcript, identify the recurring ideas and provide supporting excerpts. Do not interpret beyond the text."
+                        </div>
+                    </div>
+
+                    <button id="togglePromptBtn" onclick="togglePromptDetails()" class="w-full py-3 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition font-heading font-semibold text-sm flex items-center justify-center gap-2">
+                        <span>REVEAL RESPONSIBLE PROMPT ANALYSIS</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Prompt Explanation Details -->
+                <div id="promptDetailsBox" class="glass-card rounded-2xl p-6 border border-cyan-500/30 flex flex-col justify-between">
+                    <h3 class="font-heading font-bold text-lg text-white mb-4 flex items-center gap-2">
+                        <i data-lucide="check-square" class="w-5 h-5 text-cyan-400"></i>
+                        WHY THIS PROMPT IS BETTER
+                    </h3>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li class="flex items-start gap-2.5">
+                            <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                            <span><strong>Limits AI Scope:</strong> Strictly restricts the model to explicit provided textual evidence.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                            <span><strong>Reduces Hallucination:</strong> Minimizes unsupported speculations or ungrounded interpretations.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                            <span><strong>Demands Citation:</strong> Requires exact verbatim quotes for every suggested code.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                            <span><strong>Maintains Human Proximity:</strong> Forces the researcher to verify codes against raw participant data.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. AI TRANSCRIPTION -->
+        <section class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Audio & Speech Processing</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">AI TRANSCRIPTION: USEFUL BUT NOT AUTOMATICALLY ACCURATE</h2>
+                    <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                        Automated speech recognition saves time but introduces subtle misinterpretations that compromise qualitative integrity.
+                    </p>
+                </div>
+
+                <!-- Warning Banner -->
+                <div class="mb-10 p-6 rounded-2xl bg-red-950/40 border border-red-500/40 text-center flex flex-col items-center justify-center">
+                    <i data-lucide="alert-triangle" class="w-10 h-10 text-red-400 mb-2"></i>
+                    <h3 class="text-xl font-heading font-bold text-red-200">"IF THE TRANSCRIPT IS WRONG, THE ANALYSIS CAN ALSO BE WRONG."</h3>
+                </div>
+
+                <!-- Common Pitfalls Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300 flex items-center gap-2">
+                        <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                        <span>Incorrect word substitution</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300 flex items-center gap-2">
+                        <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                        <span>Missing statements & omissions</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300 flex items-center gap-2">
+                        <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                        <span>Incorrect speaker diarization</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300 flex items-center gap-2">
+                        <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                        <span>Misunderstood local dialects</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300 flex items-center gap-2">
+                        <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                        <span>Literal mistranslations</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs text-gray-300 flex items-center gap-2">
+                        <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                        <span>Mangled technical jargon</span>
+                    </div>
+                </div>
+
+                <!-- Workflow Diagram -->
+                <div class="glass-card rounded-2xl p-6 border border-cyan-500/30">
+                    <h4 class="font-heading font-semibold text-center text-sm text-cyan-300 uppercase tracking-widest mb-6">Rigorous Transcription Protocol</h4>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
+                        <div class="flex-1 p-3 rounded-lg bg-gray-900 border border-gray-800 w-full">
+                            <span class="text-xs font-mono text-cyan-400">STEP 1</span>
+                            <p class="font-heading font-bold text-sm text-white mt-1">Audio Recording</p>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-cyan-400 hidden sm:block"></i>
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-cyan-400 sm:hidden"></i>
+                        
+                        <div class="flex-1 p-3 rounded-lg bg-gray-900 border border-gray-800 w-full">
+                            <span class="text-xs font-mono text-cyan-400">STEP 2</span>
+                            <p class="font-heading font-bold text-sm text-white mt-1">AI Transcription</p>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-cyan-400 hidden sm:block"></i>
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-cyan-400 sm:hidden"></i>
+
+                        <div class="flex-1 p-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 w-full">
+                            <span class="text-xs font-mono text-emerald-400">MANDATORY</span>
+                            <p class="font-heading font-bold text-sm text-white mt-1">Human Verification</p>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-cyan-400 hidden sm:block"></i>
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-cyan-400 sm:hidden"></i>
+
+                        <div class="flex-1 p-3 rounded-lg bg-gray-900 border border-gray-800 w-full">
+                            <span class="text-xs font-mono text-cyan-400">STEP 4</span>
+                            <p class="font-heading font-bold text-sm text-white mt-1">Clean Transcript</p>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-cyan-400 hidden sm:block"></i>
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-cyan-400 sm:hidden"></i>
+
+                        <div class="flex-1 p-3 rounded-lg bg-gray-900 border border-gray-800 w-full">
+                            <span class="text-xs font-mono text-cyan-400">STEP 5</span>
+                            <p class="font-heading font-bold text-sm text-white mt-1">Qualitative Analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. LANGUAGE AND CULTURAL CONTEXT -->
+        <section class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Socio-Linguistic Nuance</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">CONTEXT MATTERS</h2>
+                <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                    Highlighting multilingual and culturally contextualized research (e.g., Cebuano, Hiligaynon, Tagalog, English, and Code-switching).
+                </p>
+            </div>
+
+            <!-- Interactive Nuance Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div onclick="toggleContextCard('lang')" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-heading font-bold text-cyan-300">LANGUAGE</span>
+                        <i data-lucide="languages" class="w-5 h-5 text-cyan-400"></i>
+                    </div>
+                    <p class="text-xs text-gray-400">Code-switching & local expressions.</p>
+                    <div id="card-lang" class="hidden mt-3 pt-3 border-t border-gray-800 text-xs text-gray-300">
+                        AI often fails when participants mix Cebuano, Tagalog, and English in a single sentence, missing semantic shifts.
+                    </div>
+                </div>
+
+                <div onclick="toggleContextCard('culture')" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-heading font-bold text-violet-300">CULTURE</span>
+                        <i data-lucide="users" class="w-5 h-5 text-violet-400"></i>
+                    </div>
+                    <p class="text-xs text-gray-400">Shared communal norms.</p>
+                    <div id="card-culture" class="hidden mt-3 pt-3 border-t border-gray-800 text-xs text-gray-300">
+                        Cultural concepts like <i>"Pakikisama"</i> or regional social dynamics cannot be interpreted by western-centric AI models without guidance.
+                    </div>
+                </div>
+
+                <div onclick="toggleContextCard('irony')" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-heading font-bold text-blue-300">IRONY</span>
+                        <i data-lucide="smile" class="w-5 h-5 text-blue-400"></i>
+                    </div>
+                    <p class="text-xs text-gray-400">Sarcasm & non-literal text.</p>
+                    <div id="card-irony" class="hidden mt-3 pt-3 border-t border-gray-800 text-xs text-gray-300">
+                        AI processes literal words; a participant saying "Oh, fantastic..." during distress is classified as positive sentiment by AI.
+                    </div>
+                </div>
+
+                <div onclick="toggleContextCard('emotion')" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-heading font-bold text-emerald-300">EMOTION</span>
+                        <i data-lucide="heart" class="w-5 h-5 text-emerald-400"></i>
+                    </div>
+                    <p class="text-xs text-gray-400">Subtext, hesitation, trauma.</p>
+                    <div id="card-emotion" class="hidden mt-3 pt-3 border-t border-gray-800 text-xs text-gray-300">
+                        Pauses, sighs, and emotional weight are erased in text processing, requiring human empathetic listening.
+                    </div>
+                </div>
+
+                <div onclick="toggleContextCard('context')" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-heading font-bold text-amber-300">CONTEXT</span>
+                        <i data-lucide="compass" class="w-5 h-5 text-amber-400"></i>
+                    </div>
+                    <p class="text-xs text-gray-400">Socio-political background.</p>
+                    <div id="card-context" class="hidden mt-3 pt-3 border-t border-gray-800 text-xs text-gray-300">
+                        Understanding why a participant withheld information requires knowing institutional or community dynamics.
+                    </div>
+                </div>
+
+                <div onclick="toggleContextCard('exp')" class="glass-card glass-card-hover rounded-xl p-5 cursor-pointer">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-heading font-bold text-rose-300">EXPERIENCE</span>
+                        <i data-lucide="sparkles" class="w-5 h-5 text-rose-400"></i>
+                    </div>
+                    <p class="text-xs text-gray-400">Lived human realities.</p>
+                    <div id="card-exp" class="hidden mt-3 pt-3 border-t border-gray-800 text-xs text-gray-300">
+                        Phenomenological depth comes from researcher attunement, not word counting algorithms.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. LIMITATIONS OF GENAI IN QUALITATIVE RESEARCH -->
+        <section id="limitations" class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Critical Evaluation</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">WHERE AI FALLS SHORT</h2>
+                    <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                        Generative AI models operate on statistical next-token prediction, exposing clear methodological boundaries.
+                    </p>
+                </div>
+
+                <!-- 8 Core Limitations Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">01</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Limited Contextual Understanding</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">02</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Possible Loss of Cultural Meaning</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">03</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Oversimplification of Complex Data</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">04</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Unsupported Interpretations</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">05</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Possible AI Hallucinations</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">06</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Incorrect & Decontextualized Coding</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">07</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Inaccurate Audio Transcription</h4>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-mono text-xs font-bold">08</span>
+                        <h4 class="font-heading font-semibold text-white text-sm mt-1">Inability to Reflect Positionality</h4>
+                    </div>
+                </div>
+
+                <!-- Comparison Table: AI CAN vs AI CANNOT GUARANTEE -->
+                <div class="glass-card rounded-2xl p-6 border border-gray-800 overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
+                        <thead>
+                            <tr class="border-b border-gray-800 text-xs font-mono uppercase tracking-wider text-gray-400">
+                                <th class="py-3 px-4 w-1/2">AI CAN (Capabilities)</th>
+                                <th class="py-3 px-4 w-1/2 text-red-400">AI CANNOT GUARANTEE (Boundaries)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-gray-800/60">
+                            <tr>
+                                <td class="py-3 px-4 text-gray-300">Identify candidate patterns across transcripts</td>
+                                <td class="py-3 px-4 text-red-300">Correct thematic interpretation</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-300">Organize and summarize large volumes of text</td>
+                                <td class="py-3 px-4 text-red-300">Cultural and socio-linguistic understanding</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-300">Suggest initial descriptive codes</td>
+                                <td class="py-3 px-4 text-red-300">Methodological appropriateness</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-gray-300">Cluster similar statements together</td>
+                                <td class="py-3 px-4 text-red-300">Valid conclusions & genuine meaning-making</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. HUMAN VALIDATION -->
+        <section class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Quality Assurance</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">HUMAN VALIDATION IS NON-NEGOTIABLE</h2>
+            </div>
+
+            <div class="glass-card rounded-2xl p-8 border border-cyan-500/30 text-center relative overflow-hidden">
+                <div class="inline-flex p-4 rounded-full bg-cyan-500/10 text-cyan-400 mb-6">
+                    <i data-lucide="shield" class="w-12 h-12"></i>
+                </div>
+
+                <!-- Shield Validation Flowchart -->
+                <div class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-5 gap-2 items-center text-xs font-mono mb-8">
+                    <div class="p-3 rounded-lg bg-gray-900 border border-gray-800 text-gray-300">AI OUTPUT</div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 justify-self-center hidden sm:block"></i>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-cyan-400 justify-self-center sm:hidden"></i>
+
+                    <div class="p-3 rounded-lg bg-gray-900 border border-cyan-500/40 text-cyan-300">CHECK RAW DATA & METHOD</div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 justify-self-center hidden sm:block"></i>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-cyan-400 justify-self-center sm:hidden"></i>
+
+                    <div class="p-3 rounded-lg bg-violet-950 border border-violet-500/50 text-violet-200 font-bold">RESEARCHER DECISION</div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 max-w-2xl mx-auto">
+                    <p class="text-sm font-heading font-bold text-amber-200">
+                        ⚠️ "AI-generated output should never automatically become a research finding."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. DATA PRIVACY & MINIMIZATION -->
+        <section id="privacy" class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-red-400">Ethical Data Handling</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">DATA PRIVACY: PROTECT PEOPLE BEFORE DATA</h2>
+                    <p class="text-lg text-cyan-300 font-heading font-semibold mt-3 max-w-3xl mx-auto">
+                        "Participant rights, consent, confidentiality, and research accountability are more important than AI convenience."
+                    </p>
+                </div>
+
+                <!-- Sensitive Data Detector Interactive Tool -->
+                <div class="glass-card rounded-2xl p-6 border border-gray-800 mb-12">
+                    <h3 class="font-heading font-bold text-white text-lg mb-4 flex items-center gap-2">
+                        <i data-lucide="scan-line" class="w-5 h-5 text-cyan-400"></i>
+                        INTERACTIVE SENSITIVE DATA DETECTOR
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-6">Select a category below to inspect research data elements that must NOT be uploaded into public AI tools without authorization.</p>
+
+                    <div class="flex flex-wrap gap-3 mb-6">
+                        <button onclick="filterPrivacy('direct')" class="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 hover:border-cyan-400 text-xs font-mono text-cyan-300 transition">Direct Identifiers</button>
+                        <button onclick="filterPrivacy('sensitive')" class="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 hover:border-violet-400 text-xs font-mono text-violet-300 transition">Indirect / Sensitive Info</button>
+                        <button onclick="filterPrivacy('all')" class="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 hover:border-white text-xs font-mono text-gray-300 transition">Show All</button>
+                    </div>
+
+                    <div id="privacyGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        <div class="privacy-item direct p-3 rounded-lg bg-red-950/30 border border-red-500/30 text-xs text-red-200">Names & Nicknames</div>
+                        <div class="privacy-item direct p-3 rounded-lg bg-red-950/30 border border-red-500/30 text-xs text-red-200">Email Addresses</div>
+                        <div class="privacy-item direct p-3 rounded-lg bg-red-950/30 border border-red-500/30 text-xs text-red-200">Student ID / Employee ID</div>
+                        <div class="privacy-item direct p-3 rounded-lg bg-red-950/30 border border-red-500/30 text-xs text-red-200">Contact / Phone Numbers</div>
+                        <div class="privacy-item sensitive p-3 rounded-lg bg-violet-950/30 border border-violet-500/30 text-xs text-violet-200">Raw Audio / Voice Clips</div>
+                        <div class="privacy-item sensitive p-3 rounded-lg bg-violet-950/30 border border-violet-500/30 text-xs text-violet-200">IP Addresses & Timestamps</div>
+                        <div class="privacy-item sensitive p-3 rounded-lg bg-violet-950/30 border border-violet-500/30 text-xs text-violet-200">Health & Medical Info</div>
+                        <div class="privacy-item sensitive p-3 rounded-lg bg-violet-950/30 border border-violet-500/30 text-xs text-violet-200">Academic Records / Grades</div>
+                    </div>
+
+                    <div class="mt-6 p-4 rounded-xl bg-gray-950 border border-red-500/30 flex items-center gap-3">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-red-400 shrink-0"></i>
+                        <p class="text-xs text-gray-300">
+                            <strong>Warning:</strong> Do not assume that a public AI tool is automatically safe for research data. Unchecked data uploads can violate privacy laws and ethics approvals.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- DATA MINIMIZATION FUNNEL -->
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-heading font-bold text-white">DATA MINIMIZATION PRINCIPLE</h3>
+                    <p class="text-sm text-cyan-400 font-mono mt-1">"IF AI DOES NOT NEED THE RAW DATA, DON'T GIVE IT THE RAW DATA."</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="glass-card rounded-xl p-5 border border-gray-800">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">1. ANONYMIZED DATA</div>
+                        <p class="text-xs text-gray-400">Stripping all personal names, places, and direct identifying markers.</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5 border border-gray-800">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">2. AGGREGATED DATA</div>
+                        <p class="text-xs text-gray-400">Combining individual data points into group summaries or high-level totals.</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5 border border-gray-800">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">3. SUMMARY DATA</div>
+                        <p class="text-xs text-gray-400">Passing abstract structural outlines instead of raw transcript lines.</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5 border border-gray-800">
+                        <div class="text-cyan-400 font-bold text-sm mb-1">4. SYNTHETIC DATA</div>
+                        <p class="text-xs text-gray-400">Using artificial representative examples to test prompts without real participant risk.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. PARTICIPANT CONSENT -->
+        <section id="consent" class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Ethics & Protocols</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">CONSENT MUST BE CONSIDERED</h2>
+                <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                    Consent to participate in research does not automatically mean permission to upload identifiable research data to any AI service.
+                </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 md:p-8 border border-gray-800 max-w-3xl mx-auto">
+                <h3 class="font-heading font-bold text-white text-lg mb-6 flex items-center gap-2">
+                    <i data-lucide="clipboard-check" class="w-5 h-5 text-cyan-400"></i>
+                    RESEARCHER CONSENT COMPLIANCE CHECKLIST
+                </h3>
+
+                <div class="space-y-4 text-sm text-gray-300">
+                    <label class="flex items-start gap-3 p-3 rounded-lg bg-gray-900 border border-gray-800 cursor-pointer hover:border-cyan-500/40 transition">
+                        <input type="checkbox" class="mt-1 rounded border-gray-700 text-cyan-500 focus:ring-cyan-400">
+                        <span><strong>Participant Informed Consent:</strong> Does the signed consent form explicitly authorize processing data through third-party AI software?</span>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-3 rounded-lg bg-gray-900 border border-gray-800 cursor-pointer hover:border-cyan-500/40 transition">
+                        <input type="checkbox" class="mt-1 rounded border-gray-700 text-cyan-500 focus:ring-cyan-400">
+                        <span><strong>Ethics Board (IRB) Approval:</strong> Has the institutional review board approved the specific AI tool and data workflow?</span>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-3 rounded-lg bg-gray-900 border border-gray-800 cursor-pointer hover:border-cyan-500/40 transition">
+                        <input type="checkbox" class="mt-1 rounded border-gray-700 text-cyan-500 focus:ring-cyan-400">
+                        <span><strong>Institutional Policy:</strong> Does your university or institute allow external cloud AI tool processing for this data classification?</span>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-3 rounded-lg bg-gray-900 border border-gray-800 cursor-pointer hover:border-cyan-500/40 transition">
+                        <input type="checkbox" class="mt-1 rounded border-gray-700 text-cyan-500 focus:ring-cyan-400">
+                        <span><strong>Funding Body Requirements:</strong> Does the grant or funding agency impose strict data sovereignty or privacy restrictions?</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14. PRIVACY-SAFE PROMPTING -->
+        <section id="prompting" class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Practical Application</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">PRIVACY-SAFE PROMPTING</h2>
+                    <p class="text-gray-400 text-sm mt-2">See how raw unsafe prompts transform into sanitized, privacy-compliant AI requests.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- UNSAFE PROMPT -->
+                    <div class="p-6 rounded-2xl bg-red-950/20 border border-red-500/40">
+                        <div class="flex items-center gap-2 text-red-400 font-heading font-bold mb-3">
+                            <i data-lucide="x-circle" class="w-5 h-5"></i>
+                            UNSAFE PROMPT
+                        </div>
+                        <div class="bg-gray-950 p-4 rounded-xl border border-red-900/40 font-mono text-xs text-red-200">
+                            "Here is my dataset containing student details and full transcripts from University X. Analyze it."
+                        </div>
+                        <p class="text-xs text-red-300/80 mt-3">❌ Exposes confidential student information, institution names, and unredacted raw transcripts to cloud servers.</p>
+                    </div>
+
+                    <!-- SAFER PROMPT -->
+                    <div class="p-6 rounded-2xl bg-emerald-950/20 border border-emerald-500/40">
+                        <div class="flex items-center gap-2 text-emerald-400 font-heading font-bold mb-3">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            SAFER PROMPT
+                        </div>
+                        <div class="bg-gray-950 p-4 rounded-xl border border-emerald-900/40 font-mono text-xs text-emerald-200">
+                            "Using this anonymized and aggregated dataset, identify the major patterns across Participant A through F."
+                        </div>
+                        <p class="text-xs text-emerald-300/80 mt-3">✓ Redacts direct identifiers, aggregates responses, and utilizes pseudonyms.</p>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="openPromptChecklistModal()" class="px-8 py-3.5 rounded-xl bg-cyan-500 text-black font-heading font-bold text-sm shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition inline-flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        MAKE MY PROMPT PRIVACY-SAFE (CHECKLIST)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prompt Checklist Modal -->
+        <div id="promptChecklistModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-cyan-500/30 relative">
+                <button onclick="closePromptChecklistModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <h3 class="font-heading font-bold text-white text-lg mb-4">PRIVACY-SAFE PROMPT CHECKLIST</h3>
+                <div class="space-y-3 text-xs text-gray-300">
+                    <div class="flex items-center gap-2 p-2 rounded bg-gray-900 border border-gray-800">
+                        <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Remove direct identifiers (names, IDs, emails)</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 rounded bg-gray-900 border border-gray-800">
+                        <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Remove unnecessary indirect identifiers</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 rounded bg-gray-900 border border-gray-800">
+                        <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Minimize data to essential excerpts only</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 rounded bg-gray-900 border border-gray-800">
+                        <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Use summaries or synthetic data where possible</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 rounded bg-gray-900 border border-gray-800">
+                        <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Confirm AI tool settings do not train on inputs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. AI USE IN RESEARCH POLICY -->
+        <section class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Governance & Compliance</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">CHECK THE POLICY BEFORE YOU USE AI</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Funded -->
+                <div class="glass-card glass-card-hover rounded-2xl p-6 border border-gray-800">
+                    <div class="p-3 rounded-lg bg-blue-500/10 text-blue-400 w-fit mb-4">
+                        <i data-lucide="landmark" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-lg mb-2">FUNDED RESEARCH</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">Always verify funding agency terms and grant agreements regarding third-party software and AI processing provisions.</p>
+                </div>
+
+                <!-- University -->
+                <div class="glass-card glass-card-hover rounded-2xl p-6 border border-gray-800">
+                    <div class="p-3 rounded-lg bg-cyan-500/10 text-cyan-400 w-fit mb-4">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-lg mb-2">UNIVERSITY RESEARCH</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">Review institutional AI guidelines, university data privacy charters, and thesis/capstone research office policies.</p>
+                </div>
+
+                <!-- Publication -->
+                <div class="glass-card glass-card-hover rounded-2xl p-6 border border-gray-800">
+                    <div class="p-3 rounded-lg bg-purple-500/10 text-purple-400 w-fit mb-4">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-lg mb-2">PUBLICATION</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">Check target journal publisher guidelines regarding AI disclosure statements, authorship criteria, and data transparency.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 16. AI DISCLOSURE & INTERACTIVE BUILDER -->
+        <section id="disclosure" class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Methodological Transparency</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">BE TRANSPARENT ABOUT AI USE</h2>
+                    <p class="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                        Depending on institutional and journal rules, AI usage must be documented clearly in methodology sections.
+                    </p>
+                </div>
+
+                <!-- Interactive AI Declaration Builder -->
+                <div class="glass-card rounded-2xl p-6 md:p-8 border border-cyan-500/30 max-w-4xl mx-auto">
+                    <h3 class="font-heading font-bold text-white text-lg mb-4 flex items-center gap-2">
+                        <i data-lucide="file-signature" class="w-5 h-5 text-cyan-400"></i>
+                        INTERACTIVE AI DECLARATION BUILDER
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-6">Select how AI was utilized in your research process to generate a standardized methodology disclosure statement:</p>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+                        <button onclick="generateDeclaration('language')" class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 hover:border-cyan-400 text-xs text-gray-300">Language Editing</button>
+                        <button onclick="generateDeclaration('lit')" class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 hover:border-cyan-400 text-xs text-gray-300">Literature Organization</button>
+                        <button onclick="generateDeclaration('stats')" class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 hover:border-cyan-400 text-xs text-gray-300">Statistical Decision Support</button>
+                        <button onclick="generateDeclaration('coding')" class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 hover:border-cyan-400 text-xs text-gray-300">Coding Support</button>
+                        <button onclick="generateDeclaration('transcribe')" class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 hover:border-cyan-400 text-xs text-gray-300">Audio Transcription</button>
+                        <button onclick="generateDeclaration('viz')" class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 hover:border-cyan-400 text-xs text-gray-300">Data Visualization</button>
+                    </div>
+
+                    <!-- Output Box -->
+                    <div class="bg-gray-950 p-5 rounded-xl border border-gray-800 mb-6">
+                        <span class="text-xs font-mono text-cyan-400 block mb-2">GENERATED METHODOLOGY STATEMENT:</span>
+                        <p id="declarationOutput" class="text-sm font-mono text-gray-200 leading-relaxed">
+                            Select a category above to build your statement...
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-center">
+                        <p class="text-sm font-heading font-bold text-cyan-300">
+                            "AI SUPPORT ≠ AI OWNERSHIP OF THE RESEARCH DECISION"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 17. RESPONSIBLE AI RESEARCH WORKFLOW -->
+        <section id="workflow" class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">End-to-End Governance</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">RESPONSIBLE AI RESEARCH WORKFLOW</h2>
+                <p class="text-gray-400 text-sm mt-2">A 10-step lifecycle ensuring accountability from inception to publication.</p>
+            </div>
+
+            <!-- Workflow Steps Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-cyan-500">
+                    <span class="text-xs font-mono text-cyan-400 font-bold">01</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">DEFINE</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Identify research objectives & boundaries.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-cyan-500">
+                    <span class="text-xs font-mono text-cyan-400 font-bold">02</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">PREPARE</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Review ethics & institutional rules.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-cyan-500">
+                    <span class="text-xs font-mono text-cyan-400 font-bold">03</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">PROTECT</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Anonymize & sanitize participant data.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-cyan-500">
+                    <span class="text-xs font-mono text-cyan-400 font-bold">04</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">USE AI</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Execute constrained, privacy-safe prompts.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-cyan-500">
+                    <span class="text-xs font-mono text-cyan-400 font-bold">05</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">CHECK</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Verify outputs against raw transcripts.</p>
+                </div>
+
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-violet-500">
+                    <span class="text-xs font-mono text-violet-400 font-bold">06</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">INTERPRET</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Apply human contextual understanding.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-violet-500">
+                    <span class="text-xs font-mono text-violet-400 font-bold">07</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">VALIDATE</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Confirm methodological alignment.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-violet-500">
+                    <span class="text-xs font-mono text-violet-400 font-bold">08</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">DOCUMENT</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Record tools, models, and prompts used.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-violet-500">
+                    <span class="text-xs font-mono text-violet-400 font-bold">09</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">DISCLOSE</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Include formal AI declaration in text.</p>
+                </div>
+                <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-violet-500">
+                    <span class="text-xs font-mono text-violet-400 font-bold">10</span>
+                    <h4 class="font-heading font-bold text-white text-sm mt-1">OWN DECISION</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Take full responsibility for findings.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 18. QUANTITATIVE VS QUALITATIVE -->
+        <section class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Methodological Comparison</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">QUANTITATIVE VS QUALITATIVE AI USE</h2>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 border border-gray-800 overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
+                        <thead>
+                            <tr class="border-b border-gray-800 text-xs font-mono uppercase tracking-wider">
+                                <th class="py-3 px-4 text-cyan-400 w-1/2">QUANTITATIVE RESEARCH</th>
+                                <th class="py-3 px-4 text-violet-400 w-1/2">QUALITATIVE RESEARCH</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-gray-800/60 text-gray-300">
+                            <tr>
+                                <td class="py-3 px-4">Statistical computation & formula execution</td>
+                                <td class="py-3 px-4">Qualitative text organization & grouping</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">Statistical summaries & dataset descriptions</td>
+                                <td class="py-3 px-4">Coding support & initial code suggestions</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">Chart generation & quantitative visualization</td>
+                                <td class="py-3 px-4">Thematic organization & candidate themes</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">Statistical decision support & test selection</td>
+                                <td class="py-3 px-4">Pattern identification across transcripts</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">Checking numerical assumptions</td>
+                                <td class="py-3 px-4">Contextual interpretation & meaning-making</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="mt-6 p-4 rounded-xl bg-gray-900 border border-gray-700 text-center">
+                        <p class="text-xs font-heading font-semibold text-gray-200">
+                            "In both approaches, the researcher remains responsible for the final interpretation and conclusions."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 19. THE 5 RESPONSIBLE AI PRINCIPLES -->
+        <section class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Core Ethical Framework</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">THE 5 RESPONSIBLE AI PRINCIPLES</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="glass-card rounded-2xl p-5 border-t-4 border-t-cyan-500 text-center">
+                    <div class="p-3 rounded-full bg-cyan-500/10 text-cyan-400 w-fit mx-auto mb-3">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-base mb-1">1. USE AI</h3>
+                    <p class="text-xs text-gray-400">Use AI where it genuinely assists research productivity.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border-t-4 border-t-blue-500 text-center">
+                    <div class="p-3 rounded-full bg-blue-500/10 text-blue-400 w-fit mx-auto mb-3">
+                        <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-base mb-1">2. CHECK AI</h3>
+                    <p class="text-xs text-gray-400">Rigorously validate and audit all AI outputs.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border-t-4 border-t-violet-500 text-center">
+                    <div class="p-3 rounded-full bg-violet-500/10 text-violet-400 w-fit mx-auto mb-3">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-base mb-1">3. PROTECT PEOPLE</h3>
+                    <p class="text-xs text-gray-400">Protect privacy, consent, confidentiality, and dignity.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border-t-4 border-t-purple-500 text-center">
+                    <div class="p-3 rounded-full bg-purple-500/10 text-purple-400 w-fit mx-auto mb-3">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-base mb-1">4. DOCUMENT AI</h3>
+                    <p class="text-xs text-gray-400">Record tools, prompts, and workflows transparently.</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border-t-4 border-t-emerald-500 text-center">
+                    <div class="p-3 rounded-full bg-emerald-500/10 text-emerald-400 w-fit mx-auto mb-3">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-white text-base mb-1">5. OWN DECISION</h3>
+                    <p class="text-xs text-gray-400">The researcher remains fully accountable for all work.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 20. KNOWLEDGE CHECK (INTERACTIVE QUIZ) -->
+        <section id="quiz" class="py-16 md:py-24 bg-gray-950 border-b border-gray-800">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Assessment & Verification</span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">KNOWLEDGE CHECK</h2>
+                    <p class="text-gray-400 text-sm mt-2">Test your understanding of responsible AI principles in qualitative research.</p>
+                </div>
+
+                <!-- Quiz Container -->
+                <div class="glass-card rounded-2xl p-6 md:p-8 border border-cyan-500/30">
+                    <div id="quizContainer">
+                        <!-- Dynamic Quiz Content -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 21. KEY TAKEAWAYS -->
+        <section id="takeaways" class="py-16 md:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+            <div class="text-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Summary</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mt-1">SESSION 4: KEY TAKEAWAYS</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">01</span>
+                    <p>AI can accelerate qualitative research tasks when used responsibly.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">02</span>
+                    <p>AI can help identify patterns but does not automatically understand meaning.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">03</span>
+                    <p>Researchers must validate AI-generated codes and candidate themes.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">04</span>
+                    <p>AI transcription must be verified against original audio recordings.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">05</span>
+                    <p>Socio-cultural context and language nuances require human interpretation.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">06</span>
+                    <p>Participant rights and data privacy come before AI convenience.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">07</span>
+                    <p>Use anonymized, aggregated, summarized, or synthetic data when appropriate.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">08</span>
+                    <p>Informed consent and confidentiality parameters must be respected.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">09</span>
+                    <p>Check institutional, ethical, funding, and publication policies.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-start gap-3">
+                    <span class="text-cyan-400 font-mono font-bold">10</span>
+                    <p>Document and disclose AI tool usage in methodologies transparently.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-cyan-950/40 border border-cyan-500/40 md:col-span-2 text-center text-cyan-200 font-bold">
+                    11. The researcher remains fully responsible for final analysis, interpretations, and conclusions.
+                </div>
+            </div>
+        </section>
+
+        <!-- 22. FINAL PHILOSOPHICAL MESSAGE -->
+        <section class="py-24 md:py-32 bg-black text-center relative overflow-hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <h2 class="text-3xl sm:text-5xl font-heading font-extrabold text-white leading-tight mb-8">
+                    "AI CAN FIND PATTERNS.<br />
+                    <span class="text-gradient-cyan">RESEARCHERS MUST UNDERSTAND MEANING."</span>
+                </h2>
+
+                <p class="text-xl sm:text-2xl font-heading font-semibold text-gray-300 mb-8">
+                    "AI CAN ASSIST THE PROCESS.<br />
+                    RESEARCHERS MUST OWN THE DECISION."
+                </p>
+
+                <div class="p-6 rounded-2xl bg-gray-900/80 border border-gray-800 max-w-2xl mx-auto mb-10">
+                    <p class="text-sm sm:text-base text-gray-300 italic">
+                        "THE CONVENIENCE OF AI SHOULD NEVER COME BEFORE THE RIGHTS AND PRIVACY OF RESEARCH PARTICIPANTS."
+                    </p>
+                </div>
+
+                <a href="#home" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-cyan-500 text-black font-heading font-bold text-sm hover:bg-cyan-400 transition shadow-lg shadow-cyan-500/20">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    RESTART SESSION
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-950 border-t border-gray-800 py-12 text-xs text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="font-heading font-bold text-white text-sm block">SESSION 4: RESPONSIBLE AI USE IN RESEARCH</span>
+                    <p class="mt-1 text-gray-400 max-w-md">
+                        AI-assisted research requires human judgment, ethical responsibility, transparency, and accountability.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-4 font-mono text-xs">
+                    <a href="#home" class="hover:text-cyan-400">Home</a>
+                    <a href="#qualitative" class="hover:text-cyan-400">Qualitative AI</a>
+                    <a href="#privacy" class="hover:text-cyan-400">Privacy</a>
+                    <a href="#disclosure" class="hover:text-cyan-400">Disclosure</a>
+                    <a href="#workflow" class="hover:text-cyan-400">Workflow</a>
+                    <a href="#quiz" class="hover:text-cyan-400">Knowledge Check</a>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-800/60 flex flex-col sm:flex-row items-center justify-between text-gray-400">
+                <span>Educational seminar resource</span>
+                <span>Designed for University Faculty, Researchers & Graduate Students</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Canvas Particles Background
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(6, 182, 212, 0.5)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // Scroll Progress & Reading Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+            document.getElementById('navProgressText').innerText = `PROGRESS: ${Math.round(scrolled)}%`;
+        });
+
+        // Mobile Navigation Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // Topic Modal Data
+        const topicModalData = {
+            1: { title: "1. AI in Qualitative Research", desc: "GenAI can process massive natural language datasets, but qualitative research seeks deep human understanding. AI identifies textual patterns; researchers establish qualitative meaning." },
+            2: { title: "2. AI-Assisted Coding", desc: "AI models can suggest descriptive codes, but researchers must verify every code against the empirical transcript to prevent hallucinated codes." },
+            3: { title: "3. Thematic Analysis", desc: "Candidate themes generated by AI are preliminary hypotheses. Researchers must interpret overarching themes through methodological frameworks." },
+            4: { title: "4. Context & Meaning", desc: "Language is culturally situated. AI often misses irony, emotional subtext, regional dialects, and code-switching." },
+            5: { title: "5. Human Validation", desc: "Human oversight is a non-negotiable ethical and methodological requirement. AI recommendations must undergo rigorous human auditing." },
+            6: { title: "6. Data Privacy", desc: "Research data containing direct or indirect participant identifiers must not be uploaded to unverified public AI models." },
+            7: { title: "7. Participant Consent", desc: "Standard research consent does not automatically permit uploading participant interviews to commercial third-party AI platforms." },
+            8: { title: "8. Privacy-Safe Prompting", desc: "Techniques including data stripping, pseudonyms, summary prompts, and synthetic datasets allow safe AI utilization." },
+            9: { title: "9. AI Disclosure", desc: "Methodology sections should transparently document AI software, model versions, and explicit operational roles." },
+            10: { title: "10. Research Accountability", desc: "Authors and researchers bear sole legal, academic, and ethical responsibility for all published claims and findings." }
+        };
+
+        function openTopicModal(id) {
+            const item = topicModalData[id];
+            document.getElementById('modalContent').innerHTML = `
+                <h3 class="font-heading font-bold text-white text-xl mb-3">${item.title}</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">${item.desc}</p>
+            `;
+            document.getElementById('topicModal').classList.remove('hidden');
+        }
+        function closeTopicModal() {
+            document.getElementById('topicModal').classList.add('hidden');
+        }
+
+        // Qualitative Analysis Pipeline Interactive Data
+        const pipelineStages = [
+            { title: "DATA", researcher: "Collects empirical interviews/focus groups.", ai: "N/A", control: "Human only" },
+            { title: "TRANSCRIPTION", researcher: "Verifies audio against text.", ai: "Generates automated draft.", control: "Human audit mandatory" },
+            { title: "FAMILIARIZATION", researcher: "Immerses in context & nuance.", ai: "Summarizes text length.", control: "Human judgment" },
+            { title: "INITIAL CODING", researcher: "Validates code fidelity.", ai: "Suggests preliminary codes.", control: "Human verification" },
+            { title: "CATEGORIZATION", researcher: "Groups by research questions.", ai: "Clusters related codes.", control: "Human framing" },
+            { title: "PATTERN ID", researcher: "Evaluates structural coherence.", ai: "Detects frequency patterns.", control: "Human evaluation" },
+            { title: "CANDIDATE THEMES", researcher: "Refines theme boundaries.", ai: "Proposes theme labels.", control: "Human synthesis" },
+            { title: "INTERPRETATION", researcher: "Applies theory & positionality.", ai: "N/A (Fails at deep meaning)", control: "100% Human" },
+            { title: "VALIDATION", researcher: "Checks against raw dataset.", ai: "N/A", control: "100% Human" },
+            { title: "FINAL ANALYSIS", researcher: "Defends final thesis/paper.", ai: "Assists formatting/editing.", control: "100% Human" }
+        ];
+
+        let activeStage = 3; // Initial coding
+
+        function renderPipeline() {
+            const btnContainer = document.getElementById('stagePipelineButtons');
+            btnContainer.innerHTML = pipelineStages.map((s, idx) => `
+                <button onclick="selectStage(${idx})" class="p-2.5 rounded-lg text-xs font-mono transition border ${idx === activeStage ? 'bg-cyan-500 text-black border-cyan-400 font-bold' : 'bg-gray-900 text-gray-300 border-gray-800 hover:border-cyan-500/40'}">
+                    ${idx + 1}. ${s.title}
+                </button>
+            `).join('');
+
+            const stage = pipelineStages[activeStage];
+            document.getElementById('stageInspector').innerHTML = `
+                <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-3">
+                    <span class="text-xs font-mono text-cyan-400 uppercase">STAGE ${activeStage + 1} OF 10</span>
+                    <h3 class="font-heading font-bold text-xl text-white">${stage.title}</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-cyan-400 font-bold block mb-1">RESEARCHER RESPONSIBILITY</span>
+                        <p class="text-gray-300">${stage.researcher}</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800">
+                        <span class="text-violet-400 font-bold block mb-1">AI ASSISTANCE ROLE</span>
+                        <p class="text-gray-300">${stage.ai}</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-cyan-950/40 border border-cyan-500/30">
+                        <span class="text-emerald-400 font-bold block mb-1">HUMAN CONTROL LEVEL</span>
+                        <p class="text-emerald-200 font-semibold">${stage.control}</p>
+                    </div>
+                </div>
+            `;
+        }
+        function selectStage(idx) {
+            activeStage = idx;
+            renderPipeline();
+        }
+        renderPipeline();
+
+        // Prompt toggle
+        function togglePromptDetails() {
+            const details = document.getElementById('promptDetailsBox');
+            details.classList.toggle('hidden');
+        }
+
+        // Context Cards Toggle
+        function toggleContextCard(id) {
+            const el = document.getElementById(`card-${id}`);
+            el.classList.toggle('hidden');
+        }
+
+        // Sensitive Data Detector Filter
+        function filterPrivacy(type) {
+            const items = document.querySelectorAll('.privacy-item');
+            items.forEach(item => {
+                if (type === 'all') {
+                    item.style.display = 'block';
+                } else if (item.classList.contains(type)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Prompt Checklist Modal
+        function openPromptChecklistModal() {
+            document.getElementById('promptChecklistModal').classList.remove('hidden');
+        }
+        function closePromptChecklistModal() {
+            document.getElementById('promptChecklistModal').classList.add('hidden');
+        }
+
+        // Declaration Generator
+        const declarations = {
+            language: "ChatGPT (GPT-4) was utilized solely for grammatical editing and readability refinement of the final manuscript. The original text was authored by the researchers, and no analytical ideas were generated by the AI model.",
+            lit: "Generative AI tools were used as search support to organize existing literature references. All cited sources were independently retrieved, read, and validated by the authors.",
+            stats: "ChatGPT was used as a supplementary decision-support tool in considering appropriate statistical procedures. The final selection of the statistical test was determined by the researcher.",
+            coding: "An AI language model was used to suggest preliminary descriptive codes from anonymized transcripts. The researchers independently reviewed, modified, or rejected all suggested codes against raw participant data.",
+            transcribe: "AI speech-to-text software was used for initial transcript generation. All transcripts were manually reviewed and corrected line-by-line against original audio recordings by the research team.",
+            viz: "AI tools assisted in generating code snippets for data visualization. All plotted data was verified for numerical accuracy by the primary investigator."
+        };
+
+        function generateDeclaration(type) {
+            document.getElementById('declarationOutput').innerText = declarations[type];
+        }
+
+        // KNOWLEDGE CHECK QUIZ DATA (10 QUESTIONS)
+        const quizQuestions = [
+            {
+                q: "1. A researcher uploads an unredacted interview transcript containing participants' names into a public AI tool to generate themes. What is the primary concern?",
+                options: [
+                    "A. The AI tool may take too long to run",
+                    "B. The transcript file size might be too large",
+                    "C. Participant privacy and confidentiality violation risk",
+                    "D. The AI might generate unattractive thematic charts"
+                ],
+                correct: 2,
+                explain: "Uploading identifiable data to public AI services violates privacy protocols and informed consent parameters."
+            },
+            {
+                q: "2. What is the core difference between AI pattern detection and human qualitative analysis?",
+                options: [
+                    "A. AI understands emotional context better than humans",
+                    "B. AI identifies textual frequencies, but humans interpret deeper contextual meaning",
+                    "C. Humans can process 10,000 pages per second",
+                    "D. There is no operational difference"
+                ],
+                correct: 1,
+                explain: "Finding a pattern is a mechanical task; understanding meaning requires human socio-cultural judgment."
+            },
+            {
+                q: "3. When using AI for interview transcription, what step is non-negotiable?",
+                options: [
+                    "A. Immediately deleting the audio recording",
+                    "B. Human verification against original audio",
+                    "C. Automatically accepting all transcribed words",
+                    "D. Translating all text into English first"
+                ],
+                correct: 1,
+                explain: "AI transcription frequently misinterprets local dialects, jargon, and speaker identification, requiring human audits."
+            },
+            {
+                q: "4. What does the Data Minimization principle dictate?",
+                options: [
+                    "A. Always upload raw full datasets to AI tools",
+                    "B. If AI does not need raw data, provide only anonymized/minimized data",
+                    "C. Delete all research data after 24 hours",
+                    "D. Minimize the number of researchers on a project"
+                ],
+                correct: 1,
+                explain: "Data minimization reduces privacy risk by restricting inputs to only essential, sanitized information."
+            },
+            {
+                q: "5. Does standard participant consent for research automatically allow uploading data to cloud AI software?",
+                options: [
+                    "A. Yes, consent covers all software tools",
+                    "B. No, third-party AI processing must be explicitly evaluated and authorized",
+                    "C. Yes, as long as the AI tool is popular",
+                    "D. No, unless the participant is paid extra"
+                ],
+                correct: 1,
+                explain: "Informed consent must cover third-party data transmission and privacy policies."
+            },
+            {
+                q: "6. Which of the following describes a privacy-safe prompt?",
+                options: [
+                    "A. 'Analyze John Doe's transcript from High School A.'",
+                    "B. 'Using this anonymized summary of Participant 1, identify core themes.'",
+                    "C. 'Here is the unredacted medical record of Patient X.'",
+                    "D. 'Find email addresses in this raw student file.'"
+                ],
+                correct: 1,
+                explain: "Anonymized summaries strip direct identifiers while preserving analytical value."
+            },
+            {
+                q: "7. Who holds ultimate accountability for research findings generated with AI assistance?",
+                options: [
+                    "A. The AI software company",
+                    "B. The primary researcher",
+                    "C. The university IT department",
+                    "D. The ethics board chairman"
+                ],
+                correct: 1,
+                explain: "AI support does not equal ownership of decisions; researchers remain solely accountable."
+            },
+            {
+                q: "8. What should a researcher do before using AI in funded or university research?",
+                options: [
+                    "A. Check institutional, ethical, funding, and journal policies",
+                    "B. Use AI secretly without documentation",
+                    "C. Assume AI is allowed unless caught",
+                    "D. Ask a classmate for verbal permission"
+                ],
+                correct: 0,
+                explain: "Governance compliance requires checking formal policies before processing research data."
+            },
+            {
+                q: "9. How should AI usage be handled in academic publications?",
+                options: [
+                    "A. List AI as a co-author",
+                    "B. Transparently disclose AI tool usage and operational role in the methodology",
+                    "C. Never mention AI under any circumstances",
+                    "D. Delete all prompt records"
+                ],
+                correct: 1,
+                explain: "Methodological transparency requires explicit disclosure of AI software and its specific function."
+            },
+            {
+                q: "10. What is a primary limitation of AI in qualitative research?",
+                options: [
+                    "A. AI cannot process plain text",
+                    "B. AI cannot reflect researcher positionality or guarantee cultural understanding",
+                    "C. AI works too fast for human reading",
+                    "D. AI costs too much paper"
+                ],
+                correct: 1,
+                explain: "AI lacks self-reflexivity, lived experience, and genuine cultural comprehension."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let selectedAnswers = Array(quizQuestions.length).fill(null);
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            
+            if (currentQuizIndex < quizQuestions.length) {
+                const q = quizQuestions[currentQuizIndex];
+                container.innerHTML = `
+                    <div class="flex items-center justify-between mb-4 text-xs font-mono text-cyan-400 border-b border-gray-800 pb-2">
+                        <span>QUESTION ${currentQuizIndex + 1} OF ${quizQuestions.length}</span>
+                        <span>SCORE: ${quizScore}</span>
+                    </div>
+
+                    <h3 class="font-heading font-semibold text-white text-base sm:text-lg mb-6 leading-relaxed">${q.q}</h3>
+
+                    <div class="space-y-3 mb-6">
+                        ${q.options.map((opt, idx) => `
+                            <button onclick="selectQuizOption(${idx})" class="w-full text-left p-3.5 rounded-xl bg-gray-900 border border-gray-800 hover:border-cyan-500/50 text-sm text-gray-200 transition flex items-center justify-between">
+                                <span>${opt}</span>
+                                <i data-lucide="circle" class="w-4 h-4 text-gray-600"></i>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div id="quizFeedback" class="hidden mb-6 p-4 rounded-xl text-xs font-mono"></div>
+                `;
+                lucide.createIcons();
+            } else {
+                // Quiz Final Score Screen
+                const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="inline-flex p-4 rounded-full bg-cyan-500/10 text-cyan-400 mb-4">
+                            <i data-lucide="award" class="w-12 h-12"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-2xl text-white mb-2">YOUR RESPONSIBLE AI RESEARCH SCORE</h3>
+                        <div class="text-5xl font-heading font-extrabold text-gradient-cyan mb-4">${percentage}%</div>
+                        <p class="text-sm text-gray-300 mb-6">
+                            ${percentage >= 80 ? 'Outstanding! You demonstrate a deep understanding of ethical AI research protocols.' : 'Good effort! Review the core principles above to strengthen your ethical research practice.'}
+                        </p>
+                        <button onclick="resetQuiz()" class="px-6 py-3 rounded-xl bg-cyan-500 text-black font-heading font-bold text-sm hover:bg-cyan-400 transition">
+                            RETAKE KNOWLEDGE CHECK
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function selectQuizOption(idx) {
+            const q = quizQuestions[currentQuizIndex];
+            const feedback = document.getElementById('quizFeedback');
+            
+            if (idx === q.correct) {
+                quizScore++;
+                feedback.className = "mb-6 p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-200 text-xs font-mono block";
+                feedback.innerHTML = `<strong>✓ CORRECT!</strong> ${q.explain}`;
+            } else {
+                feedback.className = "mb-6 p-4 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs font-mono block";
+                feedback.innerHTML = `<strong>✕ INCORRECT.</strong> Correct answer: ${q.options[q.correct]}. <br/>${q.explain}`;
+            }
+
+            setTimeout(() => {
+                currentQuizIndex++;
+                renderQuiz();
+            }, 2200);
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            quizScore = 0;
+            renderQuiz();
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
