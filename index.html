@@ -1,1012 +1,1103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FCU CCS Faculty @ AIFest 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsible AI Use in Research | Masterclass Homepage</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Source Serif 4 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Source Serif 4"', 'serif'],
+                    },
+                    colors: {
+                        academic: {
+                            950: '#080d1a',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                            accent: '#38bdf8',
+                            indigo: '#6366f1',
+                            teal: '#14b8a6',
+                            gold: '#f59e0b'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --bg-color: #000000;
-            --glass-bg: rgba(20, 20, 25, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            --accent-color: #3b82f6;
-            --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.7);
-            --transition-speed: 0.3s;
+        /* Custom Academic Modern Styles */
+        body {
+            background-color: #080d1a;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
+        /* Glassmorphic elements */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: var(--bg-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: var(--text-main);
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.25);
         }
 
-        #slideshow-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000;
-            overflow: hidden;
+        .glass-nav {
+            background: rgba(8, 13, 26, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .slide-layer {
+        /* Scroll reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Node Canvas Overlay */
+        #node-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            opacity: 0;
-            transition: opacity 700ms ease-in-out;
-            will-change: opacity;
             pointer-events: none;
-        }
-
-        .slide-layer.active {
-            opacity: 1;
             z-index: 1;
         }
 
-        #header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            z-index: 100;
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
-        }
-
-        #header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-align: center;
-            color: var(--text-main);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            padding: 0 20px;
-        }
-
-        #header.hidden-header {
-            opacity: 0;
-            transform: translateY(-100%);
-            pointer-events: none;
-        }
-
-        .ui-control {
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-            opacity: 0.2;
-            z-index: 90;
-        }
-
-        .ui-control.active,
-        .ui-control:hover {
-            opacity: 0.85;
-        }
-
-        .ui-control.dimmed {
-            opacity: 0.2;
-        }
-
-        .ui-control.hidden-ui {
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: var(--glass-shadow);
-            transition: background 0.2s ease, transform 0.2s ease, opacity 0.4s ease;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-50%) scale(1.08);
-        }
-
-        .nav-btn:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        #prev-btn { left: 24px; }
-        #next-btn { right: 24px; }
-
-        .nav-btn svg {
-            width: 28px;
-            height: 28px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .top-actions {
-            position: fixed;
-            top: 12px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 101;
-        }
-
-        .glass-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: var(--glass-shadow);
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        .glass-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(1.05);
-        }
-
-        .glass-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        #counter-badge {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 8px 18px;
-            border-radius: 30px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            box-shadow: var(--glass-shadow);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-dot {
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
             width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #22c55e;
-            display: inline-block;
         }
-
-        .status-dot.paused {
-            background-color: #f59e0b;
+        ::-webkit-scrollbar-track {
+            background: #080d1a;
         }
-
-        #toast {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            padding: 10px 20px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid var(--glass-border);
-            color: white;
-            font-size: 0.9rem;
-            font-weight: 500;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            z-index: 150;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
         }
-
-        #toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        #overlay-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(5, 5, 8, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-            transition: opacity 0.6s ease;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        .loading-sub {
-            font-size: 0.95rem;
-            color: var(--text-sub);
-            max-width: 420px;
-            line-height: 1.5;
-        }
-
-        .empty-icon {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 16px;
-            stroke: #ef4444;
-            opacity: 0.8;
-        }
-
-        #help-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 300;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        #help-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            background: rgba(25, 25, 30, 0.95);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 28px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 12px;
-        }
-
-        .modal-header h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .shortcut-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 12px 18px;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-
-        kbd {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 6px;
-            padding: 3px 8px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #60a5fa;
-            text-align: center;
-            min-width: 28px;
-            display: inline-block;
-        }
-
-        /* Responsive tweaks */
-        @media (max-width: 640px) {
-            #header h1 { font-size: 1.05rem; }
-            .nav-btn { width: 44px; height: 44px; }
-            #prev-btn { left: 12px; }
-            #next-btn { right: 12px; }
-            .top-actions { right: 10px; }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
         }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <header id="header">
-        <h1>FCU CCS Faculty @ AIFest 2026</h1>
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-600 via-sky-500 to-teal-400 p-[1px] flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all">
+                    <div class="w-full h-full bg-academic-950 rounded-[7px] flex items-center justify-center">
+                        <i class="fa-solid fa-brain text-indigo-400 text-lg group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase block leading-none">SILLIMAN UNIVERSITY</span>
+                    <span class="text-base sm:text-lg font-extrabold text-slate-100 tracking-tight">MASTERCLASS</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs lg:text-sm font-semibold tracking-wide">
+                <a href="#home" class="text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-house text-xs opacity-70"></i> Home
+                </a>
+                <a href="#sessions" class="text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-xs opacity-70"></i> Sessions
+                </a>
+                <a href="#overview" class="text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-xs opacity-70"></i> Overview
+                </a>
+                <a href="#principles" class="text-slate-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-xs opacity-70"></i> Principles
+                </a>
+            </nav>
+
+            <!-- Mobile Toggle -->
+            <div class="flex items-center">
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2.5 rounded-lg bg-academic-900 border border-slate-800" aria-label="Toggle menu">
+                    <i class="fa-solid fa-bars text-lg" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-academic-950/95 border-b border-slate-800 px-4 pt-2 pb-6 space-y-3 backdrop-blur-xl">
+            <a href="#home" class="mobile-link block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-cyan-400">
+                <i class="fa-solid fa-house text-xs mr-2"></i> Home
+            </a>
+            <a href="#sessions" class="mobile-link block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-cyan-400">
+                <i class="fa-solid fa-layer-group text-xs mr-2"></i> Sessions
+            </a>
+            <a href="#overview" class="mobile-link block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-cyan-400">
+                <i class="fa-solid fa-circle-info text-xs mr-2"></i> Overview
+            </a>
+            <a href="#principles" class="mobile-link block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-cyan-400">
+                <i class="fa-solid fa-shield-halved text-xs mr-2"></i> Principle
+            </a>
+        </div>
     </header>
 
-    <div class="top-actions">
-        <button id="help-btn" class="glass-btn ui-control" title="Keyboard Shortcuts (?)">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </button>
-        <button id="fullscreen-btn" class="glass-btn ui-control" title="Toggle Fullscreen (F)">
-            <svg id="fs-expand" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-            <svg id="fs-compress" viewBox="0 0 24 24" style="display:none;"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
-        </button>
-    </div>
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen pt-28 pb-20 flex items-center justify-center overflow-hidden bg-gradient-to-b from-academic-950 via-slate-900 to-academic-950">
+        <!-- Interactive Node Grid Canvas -->
+        <canvas id="node-canvas"></canvas>
 
-    <main id="slideshow-container">
-        <img id="slide-a" class="slide-layer" alt="Slideshow Image Layer A">
-        <img id="slide-b" class="slide-layer" alt="Slideshow Image Layer B">
-    </main>
+        <!-- Subtle Ambient Glow Effects -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-    <button id="prev-btn" class="nav-btn ui-control" title="Previous Image (Left Arrow)">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <button id="next-btn" class="nav-btn ui-control" title="Next Image (Right Arrow)">
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-
-    <div id="counter-badge" class="ui-control">
-        <span id="status-dot" class="status-dot" title="Slideshow Active"></span>
-        <span id="counter-text">0 / 0</span>
-    </div>
-
-    <div id="toast">Toast Message</div>
-
-    <div id="overlay-screen">
-        <div id="loading-spinner" class="spinner"></div>
-        <svg id="empty-icon" class="empty-icon" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div id="loading-title" class="loading-title">Loading slideshow...</div>
-        <div id="loading-sub" class="loading-sub">Scanning images folder for sequential photos...</div>
-    </div>
-
-    <div id="help-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Keyboard Shortcuts</h2>
-                <button class="close-btn" id="close-modal">&times;</button>
+        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center my-auto">
+            
+            <!-- Date & Audience Badge -->
+            <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-900/90 border border-slate-700/80 text-xs sm:text-sm font-bold text-slate-300 mb-8 shadow-inner animate-float">
+                <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-indigo-300 font-mono tracking-wider"><i class="fa-regular fa-calendar-days text-indigo-400 mr-1.5"></i>AUGUST 19–20, 2026</span>
+                <span class="text-slate-600">|</span>
+                <span class="text-slate-300"><i class="fa-solid fa-clock text-cyan-400 mr-1"></i> Documented by C. Egida & A. Buenvenida | FCU</span>
             </div>
-            <div class="shortcut-grid">
-                <div><kbd>&larr;</kbd> / <kbd>&rarr;</kbd></div><div>Previous / Next Image</div>
-                <div><kbd>Space</kbd></div><div>Pause / Resume Slideshow</div>
-                <div><kbd>Home</kbd> / <kbd>End</kbd></div><div>First / Last Image</div>
-                <div><kbd>F</kbd></div><div>Toggle Fullscreen</div>
-                <div><kbd>R</kbd> / <kbd>S</kbd></div><div>Toggle Random / Shuffle Playback</div>
-                <div><kbd>H</kbd></div><div>Toggle Header Visibility</div>
-                <div><kbd>I</kbd></div><div>Toggle Image Counter</div>
-                <div><kbd>L</kbd></div><div>Toggle Looping Mode</div>
-                <div><kbd>+</kbd> / <kbd>-</kbd> or <kbd>&uarr;</kbd> / <kbd>&darr;</kbd></div><div>Increase / Decrease Speed</div>
-                <div><kbd>Esc</kbd></div><div>Exit Fullscreen</div>
+
+            <!-- Main Title (Enlarged for Impact) -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white mb-6 leading-none">
+                Responsible AI Use <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-indigo-300 to-teal-300">
+                    in Research
+                </span>
+            </h1>
+
+            <!-- Subtitle (Enlarged font size) -->
+            <p class="font-serif italic font-bold text-2xl sm:text-3xl lg:text-4xl text-indigo-200/90 mb-6 font-normal tracking-wide">
+                “From Prompting to Declaration”
+            </p>
+
+            <!-- Short Description (Minimized for clear reading) -->
+            <p class="max-w-3xl mx-auto text-xs sm:text-base text-slate-300/90 leading-relaxed font-normal mb-10">
+                A definitive masterclass on using Generative AI responsibly throughout the research process — from prompt engineering and literature synthesis to rigorous data analysis and transparent AI disclosure.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                <a href="#sessions" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-600 rounded-xl shadow-xl shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                    <i class="fa-solid fa-compass text-sm"></i>
+                    <span>Explore Masterclass</span>
+                    <i class="fa-solid fa-arrow-down text-xs"></i>
+                </a>
+
+                <a href="#overview" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition-all duration-200">
+                    <i class="fa-solid fa-book-open text-indigo-400"></i>
+                    <span>Read Overview</span>
+                </a>
             </div>
+
+            <!-- Target Audience Tags 
+            <div class="mt-14 pt-8 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-slate-400 text-xs font-medium">
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-graduate text-indigo-400 text-sm"></i> Faculty & Academics
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-microscope text-cyan-400 text-sm"></i> Principal Investigators
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-teal-400 text-sm"></i> PhD Candidates
+                </div>
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-scale-balanced text-amber-400 text-sm"></i> Ethics Review Boards
+                </div>
+            </div>-->
+
+        </div>
+    </section>
+
+    <!-- Sessions Master Schedule Section (PLACED FIRST AS REQUESTED) -->
+    <section id="sessions" class="py-24 bg-slate-900/80 relative border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header (Enlarged Headline) -->
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-calendar-check text-xs"></i> Program Schedule
+                </div>
+                <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
+                    Masterclass Sessions
+                </h2>
+                <p class="text-xs sm:text-base text-slate-300/90 leading-relaxed max-w-2xl mx-auto">
+                    Four comprehensive half-day sessions designed to guide researchers from prompt engineering fundamentals to formal institutional disclosure.
+                </p>
+            </div>
+
+            <!-- Session Cards Grid (2x2) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- SESSION 1 CARD -->
+                <div class="glass-card rounded-2xl p-7 sm:p-8 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden border border-slate-800 reveal">
+                    <!-- Subtle Glow Accent -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all pointer-events-none"></div>
+
+                    <div>
+                        <!-- Header Badge Row -->
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-md bg-indigo-900/60 border border-indigo-500/40 text-indigo-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-laptop-code text-xs"></i> SESSION 1
+                            </span>
+                            <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar-check text-indigo-400"></i> August 19, 2026
+                            </span>
+                        </div>
+
+                        <!-- Session Title (Enlarged text) -->
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white group-hover:text-indigo-300 transition-colors mb-2 leading-snug">
+                            Foundations of Responsible GenAI Use in Research
+                        </h3>
+
+                        <!-- Session Subtitle -->
+                        <h4 class="text-xs sm:text-sm font-semibold text-indigo-200/90 mb-4 font-serif italic flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-indigo-400 text-xs"></i>
+                            Phases, Prompting, and the Assistance Spectrum
+                        </h4>
+
+                        <!-- Time & Format Badge -->
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300 bg-academic-950/80 p-3.5 rounded-xl mb-6 border border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-clock text-cyan-400"></i>
+                                <span class="font-mono">8:00 AM – 12:00 NN</span>
+                            </div>
+                            <span class="text-slate-700">|</span>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-laptop text-teal-400"></i>
+                                <span>Interactive Workshop</span>
+                            </div>
+                        </div>
+
+                        <!-- Key Topics Summary (Minimized secondary copy) -->
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Mapping GenAI capabilities across the full research lifecycle</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Structured prompt design patterns for academic query precision</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Defining the GenAI Assistance Spectrum: Passive vs. Active roles</span>
+                            </li>
+                        </ul>
+
+                        <!-- Embedded YouTube Playlist -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                    <i class="fa-brands fa-youtube text-red-500 text-sm"></i> Session Video Playlist
+                                </span>
+                                <a href="https://youtube.com/playlist?list=PLN8E7ea1U96Y&si=oWFfcaBCCgvr_qwA" target="_blank" rel="noopener noreferrer" class="text-[11px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                                    Open in YouTube <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                </a>
+                            </div>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700/80 shadow-lg bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLN8E7ea1U96Y" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="Session 1 Playlist"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Row -->
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
+                        <button onClick="openModal('session1')" class="text-xs font-semibold text-slate-400 hover:text-indigo-300 transition-colors flex items-center gap-1.5">
+                            <i class="fa-regular fa-eye text-indigo-400"></i> Quick Preview
+                        </button>
+
+                        <a href="ai-in-research-seminar/session1.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-bold transition-all duration-200">
+                            <span>Explore Session</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SESSION 2 CARD -->
+                <div class="glass-card rounded-2xl p-7 sm:p-8 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden border border-slate-800 reveal">
+                    <!-- Subtle Glow Accent -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all pointer-events-none"></div>
+
+                    <div>
+                        <!-- Header Badge Row -->
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-md bg-cyan-900/60 border border-cyan-500/40 text-cyan-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-open-reader text-xs"></i> SESSION 2
+                            </span>
+                            <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar-check text-cyan-400"></i> August 19, 2026
+                            </span>
+                        </div>
+
+                        <!-- Session Title (Enlarged text) -->
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white group-hover:text-cyan-300 transition-colors mb-2 leading-snug">
+                            AI for Literature Review and Evidence Synthesis
+                        </h3>
+
+                        <!-- Session Subtitle -->
+                        <h4 class="text-xs sm:text-sm font-semibold text-cyan-200/90 mb-4 font-serif italic flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass text-cyan-400 text-xs"></i>
+                            From Problem Conceptualization to Literature Research
+                        </h4>
+
+                        <!-- Time & Format Badge -->
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300 bg-academic-950/80 p-3.5 rounded-xl mb-6 border border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-clock text-cyan-400"></i>
+                                <span class="font-mono">1:00 PM – 5:00 PM</span>
+                            </div>
+                            <span class="text-slate-700">|</span>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-filter text-indigo-400"></i>
+                                <span>Synthesis Lab</span>
+                            </div>
+                        </div>
+
+                        <!-- Key Topics Summary (Minimized secondary copy) -->
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Accelerating systematic paper discovery and thematic matrix mapping</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Fact-checking AI summaries against source bibliographies</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Mitigating confirmation bias and automated literature gaps</span>
+                            </li>
+                        </ul>
+
+                        <!-- Embedded YouTube Playlist -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                    <i class="fa-brands fa-youtube text-red-500 text-sm"></i> Session Video Playlist
+                                </span>
+                                <a href="https://youtube.com/playlist?list=PLF5xRi1jv3OQ&si=bpnPSgDaOY5sW_i-" target="_blank" rel="noopener noreferrer" class="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                                    Open in YouTube <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                </a>
+                            </div>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700/80 shadow-lg bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLF5xRi1jv3OQ" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="Session 2 Playlist"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Row -->
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
+                        <button onClick="openModal('session2')" class="text-xs font-semibold text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                            <i class="fa-regular fa-eye text-cyan-400"></i> Quick Preview
+                        </button>
+
+                        <a href="ai-in-research-seminar/session2.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/30 text-xs font-bold transition-all duration-200">
+                            <span>Explore Session</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SESSION 3 CARD -->
+                <div class="glass-card rounded-2xl p-7 sm:p-8 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden border border-slate-800 reveal">
+                    <!-- Subtle Glow Accent -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-all pointer-events-none"></div>
+
+                    <div>
+                        <!-- Header Badge Row -->
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-md bg-teal-900/60 border border-teal-500/40 text-teal-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-chart-line text-xs"></i> SESSION 3
+                            </span>
+                            <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar-check text-teal-400"></i> August 20, 2026
+                            </span>
+                        </div>
+
+                        <!-- Session Title (Enlarged text) -->
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white group-hover:text-teal-300 transition-colors mb-2 leading-snug">
+                            AI for Data Analysis and Visualization
+                        </h3>
+
+                        <!-- Session Subtitle -->
+                        <h4 class="text-xs sm:text-sm font-semibold text-teal-200/90 mb-4 font-serif italic flex items-center gap-2">
+                            <i class="fa-solid fa-heart-pulse text-teal-400 text-xs"></i>
+                            Health & Multidisciplinary Research
+                        </h4>
+
+                        <!-- Time & Format Badge -->
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300 bg-academic-950/80 p-3.5 rounded-xl mb-6 border border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-clock text-cyan-400"></i>
+                                <span class="font-mono">8:00 AM – 12:00 NN</span>
+                            </div>
+                            <span class="text-slate-700">|</span>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-database text-teal-400"></i>
+                                <span>Analytical Practicum</span>
+                            </div>
+                        </div>
+
+                        <!-- Key Topics Summary (Minimized secondary copy) -->
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Assisting code generation in Python/R for health datasets</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Ensuring statistical validity and avoiding automated errors</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Creating compliant publication graphics and charts</span>
+                            </li>
+                        </ul>
+
+                        <!-- Embedded YouTube Playlist -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                    <i class="fa-brands fa-youtube text-red-500 text-sm"></i> Session Video Playlist
+                                </span>
+                                <a href="https://youtube.com/playlist?list=PLJXQrjhByf6Y&si=o0QGhwtVW36hbKCu" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-400 hover:text-teal-300 flex items-center gap-1">
+                                    Open in YouTube <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                </a>
+                            </div>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700/80 shadow-lg bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLJXQrjhByf6Y" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="Session 3 Playlist"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Row -->
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
+                        <button onClick="openModal('session3')" class="text-xs font-semibold text-slate-400 hover:text-teal-300 transition-colors flex items-center gap-1.5">
+                            <i class="fa-regular fa-eye text-teal-400"></i> Quick Preview
+                        </button>
+
+                        <a href="ai-in-research-seminar/session3.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-teal-600/20 hover:bg-teal-600 text-teal-300 hover:text-white border border-teal-500/30 text-xs font-bold transition-all duration-200">
+                            <span>Explore Session</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SESSION 4 CARD -->
+                <div class="glass-card rounded-2xl p-7 sm:p-8 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden border border-slate-800 reveal">
+                    <!-- Subtle Glow Accent -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all pointer-events-none"></div>
+
+                    <div>
+                        <!-- Header Badge Row -->
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-md bg-amber-900/60 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-signature text-xs"></i> SESSION 4
+                            </span>
+                            <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar-check text-amber-400"></i> August 20, 2026
+                            </span>
+                        </div>
+
+                        <!-- Session Title (Enlarged text) -->
+                        <h3 class="text-2xl sm:text-3xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2 leading-snug">
+                            Standardized AI Declaration in Research
+                        </h3>
+
+                        <!-- Session Subtitle -->
+                        <h4 class="text-xs sm:text-sm font-semibold text-amber-200/90 mb-4 font-serif italic flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield text-amber-400 text-xs"></i>
+                            Privacy, Confidentiality, and Responsible Disclosure
+                        </h4>
+
+                        <!-- Time & Format Badge -->
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300 bg-academic-950/80 p-3.5 rounded-xl mb-6 border border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-clock text-cyan-400"></i>
+                                <span class="font-mono">1:00 PM – 5:00 PM</span>
+                            </div>
+                            <span class="text-slate-700">|</span>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-shield-cat text-amber-400"></i>
+                                <span>Policy & Disclosure Matrix</span>
+                            </div>
+                        </div>
+
+                        <!-- Key Topics Summary (Minimized secondary copy) -->
+                        <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Drafting precise AI Disclosure Statements for top journals</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Institutional IRB compliance and data protection guidelines</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+                                <span>Finalizing the Researcher Accountability Checklist</span>
+                            </li>
+                        </ul>
+
+                        <!-- Embedded YouTube Playlist -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                    <i class="fa-brands fa-youtube text-red-500 text-sm"></i> Session Video Playlist
+                                </span>
+                                <a href="https://youtube.com/playlist?list=PLVJDN0Zu1OAM&si=i5v1zhKkFAru-GgB" target="_blank" rel="noopener noreferrer" class="text-[11px] text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                                    Open in YouTube <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                </a>
+                            </div>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700/80 shadow-lg bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLVJDN0Zu1OAM" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="Session 4 Playlist"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Row -->
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
+                        <button onClick="openModal('session4')" class="text-xs font-semibold text-slate-400 hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                            <i class="fa-regular fa-eye text-amber-400"></i> Quick Preview
+                        </button>
+
+                        <a href="ai-in-research-seminar/session4.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/30 text-xs font-bold transition-all duration-200">
+                            <span>Explore Session</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Masterclass Overview Section -->
+    <section id="overview" class="py-24 bg-academic-950 relative border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Intro Column -->
+                <div class="lg:col-span-5 space-y-6 reveal">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-bold uppercase tracking-wider">
+                        <i class="fa-solid fa-compass text-xs"></i> Masterclass Overview
+                    </div>
+                    
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        Navigating Generative AI with Academic Rigor
+                    </h2>
+                    
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Generative AI tools are reshaping academic inquiry at an unprecedented pace. This masterclass provides faculty, researchers, and university scholars with a practical, policy-aligned framework for integrating Generative AI responsibly into scholarly workflows.
+                    </p>
+
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        Rather than replacing scientific inquiry, Generative AI must serve as an assistance spectrum anchored in systematic verification, strict privacy compliance, and absolute researcher accountability.
+                    </p>
+
+                    <div class="pt-2 flex items-center gap-6">
+                        <div class="flex -space-x-2 overflow-hidden">
+                            <div class="inline-block h-10 w-10 rounded-full bg-slate-800 border-2 border-academic-950 flex items-center justify-center text-xs font-bold text-indigo-400">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <div class="inline-block h-10 w-10 rounded-full bg-slate-800 border-2 border-academic-950 flex items-center justify-center text-xs font-bold text-cyan-400">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                            <div class="inline-block h-10 w-10 rounded-full bg-slate-800 border-2 border-academic-950 flex items-center justify-center text-xs font-bold text-teal-400">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <div class="inline-block h-10 w-10 rounded-full bg-slate-800 border-2 border-academic-950 flex items-center justify-center text-xs font-bold text-amber-400">
+                                <i class="fa-solid fa-file-contract"></i>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400">
+                            <span class="text-slate-200 font-bold block text-xs">Comprehensive Framework</span>
+                            4 Core Modules & Interactive Labs
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Core Pillars Grid -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5 reveal">
+                    
+                    <!-- Pillar 1 -->
+                    <div class="glass-card p-6 rounded-2xl transition-all duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-4 text-xl">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-white mb-2">Rigorous Verification</h3>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            Strategies to combat hallucinations, audit citation provenance, and validate AI-generated synthesis against primary peer-reviewed literature.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="glass-card p-6 rounded-2xl transition-all duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4 text-xl">
+                            <i class="fa-solid fa-user-lock"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-white mb-2">Data Privacy & Protection</h3>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            Safeguarding sensitive participant data, proprietary datasets, and intellectual property when interacting with commercial or open models.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="glass-card p-6 rounded-2xl transition-all duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400 mb-4 text-xl">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-white mb-2">Academic Integrity</h3>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            Navigating ethical boundaries, authorship criteria, publisher guidelines, and institutional policies on Generative AI deployment.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="glass-card p-6 rounded-2xl transition-all duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-4 text-xl">
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-white mb-2">Standardized Disclosure</h3>
+                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            Mastering structured AI declaration forms, transparency matrices, and standardized disclosure statements for journals and grant funding.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- RESPONSIBLE AI PRINCIPLE SECTION -->
+    <section id="principles" class="py-24 bg-gradient-to-b from-slate-900 via-academic-950 to-slate-900 relative overflow-hidden">
+        
+        <!-- Background Graphic Elements -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08)_0,transparent_70%)] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <div class="glass-card p-8 sm:p-14 rounded-3xl border-2 border-indigo-500/30 relative shadow-2xl reveal">
+                
+                <!-- Quote Icon Accent -->
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-sky-500 mx-auto flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-500/30 mb-8">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <!-- Primary Principle Tagline -->
+                <span class="text-xs font-mono font-bold tracking-widest text-indigo-400 uppercase block mb-3">
+                    <i class="fa-solid fa-certificate mr-1.5"></i> Core Academic Declaration
+                </span>
+
+                <!-- Main Principle Headline (Enlarged) -->
+                <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-8">
+                    “AI ASSISTS. <br class="sm:hidden"> THE RESEARCHER REMAINS ACCOUNTABLE.”
+                </h2>
+
+                <!-- Supporting Text Box (Minimized secondary copy) -->
+                <div class="max-w-3xl mx-auto bg-academic-950/80 p-6 sm:p-8 rounded-2xl border border-slate-800 text-slate-300 text-xs sm:text-sm sm:text-base leading-relaxed font-normal">
+                    “Generative AI can support research tasks, but researchers remain responsible for verifying information, protecting data, applying appropriate methods, exercising judgment, and transparently disclosing AI use.”
+                </div>
+
+                <!-- Key Verification Matrix Badges -->
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-slate-400">
+                    <span class="px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-check-double text-teal-400"></i> Fact Verification
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-cyan-400"></i> Data Privacy
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-indigo-400"></i> Methodological Rigor
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-eye text-amber-400"></i> Full Transparency
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Session Syllabus Quick Modal -->
+    <div id="session-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-2xl w-full rounded-2xl p-6 sm:p-8 border border-slate-700 bg-slate-900/95 shadow-2xl transform scale-95 transition-transform duration-300" id="modal-container">
+            
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <span id="modal-badge" class="px-2.5 py-1 rounded bg-indigo-900 text-indigo-300 text-xs font-bold uppercase">Session</span>
+                    <span id="modal-date" class="text-xs text-slate-400 font-mono">Date</span>
+                </div>
+                <button onClick="closeModal()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <h3 id="modal-title" class="text-xl sm:text-2xl font-bold text-white mb-1">Session Title</h3>
+            <p id="modal-subtitle" class="text-xs sm:text-sm font-serif italic text-indigo-300 mb-4">Session Subtitle</p>
+
+            <div id="modal-body" class="space-y-4 text-xs sm:text-sm text-slate-300 my-6 max-h-[50vh] overflow-y-auto pr-2">
+                <!-- Dynamic Syllabus Details -->
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                <button onClick="closeModal()" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">
+                    Close Preview
+                </button>
+                <a id="modal-link" href="#" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2">
+                    <span>Go to Session Page</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-academic-950 border-t border-slate-800/80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <span class="text-base font-bold text-white">About the Speaker
+</span>
+                    </div>
+                    <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+                        Dr. Dave E. Marcial is an academic and technology educator from Silliman University, where he serves as Director of the Dr. Mariano C. Lao Global Studies Center. He is also Chairperson of the CHED Technical Panel for Information Technology.
+<br>
+His work includes information technology, higher education, educational technology, research, and responsible Generative AI use. His recent work particularly addresses ethical and critical use of GenAI in education and research, including AI literacy, verification, accountability, and academic integrity.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200 mb-4">Quick Navigation</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="#home" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-angle-right text-[10px] mr-1"></i> Home</a></li>
+                        <li><a href="#sessions" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-angle-right text-[10px] mr-1"></i> Masterclass Sessions</a></li>
+                        <li><a href="#overview" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-angle-right text-[10px] mr-1"></i> Masterclass Overview</a></li>
+                        <li><a href="#principles" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-angle-right text-[10px] mr-1"></i> Core Principle</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200 mb-4">Session Modules</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="session1.html" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-arrow-right-long text-[10px] mr-1"></i> Session 1: Foundations</a></li>
+                        <li><a href="session2.html" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-arrow-right-long text-[10px] mr-1"></i> Session 2: Lit Review</a></li>
+                        <li><a href="session3.html" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-arrow-right-long text-[10px] mr-1"></i> Session 3: Data Analysis</a></li>
+                        <li><a href="session4.html" class="hover:text-indigo-400 transition-colors"><i class="fa-solid fa-arrow-right-long text-[10px] mr-1"></i> Session 4: AI Declaration</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="pt-8 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <p>© 2026 Filamer Christian University, Inc. All rights reserved.</p>
+                <p class="font-mono">Designed for FCU Faculty & Researchers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
     <script>
-        (function() {
-            'use strict';
-
-            // Application State Parameters
-            const CONFIG = {
-                maxConsecutiveFailures: 10,
-                defaultInterval: 5000,
-                minInterval: 1000,
-                maxInterval: 30000,
-                intervalStep: 1000,
-                autoHideDelay: 2000
-            };
-
-            let images = [];              // Discovered valid image URLs
-            let currentIndex = 0;         // Current active slide index
-            let activeLayer = 'a';        // Current active DOM layer ('a' or 'b')
-            let timer = null;             // Auto slideshow timer
-            let autoHideTimer = null;     // Controls auto-dim timer
-            let toastTimer = null;        // Toast notification timer
-            let touchStartX = 0;          // Touch gesture start X
-            let touchStartY = 0;          // Touch gesture start Y
-            let touchEndTime = 0;         // Tap detection helper
-            let isScanningComplete = false;
-
-            // Persistent User Preferences
-            let prefs = {
-                interval: CONFIG.defaultInterval,
-                isRandom: false,
-                isLooping: true,
-                showHeader: true,
-                showCounter: true
-            };
-
-            // DOM Elements Cache
-            const el = {
-                slideA: document.getElementById('slide-a'),
-                slideB: document.getElementById('slide-b'),
-                header: document.getElementById('header'),
-                prevBtn: document.getElementById('prev-btn'),
-                nextBtn: document.getElementById('next-btn'),
-                counterBadge: document.getElementById('counter-badge'),
-                counterText: document.getElementById('counter-text'),
-                statusDot: document.getElementById('status-dot'),
-                fullscreenBtn: document.getElementById('fullscreen-btn'),
-                fsExpand: document.getElementById('fs-expand'),
-                fsCompress: document.getElementById('fs-compress'),
-                helpBtn: document.getElementById('help-btn'),
-                helpModal: document.getElementById('help-modal'),
-                closeModal: document.getElementById('close-modal'),
-                toast: document.getElementById('toast'),
-                overlayScreen: document.getElementById('overlay-screen'),
-                loadingSpinner: document.getElementById('loading-spinner'),
-                emptyIcon: document.getElementById('empty-icon'),
-                loadingTitle: document.getElementById('loading-title'),
-                loadingSub: document.getElementById('loading-sub'),
-                uiControls: document.querySelectorAll('.ui-control')
-            };
-
-            function loadPreferences() {
-                try {
-                    const saved = localStorage.getItem('fcu_slideshow_prefs');
-                    if (saved) {
-                        const parsed = JSON.parse(saved);
-                        prefs = { ...prefs, ...parsed };
-                    }
-                } catch (e) {
-                    console.warn('LocalStorage unavailable:', e);
-                }
-                applyPreferences();
-            }
-
-            function savePreferences() {
-                try {
-                    localStorage.setItem('fcu_slideshow_prefs', JSON.stringify(prefs));
-                } catch (e) {
-                    console.warn('Failed to save to localStorage:', e);
-                }
-            }
-
-            function applyPreferences() {
-                // Apply Header Visibility
-                if (!prefs.showHeader) {
-                    el.header.classList.add('hidden-header');
-                } else {
-                    el.header.classList.remove('hidden-header');
-                }
-
-                // Apply Counter Visibility
-                if (!prefs.showCounter) {
-                    el.counterBadge.classList.add('hidden-ui');
-                } else {
-                    el.counterBadge.classList.remove('hidden-ui');
-                }
-            }
-
-            async function discoverImages() {
-                let consecutiveFailures = 0;
-                let num = 1;
-
-                while (consecutiveFailures < CONFIG.maxConsecutiveFailures) {
-                    // Format number: '01.jpg', '02.jpg' ... '10.jpg', '100.jpg'
-                    const paddedNum = String(num).padStart(2, '0');
-                    const imgPath = `images/${paddedNum}.jpg`;
-
-                    const exists = await checkImageExists(imgPath);
-
-                    if (exists) {
-                        images.push(imgPath);
-                        consecutiveFailures = 0; // Reset missing counter on success
-                        el.loadingSub.textContent = `Found ${images.length} image${images.length > 1 ? 's' : ''}... searching for more`;
-                    } else {
-                        consecutiveFailures++;
-                    }
-
-                    num++;
-                }
-
-                isScanningComplete = true;
-                onDiscoveryFinished();
-            }
-
-            // Helper to probe image existence asynchronously
-            function checkImageExists(url) {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => resolve(true);
-                    img.onerror = () => resolve(false);
-                    img.src = url;
-                });
-            }
-
-            function onDiscoveryFinished() {
-                if (images.length === 0) {
-                    // Show Empty Folder Screen
-                    el.loadingSpinner.style.display = 'none';
-                    el.emptyIcon.style.display = 'block';
-                    el.loadingTitle.textContent = 'No slideshow images found.';
-                    el.loadingSub.innerHTML = 'Please place numbered JPG images inside the <strong>images/</strong> folder.<br><br>Example: <code>01.jpg</code>, <code>02.jpg</code>, <code>03.jpg</code>';
-                    return;
-                }
-
-                // Hide Loading Screen with Smooth Transition
-                el.overlayScreen.style.opacity = '0';
-                setTimeout(() => {
-                    el.overlayScreen.style.display = 'none';
-                }, 600);
-
-                // Initialize Slideshow View
-                currentIndex = 0;
-                displaySlide(currentIndex, true);
-                startAutoplay();
-                resetAutoHideTimer();
-            }
-
-            function displaySlide(index, immediate = false) {
-                if (images.length === 0) return;
-
-                const targetUrl = images[index];
-                const currentLayer = activeLayer === 'a' ? el.slideA : el.slideB;
-                const nextLayer = activeLayer === 'a' ? el.slideB : el.slideA;
-
-                if (immediate) {
-                    currentLayer.src = targetUrl;
-                    currentLayer.classList.add('active');
-                } else {
-                    nextLayer.src = targetUrl;
-                    
-                    // Cross-fade when next layer completes loading
-                    nextLayer.onload = () => {
-                        nextLayer.classList.add('active');
-                        currentLayer.classList.remove('active');
-                        activeLayer = activeLayer === 'a' ? 'b' : 'a';
-                    };
-                }
-
-                updateCounter();
-                preloadAdjacentImages(index);
-            }
-
-            // Preload next and previous images for ultra-smooth rendering
-            function preloadAdjacentImages(idx) {
-                const nextIdx = (idx + 1) % images.length;
-                const prevIdx = (idx - 1 + images.length) % images.length;
-
-                const imgNext = new Image();
-                imgNext.src = images[nextIdx];
-
-                const imgPrev = new Image();
-                imgPrev.src = images[prevIdx];
-            }
-
-            function updateCounter() {
-                if (images.length === 0) return;
-                el.counterText.textContent = `${currentIndex + 1} / ${images.length}`;
-            }
-
-            function startAutoplay() {
-                stopAutoplay();
-                timer = setInterval(() => {
-                    nextSlide();
-                }, prefs.interval);
-                el.statusDot.classList.remove('paused');
-                el.statusDot.title = 'Slideshow Playing';
-            }
-
-            function stopAutoplay() {
-                if (timer) {
-                    clearInterval(timer);
-                    timer = null;
-                }
-                el.statusDot.classList.add('paused');
-                el.statusDot.title = 'Slideshow Paused';
-            }
-
-            function toggleAutoplay() {
-                if (timer) {
-                    stopAutoplay();
-                    showToast('Slideshow Paused');
-                } else {
-                    startAutoplay();
-                    showToast('Slideshow Resumed');
-                }
-            }
-
-            function nextSlide() {
-                if (images.length === 0) return;
-
-                if (prefs.isRandom && images.length > 1) {
-                    let newIdx;
-                    do {
-                        newIdx = Math.floor(Math.random() * images.length);
-                    } while (newIdx === currentIndex);
-                    currentIndex = newIdx;
-                } else {
-                    if (currentIndex < images.length - 1) {
-                        currentIndex++;
-                    } else if (prefs.isLooping) {
-                        currentIndex = 0;
-                    } else {
-                        stopAutoplay();
-                        return;
-                    }
-                }
-                displaySlide(currentIndex);
-            }
-
-            function prevSlide() {
-                if (images.length === 0) return;
-
-                if (prefs.isRandom && images.length > 1) {
-                    currentIndex = Math.floor(Math.random() * images.length);
-                } else {
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                    } else if (prefs.isLooping) {
-                        currentIndex = images.length - 1;
-                    }
-                }
-                displaySlide(currentIndex);
-            }
-
-            function firstSlide() {
-                currentIndex = 0;
-                displaySlide(currentIndex);
-                showToast('First Slide');
-            }
-
-            function lastSlide() {
-                currentIndex = images.length - 1;
-                displaySlide(currentIndex);
-                showToast('Last Slide');
-            }
-
-            function changeSpeed(deltaMs) {
-                let newInterval = prefs.interval + deltaMs;
-                if (newInterval < CONFIG.minInterval) newInterval = CONFIG.minInterval;
-                if (newInterval > CONFIG.maxInterval) newInterval = CONFIG.maxInterval;
-
-                prefs.interval = newInterval;
-                savePreferences();
-
-                if (timer) {
-                    startAutoplay(); // Restart timer with new interval
-                }
-
-                showToast(`Speed: ${(prefs.interval / 1000).toFixed(1)}s`);
-            }
-
-            function showToast(message) {
-                el.toast.textContent = message;
-                el.toast.classList.add('show');
-
-                if (toastTimer) clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => {
-                    el.toast.classList.remove('show');
-                }, 1800);
-            }
-
-            function wakeUI() {
-                el.uiControls.forEach(ctrl => {
-                    ctrl.classList.remove('dimmed');
-                    ctrl.classList.add('active');
-                });
-                resetAutoHideTimer();
-            }
-
-            function resetAutoHideTimer() {
-                if (autoHideTimer) clearTimeout(autoHideTimer);
-                autoHideTimer = setTimeout(() => {
-                    el.uiControls.forEach(ctrl => {
-                        ctrl.classList.remove('active');
-                        ctrl.classList.add('dimmed');
-                    });
-                }, CONFIG.autoHideDelay);
-            }
-
-            function toggleFullscreen() {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    if (document.documentElement.requestFullscreen) {
-                        document.documentElement.requestFullscreen();
-                    } else if (document.documentElement.webkitRequestFullscreen) {
-                        document.documentElement.webkitRequestFullscreen();
-                    }
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    }
-                }
-            }
-
-            function updateFullscreenIcons() {
-                const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
-                el.fsExpand.style.display = isFS ? 'none' : 'block';
-                el.fsCompress.style.display = isFS ? 'block' : 'none';
-            }
-
-            function handleKeyDown(e) {
-                // Ignore key events if modal is open (except Escape or ?)
-                if (el.helpModal.classList.contains('active')) {
-                    if (e.key === 'Escape' || e.key === '?') {
-                        el.helpModal.classList.remove('active');
-                    }
-                    return;
-                }
-
-                wakeUI();
-
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        prevSlide();
-                        if (timer) startAutoplay(); // Reset slide timer
-                        break;
-
-                    case 'ArrowRight':
-                        nextSlide();
-                        if (timer) startAutoplay(); // Reset slide timer
-                        break;
-
-                    case ' ':
-                        e.preventDefault();
-                        toggleAutoplay();
-                        break;
-
-                    case 'Home':
-                        firstSlide();
-                        break;
-
-                    case 'End':
-                        lastSlide();
-                        break;
-
-                    case 'f':
-                    case 'F':
-                        toggleFullscreen();
-                        break;
-
-                    case 'r':
-                    case 'R':
-                    case 's':
-                    case 'S':
-                        prefs.isRandom = !prefs.isRandom;
-                        savePreferences();
-                        showToast(`Playback: ${prefs.isRandom ? 'Random / Shuffle' : 'Sequential'}`);
-                        break;
-
-                    case 'h':
-                    case 'H':
-                        prefs.showHeader = !prefs.showHeader;
-                        savePreferences();
-                        applyPreferences();
-                        showToast(`Header: ${prefs.showHeader ? 'Visible' : 'Hidden'}`);
-                        break;
-
-                    case 'i':
-                    case 'I':
-                        prefs.showCounter = !prefs.showCounter;
-                        savePreferences();
-                        applyPreferences();
-                        showToast(`Counter: ${prefs.showCounter ? 'Visible' : 'Hidden'}`);
-                        break;
-
-                    case 'l':
-                    case 'L':
-                        prefs.isLooping = !prefs.isLooping;
-                        savePreferences();
-                        showToast(`Looping: ${prefs.isLooping ? 'Enabled' : 'Disabled'}`);
-                        break;
-
-                    case '+':
-                    case '=':
-                    case 'ArrowUp':
-                        changeSpeed(-CONFIG.intervalStep); // Faster (smaller interval)
-                        break;
-
-                    case '-':
-                    case '_':
-                    case 'ArrowDown':
-                        changeSpeed(CONFIG.intervalStep); // Slower (larger interval)
-                        break;
-
-                    case '?':
-                        el.helpModal.classList.toggle('active');
-                        break;
-
-                    case 'Escape':
-                        // Exit fullscreen natively handled by browser
-                        break;
-                }
-            }
-
-            let wheelDebounce = false;
-            function handleWheel(e) {
-                wakeUI();
-                if (wheelDebounce) return;
-
-                wheelDebounce = true;
-                setTimeout(() => { wheelDebounce = false; }, 250);
-
-                if (e.deltaY > 0) {
-                    nextSlide();
-                } else if (e.deltaY < 0) {
-                    prevSlide();
-                }
-            }
-
-            function handleTouchStart(e) {
-                wakeUI();
-                if (e.touches.length === 1) {
-                    touchStartX = e.touches[0].clientX;
-                    touchStartY = e.touches[0].clientY;
-                }
-            }
-
-            function handleTouchEnd(e) {
-                if (!touchStartX || !touchStartY) return;
-
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-
-                const diffX = touchStartX - touchEndX;
-                const diffY = touchStartY - touchEndY;
-
-                // Check horizontal swipe
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-                    if (diffX > 0) {
-                        nextSlide(); // Swipe Left
-                    } else {
-                        prevSlide(); // Swipe Right
-                    }
-                } else if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
-                    // Tap detection for double-tap fullscreen
-                    const now = Date.now();
-                    if (now - touchEndTime < 300) {
-                        toggleFullscreen();
-                    }
-                    touchEndTime = now;
-                }
-
-                touchStartX = 0;
-                touchStartY = 0;
-            }
-
-            function initEventListeners() {
-                // Mouse & Keyboard Movement
-                window.addEventListener('mousemove', wakeUI);
-                window.addEventListener('keydown', handleKeyDown);
-                window.addEventListener('wheel', handleWheel, { passive: true });
-
-                // Navigation Buttons
-                el.prevBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    prevSlide();
-                    if (timer) startAutoplay();
-                });
-
-                el.nextBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    nextSlide();
-                    if (timer) startAutoplay();
-                });
-
-                // Top Actions
-                el.fullscreenBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleFullscreen();
-                });
-
-                el.helpBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    el.helpModal.classList.add('active');
-                });
-
-                el.closeModal.addEventListener('click', () => {
-                    el.helpModal.classList.remove('active');
-                });
-
-                el.helpModal.addEventListener('click', (e) => {
-                    if (e.target === el.helpModal) {
-                        el.helpModal.classList.remove('active');
-                    }
-                });
-
-                // Fullscreen Change Observer
-                document.addEventListener('fullscreenchange', updateFullscreenIcons);
-                document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
-
-                // Container Interactions (Single & Double Click)
-                const container = document.getElementById('slideshow-container');
-                container.addEventListener('click', wakeUI);
-                container.addEventListener('dblclick', toggleFullscreen);
-
-                // Touch Events
-                window.addEventListener('touchstart', handleTouchStart, { passive: true });
-                window.addEventListener('touchend', handleTouchEnd, { passive: true });
-            }
-
-            window.addEventListener('load', () => {
-                loadPreferences();
-                initEventListeners();
-                discoverImages();
+        // -------------------------------------------------------------
+        // 1. Mobile Navigation Toggle
+        // -------------------------------------------------------------
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
             });
+        });
 
-        })();
+        // -------------------------------------------------------------
+        // 2. Interactive Node Canvas Background Animation
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('node-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = canvas.parentElement.offsetWidth;
+            height = canvas.height = canvas.parentElement.offsetHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.6;
+                this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.5)';
+                ctx.fill();
+            }
+        }
+
+        // Generate particle network
+        const particleCount = Math.min(Math.floor(window.innerWidth / 18), 60);
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 * (1 - dist / 130)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // -------------------------------------------------------------
+        // 3. Intersection Observer for Scroll Reveal
+        // -------------------------------------------------------------
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // -------------------------------------------------------------
+        // 4. Quick Syllabus Preview Modal
+        // -------------------------------------------------------------
+        const modalData = {
+            session1: {
+                badge: "Session 1",
+                date: "August 19, 2026 | 8:00 AM–12:00 NN",
+                title: "Foundations of Responsible GenAI Use in Research",
+                subtitle: "Phases, Prompting, and the Assistance Spectrum",
+                link: "session1.html",
+                body: `
+                    <div class="space-y-3">
+                        <p><strong>Module Overview:</strong> This introductory session establishes foundational literacy in Generative AI for academic researchers. Participants will explore where GenAI fits—and where it does not—across the scientific method.</p>
+                        <h5 class="font-bold text-white text-xs uppercase tracking-wider text-indigo-300">Key Learning Objectives:</h5>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-300">
+                            <li>Understand LLM architectures, context windows, and hallucination mechanics.</li>
+                            <li>Master multi-turn prompt engineering tailored for academic synthesis.</li>
+                            <li>Establish institutional boundaries for passive vs. active GenAI involvement.</li>
+                        </ul>
+                        <div class="mt-4">
+                            <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5 mb-2">
+                                <i class="fa-brands fa-youtube text-red-500"></i> Playlist Preview
+                            </span>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLN8E7ea1U96Y" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            session2: {
+                badge: "Session 2",
+                date: "August 19, 2026 | 1:00 PM–5:00 PM",
+                title: "AI for Literature Review and Evidence Synthesis",
+                subtitle: "From Problem Conceptualization to Literature Research",
+                link: "session2.html",
+                body: `
+                    <div class="space-y-3">
+                        <p><strong>Module Overview:</strong> Discover how to ethically accelerate systematic literature discovery, thematic extraction, and gap analysis without compromising scholarly rigor.</p>
+                        <h5 class="font-bold text-white text-xs uppercase tracking-wider text-cyan-300">Key Learning Objectives:</h5>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-300">
+                            <li>Integrate AI-powered academic search tools (Semantic Scholar, Consensus, Elicit).</li>
+                            <li>Construct automated matrix tables for comparing empirical methodologies.</li>
+                            <li>Conduct citation verification workflows to catch phantom references.</li>
+                        </ul>
+                        <div class="mt-4">
+                            <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5 mb-2">
+                                <i class="fa-brands fa-youtube text-red-500"></i> Playlist Preview
+                            </span>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLF5xRi1jv3OQ" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            session3: {
+                badge: "Session 3",
+                date: "August 20, 2026 | 8:00 AM–12:00 NN",
+                title: "AI for Data Analysis and Visualization",
+                subtitle: "Health & Multidisciplinary Research",
+                link: "session3.html",
+                body: `
+                    <div class="space-y-3">
+                        <p><strong>Module Overview:</strong> Practical lab session on leveraging GenAI for coding assistance, data cleaning, statistical modeling scripts, and publication-grade visualization.</p>
+                        <h5 class="font-bold text-white text-xs uppercase tracking-wider text-teal-300">Key Learning Objectives:</h5>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-300">
+                            <li>Write and debug Python/R analytical scripts with GenAI code co-pilots.</li>
+                            <li>Maintain data security: Preventing accidental upload of confidential datasets.</li>
+                            <li>Generate accessible charts and vector graphics compliant with journal standards.</li>
+                        </ul>
+                        <div class="mt-4">
+                            <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5 mb-2">
+                                <i class="fa-brands fa-youtube text-red-500"></i> Playlist Preview
+                            </span>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLJXQrjhByf6Y" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            session4: {
+                badge: "Session 4",
+                date: "August 20, 2026 | 1:00 PM–5:00 PM",
+                title: "Standardized AI Declaration in Research",
+                subtitle: "Privacy, Confidentiality, and Responsible Disclosure",
+                link: "session4.html",
+                body: `
+                    <div class="space-y-3">
+                        <p><strong>Module Overview:</strong> Master the operational and administrative requirements for transparently disclosing GenAI use in peer-reviewed journals and institutional IRB filings.</p>
+                        <h5 class="font-bold text-white text-xs uppercase tracking-wider text-amber-300">Key Learning Objectives:</h5>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-300">
+                            <li>Complete standard journal AI declaration templates (ICMJE, Nature, Elsevier).</li>
+                            <li>Draft comprehensive methodology sections detailing prompt history and validation.</li>
+                            <li>Establish institutional accountability standards for research labs.</li>
+                        </ul>
+                        <div class="mt-4">
+                            <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5 mb-2">
+                                <i class="fa-brands fa-youtube text-red-500"></i> Playlist Preview
+                            </span>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+                                <iframe src="https://www.youtube.com/embed/videoseries?list=PLVJDN0Zu1OAM" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        const modal = document.getElementById('session-modal');
+        const modalContainer = document.getElementById('modal-container');
+
+        function openModal(sessionKey) {
+            const data = modalData[sessionKey];
+            if (!data) return;
+
+            document.getElementById('modal-badge').textContent = data.badge;
+            document.getElementById('modal-date').textContent = data.date;
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-subtitle').textContent = data.subtitle;
+            document.getElementById('modal-body').innerHTML = data.body;
+            document.getElementById('modal-link').setAttribute('href', data.link);
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-95');
+            modalContainer.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-100');
+            modalContainer.classList.add('scale-95');
+        }
+
+        // Close modal when clicking outside box
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
