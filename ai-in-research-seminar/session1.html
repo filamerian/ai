@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 1 — Responsible Generative AI Use in Research</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ['Inter', 'ui-sans-serif', 'system-ui'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+      },
+      colors: {
+        violetAccent: '#a78bfa',
+        cyanAccent: '#22d3ee',
+        greenSafe: '#4ade80',
+        amberCaution: '#fbbf24',
+        redAlert: '#fb7185',
+        slatePanel: '#0f172a'
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background:
+      radial-gradient(circle at 15% 10%, rgba(124,58,237,.14), transparent 28%),
+      radial-gradient(circle at 85% 25%, rgba(6,182,212,.10), transparent 28%),
+      #020617;
+  }
+  .glass-card {
+    background: rgba(15, 23, 42, .72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .reveal-on-scroll { animation: fadeUp .7s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .video-frame iframe { width:100%; aspect-ratio:16/9; border:0; }
+</style>
+</head>
+
+<body class="text-slate-200 font-heading">
+<main class="max-w-7xl mx-auto px-5 sm:px-8 py-12 space-y-20">
+
+  <!-- HERO -->
+  <section class="text-center space-y-6 reveal-on-scroll">
+    <span class="inline-block text-xs font-mono uppercase tracking-widest text-violetAccent bg-violetAccent/10 px-3 py-1 rounded-full border border-violetAccent/20">
+      SESSION 01 • RESEARCH & AI
+    </span>
+    <h1 class="text-4xl sm:text-6xl font-bold text-white">
+      Responsible Generative AI Use in Research
+    </h1>
+    <p class="max-w-3xl mx-auto text-slate-400 text-base sm:text-lg">
+      A practical learning module on intellectual ownership, responsible prompting,
+      verification, privacy, academic integrity, and human judgment.
+    </p>
+
+    <div class="max-w-4xl mx-auto glass-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl video-frame">
+      <iframe
+        src="https://www.youtube.com/embed/videoseries?list=PLN8E7ea1U96Y"
+        title="Session 1 YouTube Playlist"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <p class="text-xs text-slate-500">
+      Session playlist • YouTube playlist ID: <span class="font-mono">PLN8E7ea1U96Y</span>
+    </p>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="scroll-mt-24 reveal-on-scroll space-y-10">
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <span class="text-xs font-mono uppercase tracking-widest text-cyanAccent bg-cyanAccent/10 px-3 py-1 rounded-full border border-cyanAccent/20">
+        Topic Overview
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white">AI Should Assist the Researcher</h2>
+      <p class="text-slate-400">
+        Generative AI can support many stages of research, but the researcher remains
+        responsible for the thinking, decisions, verification, and final claims.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-violetAccent space-y-3">
+        <span class="text-xs font-mono text-violetAccent font-bold">01 • OWNERSHIP</span>
+        <h3 class="text-xl font-bold text-white">Keep the Thinking Human</h3>
+        <p class="text-slate-400 text-sm">
+          The researcher should retain ownership of the research problem, interpretation,
+          decisions, and conclusions.
+        </p>
+      </div>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-cyanAccent space-y-3">
+        <span class="text-xs font-mono text-cyanAccent font-bold">02 • VERIFICATION</span>
+        <h3 class="text-xl font-bold text-white">Do Not Trust Fluency</h3>
+        <p class="text-slate-400 text-sm">
+          AI output can contain errors, unsupported claims, or fabricated references.
+          Important information must be checked.
+        </p>
+      </div>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-greenSafe space-y-3">
+        <span class="text-xs font-mono text-greenSafe font-bold">03 • RESPONSIBILITY</span>
+        <h3 class="text-xl font-bold text-white">Human Accountability</h3>
+        <p class="text-slate-400 text-sm">
+          The person submitting the work remains responsible for its accuracy,
+          integrity, privacy, and compliance with applicable rules.
+        </p>
+      </div>
+    </div>
+
+    <p class="text-center font-heading text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violetAccent to-cyanAccent pt-4">
+      "AI can help you do research, but AI should not become the researcher."
+    </p>
+  </section>
+
+  <!-- OBJECTIVES -->
+  <section id="objectives" class="scroll-mt-24 reveal-on-scroll space-y-8">
+    <div class="text-center">
+      <span class="text-xs font-mono uppercase tracking-widest text-violetAccent">Learning Objectives</span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mt-2">By the End of Session 1</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="glass-card p-5 rounded-2xl border border-white/10">
+        <span class="text-cyanAccent font-mono text-xs">01</span>
+        <p class="mt-2 text-sm">Explain AI's role as a research assistant.</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/10">
+        <span class="text-cyanAccent font-mono text-xs">02</span>
+        <p class="mt-2 text-sm">Identify risks such as hallucination and fabricated sources.</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/10">
+        <span class="text-cyanAccent font-mono text-xs">03</span>
+        <p class="mt-2 text-sm">Apply Purpose → Process → Prompt Quality → Post-Check.</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/10">
+        <span class="text-cyanAccent font-mono text-xs">04</span>
+        <p class="mt-2 text-sm">Create specific, ethical, and honest prompts.</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/10">
+        <span class="text-cyanAccent font-mono text-xs">05</span>
+        <p class="mt-2 text-sm">Recognize privacy and institutional-policy boundaries.</p>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border border-white/10">
+        <span class="text-cyanAccent font-mono text-xs">06</span>
+        <p class="mt-2 text-sm">Maintain intellectual ownership and human accountability.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRAMEWORK -->
+  <section id="framework" class="scroll-mt-24 reveal-on-scroll space-y-10">
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <span class="text-xs font-mono uppercase tracking-widest text-amberCaution bg-amberCaution/10 px-3 py-1 rounded-full border border-amberCaution/20">
+        Responsible Use Framework
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white">Purpose → Process → Prompt Quality → Post-Check</h2>
+      <p class="text-slate-400">A simple decision structure for keeping AI use human-centered.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-violetAccent space-y-3">
+        <span class="text-xs font-mono text-violetAccent font-bold">STEP 01</span>
+        <h3 class="text-xl font-bold text-white">Purpose</h3>
+        <p class="text-slate-400 text-sm">Why am I using AI? Learning, brainstorming, feedback, organization—or replacing the task?</p>
+      </div>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-cyanAccent space-y-3">
+        <span class="text-xs font-mono text-cyanAccent font-bold">STEP 02</span>
+        <h3 class="text-xl font-bold text-white">Process</h3>
+        <p class="text-slate-400 text-sm">What cognitive work, analysis, interpretation, and decisions must remain mine?</p>
+      </div>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-amberCaution space-y-3">
+        <span class="text-xs font-mono text-amberCaution font-bold">STEP 03</span>
+        <h3 class="text-xl font-bold text-white">Prompt Quality</h3>
+        <p class="text-slate-400 text-sm">Is the request specific, ethical, honest, contextualized, and appropriately constrained?</p>
+      </div>
+      <div class="glass-card p-6 rounded-2xl border-t-2 border-t-greenSafe space-y-3">
+        <span class="text-xs font-mono text-greenSafe font-bold">STEP 04</span>
+        <h3 class="text-xl font-bold text-white">Post-Check</h3>
+        <p class="text-slate-400 text-sm">Verify sources and claims, revise the output, reflect, and make the final judgment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMPTING -->
+  <section id="prompting" class="scroll-mt-24 reveal-on-scroll space-y-10">
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <span class="text-xs font-mono uppercase tracking-widest text-violetAccent bg-violetAccent/10 px-3 py-1 rounded-full border border-violetAccent/20">
+        Prompt Engineering
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white">Responsible Prompting</h2>
+      <p class="text-slate-400">
+        Good prompts define clear boundaries instead of asking AI to perform the entire intellectual task.
+      </p>
+    </div>
+
+    <div class="space-y-6">
+      <div class="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+        <div class="flex items-center justify-between gap-4 text-xs font-mono">
+          <span class="text-redAlert font-bold">WEAK: "Improve this."</span>
+          <span class="text-greenSafe font-bold">BETTER: Constrained Prompt</span>
+        </div>
+        <pre class="font-mono text-xs sm:text-sm text-slate-300 bg-slatePanel p-4 rounded-xl whitespace-pre-wrap overflow-x-auto">"Improve the grammar of the paragraph below. Do not change the meaning, research claims, tense, or author's voice. Do not add new information. Only correct grammar, spelling, punctuation, and awkward sentence construction."</pre>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+        <div class="flex items-center justify-between gap-4 text-xs font-mono">
+          <span class="text-redAlert font-bold">WEAK: "Write my literature review."</span>
+          <span class="text-greenSafe font-bold">BETTER: Source-Grounded Prompt</span>
+        </div>
+        <pre class="font-mono text-xs sm:text-sm text-slate-300 bg-slatePanel p-4 rounded-xl whitespace-pre-wrap overflow-x-auto">"Based only on the verified articles I uploaded, help me identify recurring themes. Do not introduce sources that are not in the documents. I will decide which themes belong in my literature review."</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI BOUNDARIES -->
+  <section id="boundaries" class="scroll-mt-24 reveal-on-scroll space-y-8">
+    <div class="text-center">
+      <span class="text-xs font-mono uppercase tracking-widest text-redAlert">Human Control Boundaries</span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mt-2">When Should AI Stop?</h2>
+    </div>
+
+    <div class="space-y-3">
+      <div class="glass-card rounded-xl border border-white/10 overflow-hidden accordion-item">
+        <button onclick="toggleAccordion(this)" class="w-full px-6 py-5 text-left flex items-center justify-between font-bold">
+          <span>1. When AI begins making substantive decisions for the researcher</span>
+          <span class="text-violetAccent">⌄</span>
+        </button>
+        <div class="px-6 pb-6 hidden text-sm text-slate-400 border-t border-white/5 pt-4">
+          AI can help identify possibilities, but the researcher should retain the final decision and be able to explain the reasoning.
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl border border-white/10 overflow-hidden accordion-item">
+        <button onclick="toggleAccordion(this)" class="w-full px-6 py-5 text-left flex items-center justify-between font-bold">
+          <span>2. When confidential or sensitive information would be exposed</span>
+          <span class="text-violetAccent">⌄</span>
+        </button>
+        <div class="px-6 pb-6 hidden text-sm text-slate-400 border-t border-white/5 pt-4">
+          Check institutional, research, and data-privacy requirements before entering sensitive information into an external AI service.
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl border border-white/10 overflow-hidden accordion-item">
+        <button onclick="toggleAccordion(this)" class="w-full px-6 py-5 text-left flex items-center justify-between font-bold">
+          <span>3. When you cannot understand or verify the output</span>
+          <span class="text-violetAccent">⌄</span>
+        </button>
+        <div class="px-6 pb-6 hidden text-sm text-slate-400 border-t border-white/5 pt-4">
+          If you cannot explain or verify an important AI-generated claim, do not present it as your research finding.
+          <div class="mt-4 p-3.5 bg-amberCaution/10 border border-amberCaution/30 rounded text-amber-300 text-xs">
+            <strong>Rule:</strong> If you cannot understand it, you should not claim it as your research finding.
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl border border-white/10 overflow-hidden accordion-item">
+        <button onclick="toggleAccordion(this)" class="w-full px-6 py-5 text-left flex items-center justify-between font-bold">
+          <span>4. When the work no longer reflects your thinking</span>
+          <span class="text-violetAccent">⌄</span>
+        </button>
+        <div class="px-6 pb-6 hidden text-sm text-slate-400 border-t border-white/5 pt-4">
+          AI text can become so polished that it no longer represents the researcher's authentic scholarly voice.
+          <div class="mt-4 p-3.5 bg-violetAccent/10 border border-violetAccent/30 rounded text-violet-300 text-xs">
+            <strong>Self-Test:</strong> "Can I explain this paragraph without looking at it?" If no, revise it.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIFECYCLE -->
+  <section id="lifecycle" class="scroll-mt-24 reveal-on-scroll space-y-10">
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <span class="text-xs font-mono uppercase tracking-widest text-cyanAccent bg-cyanAccent/10 px-3 py-1 rounded-full border border-cyanAccent/20">
+        Lifecycle Support
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white">AI Across the Research Lifecycle</h2>
+      <p class="text-slate-400">AI can support many research activities when use remains purposeful, verifiable, and policy-compliant.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-violetAccent"><span class="text-xs font-mono text-violetAccent font-bold">STAGE 01</span><h4 class="font-bold text-white">Conceptualization</h4><p class="text-slate-400 text-xs">Explore possible research problems and angles.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-violetAccent"><span class="text-xs font-mono text-violetAccent font-bold">STAGE 02</span><h4 class="font-bold text-white">Literature Review</h4><p class="text-slate-400 text-xs">Organize and work with verified source material.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-violetAccent"><span class="text-xs font-mono text-violetAccent font-bold">STAGE 03</span><h4 class="font-bold text-white">Hypothesis Generation</h4><p class="text-slate-400 text-xs">Explore possible relationships and questions.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-violetAccent"><span class="text-xs font-mono text-violetAccent font-bold">STAGE 04</span><h4 class="font-bold text-white">Data Work</h4><p class="text-slate-400 text-xs">Support analysis while retaining human interpretation.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-cyanAccent"><span class="text-xs font-mono text-cyanAccent font-bold">STAGE 05</span><h4 class="font-bold text-white">Writing</h4><p class="text-slate-400 text-xs">Assist with organization and refinement where permitted.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-cyanAccent"><span class="text-xs font-mono text-cyanAccent font-bold">STAGE 06</span><h4 class="font-bold text-white">Coding</h4><p class="text-slate-400 text-xs">Generate or explain code while checking correctness.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-greenSafe"><span class="text-xs font-mono text-greenSafe font-bold">STAGE 07</span><h4 class="font-bold text-white">Interpretation</h4><p class="text-slate-400 text-xs">Interpret findings and form conclusions yourself.</p></div>
+      <div class="glass-card p-5 rounded-2xl space-y-2 border-t-2 border-t-amberCaution"><span class="text-xs font-mono text-amberCaution font-bold">STAGE 08</span><h4 class="font-bold text-white">Verification & Automation</h4><p class="text-slate-400 text-xs">Verify information and reduce repetitive mechanical work.</p></div>
+    </div>
+
+    <p class="text-center font-heading text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violetAccent to-cyanAccent pt-4">
+      "The objective is to reduce time spent on low-level repetitive work so researchers can spend more time on high-level thinking."
+    </p>
+  </section>
+
+  <!-- AI SPECTRUM -->
+  <section id="spectrum" class="scroll-mt-24 reveal-on-scroll space-y-8">
+    <div class="text-center">
+      <span class="text-xs font-mono uppercase tracking-widest text-greenSafe">Use Spectrum</span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mt-2">Generally Acceptable → Caution → Avoid</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="glass-card p-6 rounded-2xl border border-greenSafe/30">
+        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-greenSafe/20 text-greenSafe uppercase">Supportive</span>
+        <ul class="mt-5 space-y-3 text-sm text-slate-300 list-disc list-inside">
+          <li>Brainstorming</li>
+          <li>Concept clarification</li>
+          <li>Examples</li>
+          <li>Feedback</li>
+          <li>Organization</li>
+        </ul>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl border border-amberCaution/30">
+        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-amberCaution/20 text-amberCaution uppercase">High Caution</span>
+        <ul class="mt-5 space-y-3 text-sm text-slate-300 list-disc list-inside">
+          <li>Literature synthesis</li>
+          <li>Data analysis</li>
+          <li>Research writing</li>
+          <li>Complex interpretation</li>
+          <li>Anything requiring strong verification</li>
+        </ul>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl border border-redAlert/30">
+        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-redAlert/20 text-redAlert uppercase">Problematic</span>
+        <ul class="mt-5 space-y-3 text-sm text-slate-300 list-disc list-inside">
+          <li>Replacing the researcher's thinking</li>
+          <li>Fabricated or unverified sources</li>
+          <li>Deceptive use</li>
+          <li>Prohibited confidential data</li>
+          <li>Final work where AI use is prohibited</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAYS -->
+  <section id="takeaways" class="scroll-mt-24 reveal-on-scroll space-y-8">
+    <div class="text-center">
+      <span class="text-xs font-mono uppercase tracking-widest text-violetAccent">Session Takeaways</span>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mt-2">What to Remember</h2>
+    </div>
+
+    <div class="glass-card rounded-3xl border border-white/10 p-7 sm:p-10">
+      <div class="grid md:grid-cols-2 gap-5">
+        <div class="flex gap-3"><span class="text-cyanAccent font-mono">01</span><p>AI should assist research, not become the researcher.</p></div>
+        <div class="flex gap-3"><span class="text-cyanAccent font-mono">02</span><p>Human judgment is central to intellectual ownership.</p></div>
+        <div class="flex gap-3"><span class="text-cyanAccent font-mono">03</span><p>Fluent AI output still requires verification.</p></div>
+        <div class="flex gap-3"><span class="text-cyanAccent font-mono">04</span><p>Specific, ethical, honest prompts produce more useful assistance.</p></div>
+        <div class="flex gap-3"><span class="text-cyanAccent font-mono">05</span><p>Protect confidential and sensitive research information.</p></div>
+        <div class="flex gap-3"><span class="text-cyanAccent font-mono">06</span><p>Follow classroom, institutional, research, and publication policies.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="text-center border-t border-white/10 pt-8 pb-6">
+    <p class="text-xs text-slate-500">
+      Session 1 Learning Resource • Responsible Generative AI Use in Research
+    </p>
+    <p class="text-xs text-slate-600 mt-2">
+      YouTube playlist embedded using playlist ID PLN8E7ea1U96Y.
+    </p>
+  </footer>
+
+</main>
+
+<script>
+function toggleAccordion(button) {
+  const item = button.closest('.accordion-item');
+  const content = item.querySelector('div.hidden, div:not(.hidden)');
+  if (!content) return;
+  content.classList.toggle('hidden');
+}
+</script>
+</body>
+</html>
